@@ -13,18 +13,6 @@ int32_t		error(int code, char *msg, char *argument)
 	return (1);
 }
 
-int32_t			hex(uint8_t *buff, int size)
-{
-	int res;
-	int pow;
-	int number;
-
-	res = 0;
-	pow = 0;
-
-	return (res);
-}
-
 int32_t			from_bytes_to_dec(uint8_t const *str, int32_t bytes)
 {
 	uint8_t		buff[bytes * 2];
