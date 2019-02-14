@@ -4,4 +4,17 @@
 # include "op.h"
 # include "../libft/includes/libft.h"
 
+typedef struct			s_carriage
+{
+	struct s_carriage	*next;
+	int 				counter;
+	int 				step_size;
+	int 				last_live;
+	int 				pause;
+	char				player;
+	unsigned char		carry : 1;
+	void				*reg;
+
+}						t_carriage;
+
 #endif
