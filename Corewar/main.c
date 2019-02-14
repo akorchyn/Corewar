@@ -16,10 +16,10 @@ int32_t		error(int code, char *msg, char *argument)
 int32_t			from_bytes_to_dec(uint8_t const *str, int32_t bytes)
 {
 	uint8_t		buff[bytes * 2];
-	int 		i;
-	int 		number;
-	int			counter;
-	int 		res;
+	int32_t		i;
+	int32_t		number;
+	int32_t		counter;
+	int32_t 	res;
 
 	counter = -1;
 	i = 0;
