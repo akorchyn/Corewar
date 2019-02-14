@@ -1,0 +1,34 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/dmlitvin/corewarYE/asm/asm.h
+libft.h
+/Users/dmlitvin/corewarYE/asm/libft.h
+fcntl.h
+-
+
+/Users/dmlitvin/corewarYE/asm/file_reading.c
+asm.h
+/Users/dmlitvin/corewarYE/asm/asm.h
+stdio.h
+-
+
+/Users/dmlitvin/corewarYE/asm/libft.h
+string.h
+-
+stdlib.h
+-
+unistd.h
+-
+stdarg.h
+-
+
+/Users/dmlitvin/corewarYE/asm/main.c
+asm.h
+/Users/dmlitvin/corewarYE/asm/asm.h
+

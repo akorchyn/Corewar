@@ -46,9 +46,7 @@ int				print_string(t_printf *info, void *data)
 	int		len;
 	char	*buf;
 
-	buf = (char*)data;
-	if (!buf)
-		buf = "(null)";
+	buf = (data) ? (char*)data : "(null)";
 	len = ft_strlen(buf);
 	buf = remake_buf(info, buf, len);
 	len = write(1, buf, ft_strlen(buf));

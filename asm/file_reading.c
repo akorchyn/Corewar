@@ -31,6 +31,7 @@ void		read_file(char *file_name)
 			g_file[offset++ * BUFF_SIZE + read_return] = 0;
 			if (!(g_file = realloc(g_file, BUFF_SIZE)))
 				throw_error(11, "Allocation failed!");
+			write(1, g_file, ft_strlen(g_file));
 		}
 	}
 	else
