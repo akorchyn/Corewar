@@ -6,7 +6,7 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 16:38:06 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/02/14 18:58:08 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/14 23:39:06 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ typedef struct			s_carriage
 	int32_t 			pause;
 	int8_t				player;
 	uint8_t				carry : 1;
+	char				*code;
 }						t_carriage;
 
 typedef struct			s_corewar
