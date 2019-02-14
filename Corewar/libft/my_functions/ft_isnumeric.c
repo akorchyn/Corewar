@@ -14,6 +14,8 @@
 
 int	ft_isnumeric(char *str, int c)
 {
+	if (!str)
+		return (0);
 	while (*str && *str != c)
 		if (!(ft_isdigit(*str++)))
 			return (0);

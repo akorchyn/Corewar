@@ -6,7 +6,7 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 16:38:06 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/02/14 17:09:45 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/14 17:29:20 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #define COREWAR_VM_H
 
 # include "op.h"
+# include <errno.h>
 # include "../libft/includes/libft.h"
 
 # define ERROR(x, str) if (x) {write(2, str, ft_strlen(str)); exit(x);}
