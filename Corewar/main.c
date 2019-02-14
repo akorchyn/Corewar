@@ -13,15 +13,14 @@ int32_t		error(int code, char *msg, char *argument)
 	return (1);
 }
 
-int32_t			values(uint8_t const *str, int32_t bytes)
+int32_t			from_bytes_to_dec(uint8_t const *str, int32_t bytes)
 {
-	int32_t		result;
-	char		buff[bytes * 2];
+	uint8_t		buff[bytes * 2];
 	int 		i;
 	int 		number;
 	int			counter;
+	int 		res;
 
-	result = 0;
 	counter = -1;
 	i = 0;
 	while (++counter < bytes)
@@ -31,8 +30,16 @@ int32_t			values(uint8_t const *str, int32_t bytes)
 		number = str[counter] % 16;
 		buff[i++] = (number < 10) ? number + '0' : 'a' + (number - 10);
 	}
-	write(1, buff, 8);
-	return (result);
+	counter = 0;
+	res = 0;
+	bytes *= 2;
+	while (bytes--)
+	{
+		number = (ft_isdigit(buff[bytes]))	? buff[bytes] - '0'
+											 : 10 + (buff[bytes] - 'a');
+		res += number * ft_pow(16, counter++);
+	}
+	return (res);
 }
 
 void		parse_file(int32_t fd, t_carriage *new)
@@ -42,7 +49,7 @@ void		parse_file(int32_t fd, t_carriage *new)
 
 	ret = read(fd, buff, HEADER_SIZE);
 	(ret != HEADER_SIZE) && error(7, "Bad file", NULL);
-	(values(buff, 4) == COREWAR_EXEC_MAGIC) && printf("ALL OK\n");
+	(from_bytes_to_dec(buff, 4) == COREWAR_EXEC_MAGIC) && printf("ALL OK\n");
 }
 
 void			create_carriage(char *file, t_carriage **head)
