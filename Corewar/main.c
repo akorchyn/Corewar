@@ -6,7 +6,7 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 23:43:59 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/14 23:46:51 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/14 23:51:55 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,9 @@ void		parse_file(int32_t fd, t_carriage *new)
 			PROG_NAME_LENGTH + NULL_SIZE + PROG_SIZE_LENGTH, COMMENT_LENGTH);
 	if (!(new->code = (char *)malloc(sizeof(char) * new->header.prog_size + 1)))
 		error(10, "Memory allocation failed", NULL);
-	ret = read(fd, new->code, new->header.prog_size);
-	(ret != new->header.prog_size) && error(11, "Bad exec code", NULL);
+	ret = read(fd, new->code, new->header.prog_size + 1);
+	if (ret != new->header.prog_size)
+		error(11, "Exec code's size differs from the given one.", NULL);
 	new->code[ret] = '\0';
 }
 
@@ -100,8 +101,9 @@ void			create_carriage(char *file, t_carriage **head)
 		error(6, "Memory allocation failed", NULL);
 	ft_bzero(new, sizeof(t_carriage));
 	new->next = *head;
-	if (!(new->reg = malloc(REG_SIZE * REG_NUMBER)))
-		error(12, "Memory allocation failed", NULL);
+	if (!(new->reg = ft_memalloc(REG_SIZE * REG_NUMBER)))
+		error(13, "Memory allocation failed", NULL);
+	// new->reg[0]  function for REG_SIZE
 	parse_file(fd, new);
 	*head = new;
 	close(fd);
