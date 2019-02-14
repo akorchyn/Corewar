@@ -13,6 +13,13 @@ int32_t		error(int code, char *msg, char *argument)
 	return (1);
 }
 
+/*
+** Function translate from some bytes to one united number;
+**
+** EXAMPLE: 1th byte - ff 2nd byte - ff
+** 			Result of work 65535 (0xffff)
+*/
+
 uint32_t			from_bytes_to_dec(uint8_t const *str, int32_t bytes)
 {
 	uint8_t		buff[bytes * 2];
@@ -50,7 +57,9 @@ void		parse_file(int32_t fd, t_carriage *new)
 	ret = read(fd, buff, HEADER_SIZE);
 	(ret != HEADER_SIZE) && error(7, "Bad file", NULL);
 	new->header.magic = from_bytes_to_dec(buff, 4);
-	(new->header.magic != COREWAR_EXEC_MAGIC) && error(8, "Bad magic number", NULL);
+	if (new->header.magic != COREWAR_EXEC_MAGIC)
+		error(8, "Bad magic number", NULL);
+
 }
 
 void			create_carriage(char *file, t_carriage **head)
