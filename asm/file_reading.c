@@ -11,29 +11,24 @@
 /* ************************************************************************** */
 
 #include "asm.h"
-#include <stdio.h>
 
-void		read_file(char *file_name)
+char	*g_file;
+
+void	read_file(char *file_name)
 {
-	ssize_t	read_return;
+	ssize_t	read_ret;
 	size_t	offset;
 	int		fd;
 
-	if (!(g_file = malloc(BUFF_SIZE)))
-		throw_error(11, "Allocation failed!");
-	if ((fd = open(file_name, O_RDONLY)) != -1)
+	if (!(g_file = malloc(BUFF_SIZE + 1)))
+		throw_error(2, "Memory allocation failed!");
+	if ((fd = open(file_name, O_RDONLY)) == -1 || read(fd, g_file, 0) == -1)
+		throw_error(2, "Error on file opening or reading!");
+	offset = 0;
+	while ((read_ret = read(fd, g_file + (BUFF_SIZE * offset++), BUFF_SIZE)))
 	{
-		offset = 0;
-		while ((read_return = read(fd, g_file + (BUFF_SIZE * offset), BUFF_SIZE)))
-		{
-			if (read_return == -1)
-				throw_error(1, "Error on reading file.");
-			g_file[offset++ * BUFF_SIZE + read_return] = 0;
-			if (!(g_file = realloc(g_file, BUFF_SIZE)))
-				throw_error(11, "Allocation failed!");
-			write(1, g_file, ft_strlen(g_file));
-		}
+		g_file[read_ret + (BUFF_SIZE * offset)] = 0;
+		if (!(g_file = realloc(g_file, (BUFF_SIZE * (offset + 1)) + 1)))
+			throw_error(2, "Memory reallocation failed!");
 	}
-	else
-		throw_error(1, "Error on file opening!");
 }

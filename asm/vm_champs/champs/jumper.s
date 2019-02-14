@@ -1,7 +1,7 @@
 #debut du mega truc qu'il est trop dur a faire
 
-.name "Jumper !"
 .comment "en fait C forker !"
+.name "Jumper !"
 
 gobepc:	st r1,:buff
 	st r6,-4
@@ -68,3 +68,4 @@ goboucle1:	live %66
 		zjmp %:goboucle1
 finboucle1:	xor r3,r3,r3
 		zjmp %1
+

@@ -16,9 +16,9 @@
 # include "libft.h"
 # include <fcntl.h>
 
-char	*g_file;
+extern char	*g_file;
 
-void		throw_error(int error_out, char *str);
+void		throw_error(int error_id, char *str);
 void		read_file(char *file_name);
 
 #endif
