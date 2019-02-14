@@ -6,9 +6,11 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/10/04 11:33:27 by zaz               #+#    #+#             */
-/*   Updated: 2019/02/14 19:05:42 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/14 22:19:03 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include <stdint.h>
 
 # define IND_SIZE				2
 # define REG_SIZE				4
@@ -63,17 +65,17 @@ typedef char	t_arg_type;
 # define COMMENT_LENGTH			(2048)
 # define MAGIC_LENGTH			(4)
 # define PROG_SIZE_LENGTH		(4)
-# define NULL_SIZE				(8)
+# define NULL_SIZE				(4)
 /*
-** PROG_NAME_LENGTH + COMMENT_LENGTH + MAGIC_LENGTH + NULL_SIZE + PROG_SIZE_LENGTH
+** PROG_NAME_LENGTH + COMMENT_LENGTH + MAGIC_LENGTH + 2 *NULL_SIZE + PROG_SIZE_LENGTH
 */
 # define HEADER_SIZE 			2192
 # define COREWAR_EXEC_MAGIC		0xea83f3
 
 typedef struct		header_s
 {
-  unsigned int		magic;
-  char				prog_name[PROG_NAME_LENGTH + 1];
-  unsigned int		prog_size;
-  char				comment[COMMENT_LENGTH + 1];
+	unsigned		magic;
+	char			prog_name[PROG_NAME_LENGTH + 1];
+	unsigned		prog_size;
+	char			comment[COMMENT_LENGTH + 1];
 }					header_t;

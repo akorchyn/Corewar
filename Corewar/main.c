@@ -59,7 +59,13 @@ void		parse_file(int32_t fd, t_carriage *new)
 	new->header.magic = from_bytes_to_dec(buff, 4);
 	if (new->header.magic != COREWAR_EXEC_MAGIC)
 		error(8, "Bad magic number", NULL);
-
+	ft_strncpy(new->header.prog_name, buff + MAGIC_LENGTH, PROG_NAME_LENGTH);
+	new->header.prog_size = from_bytes_to_dec(buff + MAGIC_LENGTH
+							+ PROG_NAME_LENGTH + NULL_SIZE, PROG_SIZE_LENGTH);
+	if (new->header.prog_size > CHAMP_MAX_SIZE)
+		error(9, "Exec code too big.", NULL);
+	ft_strncpy(new->header.comment, buff + MAGIC_LENGTH + PROG_NAME_LENGTH
+							+ NULL_SIZE + PROG_SIZE_LENGTH, COMMENT_LENGTH);
 }
 
 void			create_carriage(char *file, t_carriage **head)
@@ -74,6 +80,7 @@ void			create_carriage(char *file, t_carriage **head)
 	(fd = open(file, O_RDONLY)) == -1 && error(5, strerror(errno), file);
 	if (!(new = (t_carriage *)malloc(sizeof(t_carriage))))
 		error(6, "Memory allocation error", NULL);
+	ft_bzero(new, sizeof(t_carriage));
 	new->next = *head;
 	parse_file(fd, new);
 	*head = new;
