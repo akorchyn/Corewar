@@ -17,4 +17,10 @@ typedef struct			s_carriage
 
 }						t_carriage;
 
+typedef struct			s_corewar
+{
+	char				*map;
+	t_carriage			*carriages;
+}						t_corewar;
+
 #endif
