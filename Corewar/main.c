@@ -13,13 +13,13 @@ int32_t		error(int code, char *msg, char *argument)
 	return (1);
 }
 
-int32_t			from_bytes_to_dec(uint8_t const *str, int32_t bytes)
+uint32_t			from_bytes_to_dec(uint8_t const *str, int32_t bytes)
 {
 	uint8_t		buff[bytes * 2];
 	int32_t		i;
 	int32_t		number;
 	int32_t		counter;
-	int32_t 	res;
+	uint32_t 	res;
 
 	counter = -1;
 	i = 0;
@@ -36,7 +36,7 @@ int32_t			from_bytes_to_dec(uint8_t const *str, int32_t bytes)
 	while (bytes--)
 	{
 		number = (ft_isdigit(buff[bytes]))	? buff[bytes] - '0'
-											 : 10 + (buff[bytes] - 'a');
+											: 10 + (buff[bytes] - 'a');
 		res += number * ft_pow(16, counter++);
 	}
 	return (res);
@@ -49,7 +49,8 @@ void		parse_file(int32_t fd, t_carriage *new)
 
 	ret = read(fd, buff, HEADER_SIZE);
 	(ret != HEADER_SIZE) && error(7, "Bad file", NULL);
-	(from_bytes_to_dec(buff, 4) == COREWAR_EXEC_MAGIC) && printf("ALL OK\n");
+	new->header.magic = from_bytes_to_dec(buff, 4);
+	(new->header.magic != COREWAR_EXEC_MAGIC) && error(8, "Bad magic number", NULL);
 }
 
 void			create_carriage(char *file, t_carriage **head)
