@@ -6,7 +6,7 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/10/04 11:33:27 by zaz               #+#    #+#             */
-/*   Updated: 2019/02/14 12:56:08 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/14 19:05:42 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,13 @@ typedef char	t_arg_type;
 
 # define PROG_NAME_LENGTH		(128)
 # define COMMENT_LENGTH			(2048)
+# define MAGIC_LENGTH			(4)
+# define PROG_SIZE_LENGTH		(4)
+# define NULL_SIZE				(8)
+/*
+** PROG_NAME_LENGTH + COMMENT_LENGTH + MAGIC_LENGTH + NULL_SIZE + PROG_SIZE_LENGTH
+*/
+# define HEADER_SIZE 			2192
 # define COREWAR_EXEC_MAGIC		0xea83f3
 
 typedef struct		header_s

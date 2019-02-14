@@ -1,6 +1,6 @@
-#include <vm.h>
+#include "vm.h"
 
-int		error(int code, char *msg, char *argument)
+int32_t		error(int code, char *msg, char *argument)
 {
 	ft_putstr_fd(msg, 2);
 	if (argument)
@@ -13,7 +13,39 @@ int		error(int code, char *msg, char *argument)
 	return (1);
 }
 
-void	create_carriage(char *file, t_carriage **head)
+int32_t			values(uint8_t const *str, int32_t bytes)
+{
+	int32_t		result;
+	char		buff[bytes * 2];
+	int 		i;
+	int 		number;
+	int			counter;
+
+	result = 0;
+	counter = -1;
+	i = 0;
+	while (++counter < bytes)
+	{
+		number = str[counter] / 16;
+		buff[i++] = (number < 10) ? number + '0' : 'a' + (number - 10);
+		number = str[counter] % 16;
+		buff[i++] = (number < 10) ? number + '0' : 'a' + (number - 10);
+	}
+	write(1, buff, 8);
+	return (result);
+}
+
+void		parse_file(int32_t fd, t_carriage *new)
+{
+	uint8_t		buff[HEADER_SIZE + 1];
+	int32_t		ret;
+
+	ret = read(fd, buff, HEADER_SIZE);
+	(ret != HEADER_SIZE) && error(7, "Bad file", NULL);
+	(values(buff, 4) == COREWAR_EXEC_MAGIC) && printf("ALL OK\n");
+}
+
+void			create_carriage(char *file, t_carriage **head)
 {
 	int32_t		fd;
 	size_t 		len;
@@ -26,14 +58,15 @@ void	create_carriage(char *file, t_carriage **head)
 	if (!(new = (t_carriage *)malloc(sizeof(t_carriage))))
 		error(6, "Memory allocation error", NULL);
 	new->next = *head;
+	parse_file(fd, new);
 	*head = new;
 	close(fd);
 }
 
 void	parse_arguments(int ac, char **av, t_corewar *corewar)
 {
-	int8_t		i;
-	int8_t		number;
+	register int8_t		i;
+	int8_t				number;
 
 	i = 0;
 	while (++i < ac)
@@ -56,7 +89,7 @@ void	parse_arguments(int ac, char **av, t_corewar *corewar)
 	DEBUG && ft_printf("Dump on: %d\n", corewar->is_dump);
 }
 
-int 	main(int ac, char **av)
+int32_t 	main(int ac, char **av)
 {
 	t_corewar		corewar;
 
