@@ -19,7 +19,7 @@ SRC_PRINTF = itoa_base.c mask.c unsigned.c for_all.c printunicode.c binary_memor
 
 SRC_LST = ft_lstmap.c ft_lstiter.c ft_lstadd.c ft_lstdel.c ft_lstdelone.c ft_lstnew.c ft_list_counter.c
 
-SRC_MY_FUNCTION = ft_isxdigit.c ft_freesplit.c get_next_line.c ft_putred.c ft_len.c ft_isnumeric.c
+SRC_MY_FUNCTION = ft_isxdigit.c ft_freesplit.c get_next_line.c ft_putred.c ft_len.c ft_isnumeric.c ft_pow.c
 
 SRC = $(addprefix standart/, $(SRC_STANDART)) $(addprefix printf/, $(SRC_PRINTF)) $(addprefix lst/, $(SRC_LST)) \
 	$(addprefix my_functions/, $(SRC_MY_FUNCTION))

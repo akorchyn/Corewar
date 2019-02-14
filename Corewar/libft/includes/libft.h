@@ -96,5 +96,6 @@ void				ft_putred(char *str);
 int					ft_len(void *array, int size);
 int					ft_list_counter(void **list);
 int					ft_isnumeric(char *str, int c);
+int32_t				ft_pow(int32_t number, int32_t power);
 
 #endif

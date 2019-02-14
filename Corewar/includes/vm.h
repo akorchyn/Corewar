@@ -6,7 +6,7 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 16:38:06 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/02/14 17:09:45 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/14 18:58:08 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,8 @@
 #define COREWAR_VM_H
 
 # include "op.h"
+# include <errno.h>
 # include "../libft/includes/libft.h"
-
-# define ERROR(x, str) if (x) {write(2, str, ft_strlen(str)); exit(x);}
 
 # define DEBUG 1
 
@@ -26,11 +25,11 @@ typedef struct			s_carriage
 {
 	struct s_carriage	*next;
 	void				*reg;
+	header_t			header;
 	int32_t				counter;
 	int32_t				step_size;
 	int32_t 			last_live;
 	int32_t 			pause;
-	int16_t				size;
 	int8_t				player;
 	uint8_t				carry : 1;
 }						t_carriage;
