@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 23:43:59 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/14 23:51:55 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/15 14:01:59 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "vm.h"
+#include "includes/vm.h"
 
 int32_t				error(int code, char *msg, char *argument)
 {
@@ -75,7 +75,7 @@ void		parse_file(int32_t fd, t_carriage *new)
 	new->code[ret] = '\0';
 }
 
-void			create_carriage(char *file, t_carriage **head)
+int8_t			create_carriage(char *file, t_carriage **head)
 {
 	int32_t		fd;
 	size_t		len;
@@ -95,6 +95,34 @@ void			create_carriage(char *file, t_carriage **head)
 	parse_file(fd, new);
 	*head = new;
 	close(fd);
+	return (SUCCESS);
+}
+
+int8_t		process_ids(t_carriage *carriages, int8_t players_count)
+{
+	t_carriage	*prev_carriages;
+	t_carriage	*head;
+	int8_t		new_id;
+
+	new_id = players_count;
+	head = carriages;
+	while (carriages)
+	{
+		prev_carriages = head;
+		if (carriages->id > players_count)
+			error(15, "Uniq id is bigger than players count", NULL);
+		while (prev_carriages)
+		{
+			if (carriages->id == prev_carriages->id && prev_carriages != carriages
+				&& carriages->id)
+				error(16, "Uniq id is repeating", NULL);
+			(new_id == prev_carriages->id) && (new_id--);
+			prev_carriages = prev_carriages->next;
+		}
+		!(carriages->id) && (carriages->id = new_id);
+		carriages = carriages->next;
+	}
+	return (SUCCESS);
 }
 
 void	parse_arguments(int ac, char **av, t_corewar *corewar)
@@ -114,12 +142,14 @@ void	parse_arguments(int ac, char **av, t_corewar *corewar)
 		else if (!ft_strcmp("-n", av[i]))
 		{
 			!ft_isnumeric(av[++i], '\0') && error(2, "Number error", av[i]);
-			create_carriage(av[i + 1], &corewar->carriages);
-			corewar->carriages->player = ft_atoi(av[i++]);
+			create_carriage(av[i + 1], &corewar->carriages) && (corewar->players_count)++;
+			if (!(corewar->carriages->id = ft_atoi(av[i++])))
+				error(14, "Uniq id can't be null", av[i - 1]);
 		}
 		else
-			create_carriage(av[i], &corewar->carriages);
+			create_carriage(av[i], &corewar->carriages) && corewar->players_count++;
 	}
+	process_ids(corewar->carriages, corewar->players_count);
 	DEBUG && ft_printf("Dump on: %d\n", corewar->is_dump);
 }
 
@@ -129,5 +159,10 @@ int32_t		main(int ac, char **av)
 
 	ft_bzero(&corewar, sizeof(corewar));
 	parse_arguments(ac, av, &corewar);
+	while (corewar.carriages)
+	{
+		ft_printf("%d\n", corewar.carriages->id);
+		corewar.carriages = corewar.carriages->next;
+	}
 	return (0);
 }
