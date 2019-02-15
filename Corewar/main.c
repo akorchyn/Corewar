@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/02/14 23:43:59 by akorchyn          #+#    #+#             */
+/*   Updated: 2019/02/14 23:51:55 by akorchyn         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "vm.h"
 
-int32_t		error(int code, char *msg, char *argument)
+int32_t				error(int code, char *msg, char *argument)
 {
 	ft_putstr_fd(msg, 2);
 	if (argument)
@@ -13,42 +25,60 @@ int32_t		error(int code, char *msg, char *argument)
 	return (1);
 }
 
-int32_t			values(uint8_t const *str, int32_t bytes)
-{
-	int32_t		result;
-	char		buff[bytes * 2];
-	int 		i;
-	int 		number;
-	int			counter;
+/*
+** Function translate from some bytes to one united number;
+**
+** EXAMPLE: 1th byte - ff 2nd byte - ff
+** 			Result of work 65535 (0xffff)
+*/
 
-	result = 0;
-	counter = -1;
-	i = 0;
-	while (++counter < bytes)
+uint32_t			from_bytes_to_dec(unsigned char const *str, int32_t bytes)
+{
+	uint32_t		res;
+	int32_t			i;
+	int32_t			number;
+
+	res = 0;
+	i = -1;
+	while (++i < bytes)
 	{
-		number = str[counter] / 16;
-		buff[i++] = (number < 10) ? number + '0' : 'a' + (number - 10);
-		number = str[counter] % 16;
-		buff[i++] = (number < 10) ? number + '0' : 'a' + (number - 10);
+		number = str[i];
+		res <<= 8;
+		res |= number;
 	}
-	write(1, buff, 8);
-	return (result);
+	return (res);
 }
 
 void		parse_file(int32_t fd, t_carriage *new)
 {
-	uint8_t		buff[HEADER_SIZE + 1];
-	int32_t		ret;
+	unsigned char		buff[HEADER_SIZE + 1];
+	int32_t				ret;
 
 	ret = read(fd, buff, HEADER_SIZE);
 	(ret != HEADER_SIZE) && error(7, "Bad file", NULL);
-	(values(buff, 4) == COREWAR_EXEC_MAGIC) && printf("ALL OK\n");
+	new->header.magic = from_bytes_to_dec(buff, 4);
+	if (new->header.magic != COREWAR_EXEC_MAGIC)
+		error(8, "Bad magic number", NULL);
+	ft_strncpy(new->header.prog_name, (char *)buff + MAGIC_LENGTH,
+							PROG_NAME_LENGTH);
+	new->header.prog_size = from_bytes_to_dec(buff + MAGIC_LENGTH
+							+ PROG_NAME_LENGTH + NULL_SIZE, PROG_SIZE_LENGTH);
+	if (new->header.prog_size > CHAMP_MAX_SIZE)
+		error(9, "Exec code too big.", NULL);
+	ft_strncpy(new->header.comment, (char *)buff + MAGIC_LENGTH +
+			PROG_NAME_LENGTH + NULL_SIZE + PROG_SIZE_LENGTH, COMMENT_LENGTH);
+	if (!(new->code = (char *)malloc(sizeof(char) * new->header.prog_size + 1)))
+		error(10, "Memory allocation failed", NULL);
+	ret = read(fd, new->code, new->header.prog_size + 1);
+	if (ret != new->header.prog_size)
+		error(11, "Exec code's size differs from the given one.", NULL);
+	new->code[ret] = '\0';
 }
 
 void			create_carriage(char *file, t_carriage **head)
 {
 	int32_t		fd;
-	size_t 		len;
+	size_t		len;
 	t_carriage	*new;
 
 	!file && error(3, "Filename is missing", NULL);
@@ -56,8 +86,12 @@ void			create_carriage(char *file, t_carriage **head)
 	ft_strcmp(file + len - 4, ".cor") && error(4, "Invalid file", file);
 	(fd = open(file, O_RDONLY)) == -1 && error(5, strerror(errno), file);
 	if (!(new = (t_carriage *)malloc(sizeof(t_carriage))))
-		error(6, "Memory allocation error", NULL);
+		error(6, "Memory allocation failed", NULL);
+	ft_bzero(new, sizeof(t_carriage));
 	new->next = *head;
+	if (!(new->reg = ft_memalloc(REG_SIZE * REG_NUMBER)))
+		error(13, "Memory allocation failed", NULL);
+	// new->reg[0]  function for REG_SIZE
 	parse_file(fd, new);
 	*head = new;
 	close(fd);
@@ -81,7 +115,7 @@ void	parse_arguments(int ac, char **av, t_corewar *corewar)
 		{
 			!ft_isnumeric(av[++i], '\0') && error(2, "Number error", av[i]);
 			create_carriage(av[i + 1], &corewar->carriages);
-//			corewar->carriages->player = ft_atoi(av[i++]);
+			corewar->carriages->player = ft_atoi(av[i++]);
 		}
 		else
 			create_carriage(av[i], &corewar->carriages);
@@ -89,11 +123,11 @@ void	parse_arguments(int ac, char **av, t_corewar *corewar)
 	DEBUG && ft_printf("Dump on: %d\n", corewar->is_dump);
 }
 
-int32_t 	main(int ac, char **av)
+int32_t		main(int ac, char **av)
 {
 	t_corewar		corewar;
 
 	ft_bzero(&corewar, sizeof(corewar));
 	parse_arguments(ac, av, &corewar);
-	return 0;
+	return (0);
 }
