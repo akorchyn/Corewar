@@ -6,7 +6,7 @@
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 23:43:59 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/15 14:01:59 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/02/15 15:27:52 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,23 @@ void		parse_file(int32_t fd, t_carriage *new)
 	new->code[ret] = '\0';
 }
 
+void	add_to_register(unsigned char *value, size_t index, unsigned char *reg)
+{
+	size_t	move;
+	int		i;
+	int		j;
+
+	i = -1;
+	j = 0;
+	move = 0;
+	while (--index > 0)
+		move += REG_SIZE;
+	i = REG_SIZE;
+	while (i--)
+		reg[move + i] = value[j++];
+	printf("%d\n", from_bytes_to_dec(reg + move, 4));
+}
+
 int8_t			create_carriage(char *file, t_carriage **head)
 {
 	int32_t		fd;
@@ -91,11 +108,22 @@ int8_t			create_carriage(char *file, t_carriage **head)
 	new->next = *head;
 	if (!(new->reg = ft_memalloc(REG_SIZE * REG_NUMBER)))
 		error(13, "Memory allocation failed", NULL);
-	// new->reg[0]  function for REG_SIZE
+	add_to_register((unsigned char *)(&(int){-2}), 1, new->reg);
 	parse_file(fd, new);
 	*head = new;
 	close(fd);
-	return (SUCCESS);
+	return (1);
+}
+
+int8_t		id_exists(t_carriage *carriages, int8_t id, t_carriage *self)
+{
+	while (carriages)
+	{
+		if (id == carriages->id && self != carriages)
+			return (1);
+		carriages = carriages->next;
+	}
+	return (0);
 }
 
 int8_t		process_ids(t_carriage *carriages, int8_t players_count)
@@ -113,16 +141,15 @@ int8_t		process_ids(t_carriage *carriages, int8_t players_count)
 			error(15, "Uniq id is bigger than players count", NULL);
 		while (prev_carriages)
 		{
-			if (carriages->id == prev_carriages->id && prev_carriages != carriages
-				&& carriages->id)
-				error(16, "Uniq id is repeating", NULL);
-			(new_id == prev_carriages->id) && (new_id--);
+			(carriages->id == prev_carriages->id && prev_carriages != carriages
+				&& carriages->id) && error(16, "Uniq id is repeating", NULL);
+//			(id_exists(head, new_id)) && (new_id--);
 			prev_carriages = prev_carriages->next;
 		}
 		!(carriages->id) && (carriages->id = new_id);
 		carriages = carriages->next;
 	}
-	return (SUCCESS);
+	return (1);
 }
 
 void	parse_arguments(int ac, char **av, t_corewar *corewar)
