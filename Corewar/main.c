@@ -34,29 +34,17 @@ int32_t				error(int code, char *msg, char *argument)
 
 uint32_t			from_bytes_to_dec(unsigned char const *str, int32_t bytes)
 {
-	unsigned char		buff[bytes * 2];
-	int32_t				i;
-	int32_t				number;
-	int32_t				counter;
-	uint32_t			res;
+	int		res;
+	int		i;
+	int		number;
 
-	counter = -1;
-	i = 0;
-	while (++counter < bytes)
-	{
-		number = str[counter] / 16;
-		buff[i++] = (number < 10) ? number + '0' : 'a' + (number - 10);
-		number = str[counter] % 16;
-		buff[i++] = (number < 10) ? number + '0' : 'a' + (number - 10);
-	}
-	counter = 0;
 	res = 0;
-	bytes *= 2;
-	while (bytes--)
+	i = -1;
+	while (++i < bytes)
 	{
-		number = (ft_isdigit(buff[bytes])) ? buff[bytes] - '0'
-											: 10 + (buff[bytes] - 'a');
-		res += number * ft_pow(16, counter++);
+		number = str[i];
+		res <<= 8;
+		res |= number;
 	}
 	return (res);
 }
