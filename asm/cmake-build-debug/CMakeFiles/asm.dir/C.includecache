@@ -15,8 +15,6 @@ fcntl.h
 /Users/dmlitvin/corewarYE/asm/file_reading.c
 asm.h
 /Users/dmlitvin/corewarYE/asm/asm.h
-stdio.h
--
 
 /Users/dmlitvin/corewarYE/asm/libft.h
 string.h
