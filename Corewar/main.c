@@ -34,9 +34,9 @@ int32_t				error(int code, char *msg, char *argument)
 
 uint32_t			from_bytes_to_dec(unsigned char const *str, int32_t bytes)
 {
-	int		res;
-	int		i;
-	int		number;
+	uint32_t		res;
+	int32_t			i;
+	int32_t			number;
 
 	res = 0;
 	i = -1;
