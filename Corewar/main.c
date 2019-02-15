@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 23:43:59 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/15 14:01:59 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/02/15 14:32:17 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ uint32_t			from_bytes_to_dec(unsigned char const *str, int32_t bytes)
 void		parse_file(int32_t fd, t_carriage *new)
 {
 	unsigned char		buff[HEADER_SIZE + 1];
-	int32_t				ret;
+	ssize_t				ret;
 
 	ret = read(fd, buff, HEADER_SIZE);
 	(ret != HEADER_SIZE) && error(7, "Bad file", NULL);
@@ -128,7 +128,6 @@ int8_t		process_ids(t_carriage *carriages, int8_t players_count)
 void	parse_arguments(int ac, char **av, t_corewar *corewar)
 {
 	register int8_t		i;
-	int8_t				number;
 
 	i = 0;
 	while (++i < ac)
