@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vm.h                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 16:38:06 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/02/14 23:39:06 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/15 12:25:48 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,20 +17,20 @@
 # include <errno.h>
 # include "../libft/includes/libft.h"
 
+# define SUCCESS 1
+# define FAILURE 0
 # define DEBUG 1
-
-# pragma pack(1)
 
 typedef struct			s_carriage
 {
 	struct s_carriage	*next;
-	void				*reg;
+	int64_t				reg[16];
 	header_t			header;
 	int32_t				counter;
 	int32_t				step_size;
 	int32_t 			last_live;
 	int32_t 			pause;
-	int8_t				player;
+	int8_t				id;
 	uint8_t				carry : 1;
 	char				*code;
 }						t_carriage;
@@ -42,6 +42,7 @@ typedef struct			s_corewar
 	int32_t				dump_drop;
 	int32_t				iteration;
 	uint8_t				is_dump : 1;
+	uint8_t				players_count;
 }						t_corewar;
 
 #endif
