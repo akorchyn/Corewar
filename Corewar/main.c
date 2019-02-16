@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "includes/vm.h"
+#include <stdio.h>
 
 int32_t				error(int code, char *msg, char *argument)
 {
@@ -75,23 +76,6 @@ void		parse_file(int32_t fd, t_carriage *new)
 	new->code[ret] = '\0';
 }
 
-void	add_to_register(unsigned char *value, size_t index, unsigned char *reg)
-{
-	size_t	move;
-	int		i;
-	int		j;
-
-	i = -1;
-	j = 0;
-	move = 0;
-	while (--index > 0)
-		move += REG_SIZE;
-	i = REG_SIZE;
-	while (i--)
-		reg[move + i] = value[j++];
-	printf("%d\n", from_bytes_to_dec(reg + move, 4));
-}
-
 int8_t			create_carriage(char *file, t_carriage **head)
 {
 	int32_t		fd;
@@ -106,9 +90,6 @@ int8_t			create_carriage(char *file, t_carriage **head)
 		error(6, "Memory allocation failed", NULL);
 	ft_bzero(new, sizeof(t_carriage));
 	new->next = *head;
-	if (!(new->reg = ft_memalloc(REG_SIZE * REG_NUMBER)))
-		error(13, "Memory allocation failed", NULL);
-	add_to_register((unsigned char *)(&(int){-2}), 1, new->reg);
 	parse_file(fd, new);
 	*head = new;
 	close(fd);
@@ -179,16 +160,40 @@ void	parse_arguments(int ac, char **av, t_corewar *corewar)
 	DEBUG && ft_printf("Dump on: %d\n", corewar->is_dump);
 }
 
+void		initializing(t_corewar *corewar)
+{
+	t_carriage		*tmp;
+	int32_t			placement;
+	int32_t			distance;
+
+	if (ft_list_counter((void **)corewar->carriages) > MAX_PLAYERS)
+		error(17, "Too many players.", NULL);
+	if (!(corewar->map = (char *)ft_memalloc(sizeof(char) * MEM_SIZE)))
+		error(18, "Allocation battle arena failed.", NULL);
+	distance = MEM_SIZE / corewar->players_count;
+	tmp = corewar->carriages;
+	placement = 0;
+	ft_printf("Introducing contestants...\n");
+	while (tmp)
+	{
+		ft_printf("* Player %d, weighing %d bytes, \"%s\" (\"%s\")\n",
+				tmp->id, tmp->header.prog_size, tmp->header.prog_name,
+				tmp->header.comment);
+		tmp->reg[0] = -tmp->id;
+		ft_memcpy(corewar->map + placement, tmp->code, tmp->header.prog_size);
+		free(tmp->code);
+		placement += distance;
+		tmp = tmp->next;
+	}
+	(DEBUG) && ft_printf("%.*m", MEM_SIZE, corewar->map);
+}
+
 int32_t		main(int ac, char **av)
 {
 	t_corewar		corewar;
 
 	ft_bzero(&corewar, sizeof(corewar));
 	parse_arguments(ac, av, &corewar);
-	while (corewar.carriages)
-	{
-		ft_printf("%d\n", corewar.carriages->id);
-		corewar.carriages = corewar.carriages->next;
-	}
+	initializing(&corewar);
 	return (0);
 }

@@ -21,12 +21,10 @@
 # define FAILURE 0
 # define DEBUG 1
 
-# pragma pack(1)
-
 typedef struct			s_carriage
 {
 	struct s_carriage	*next;
-	void				*reg;
+	int64_t				reg[16];
 	header_t			header;
 	int32_t				counter;
 	int32_t				step_size;
