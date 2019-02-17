@@ -11,29 +11,83 @@
 /* ************************************************************************** */
 
 #include "asm.h"
-#include <stdio.h>
+
+char	*g_file;
+t_list	*g_instructions;
+
+static void	check_last_line(char *start)
+{
+	while (*start)
+	{
+		if (*start != ' ' && *start != '\n' && *start != '\t')
+			throw_error(2, "Check the last instruction,"
+						   "maybe you forget to put endline.");
+		start++;
+	}
+}
+
+static int	line_not_clear(char *start, char *end)
+{
+	while (start != end)
+		if (ft_is_whitespace(start++))
+			return (0);
+	return (1);
+}
+
+static void	instruction_add_end(char *start, char *end, t_insturction *instr)
+{
+	static t_list	*last = NULL;
+
+	instr->instruction = ft_memcpy(malloc(end - start), start + 1, end - start);
+	instr->instruction[start - end - 1] = 0;
+	if (last)
+	{
+		last->next = ft_lstnew(instr, sizeof(t_insturction));
+		last = last->next;
+	}
+	else
+		ft_lstadd(&g_instructions, (last = ft_lstnew(instr, sizeof(*instr))));
+}
+
+void		split_instructions(void)
+{
+	t_insturction	insturction;
+	char			*end;
+	char			*start;
+
+	start = g_file;
+	ft_bzero(&insturction, sizeof(t_insturction));
+	while (start)
+	{
+		start = ft_strchr(start, '\n');
+		if (start && (end = ft_strchr(start + 1, '\n')))
+		{
+			if (line_not_clear(start, end))
+				instruction_add_end(start, end, &insturction);
+		}
+		else
+			check_last_line(start);
+		start = end;
+	}
+}
 
 void		read_file(char *file_name)
 {
-	ssize_t	read_return;
+	ssize_t	read_ret;
 	size_t	offset;
 	int		fd;
 
-	if (!(g_file = malloc(BUFF_SIZE)))
-		throw_error(11, "Allocation failed!");
-	if ((fd = open(file_name, O_RDONLY)) != -1)
+	if (!(g_file = malloc(BUFF_SIZE + 1)))
+		throw_error(2, "Memory allocation failed!");
+	if ((fd = open(file_name, O_RDONLY)) == -1 || read(fd, g_file, 0) == -1)
+		throw_error(2, "Error on file opening or reading!");
+	offset = 0;
+	while ((read_ret = read(fd, g_file + (BUFF_SIZE * offset), BUFF_SIZE)))
 	{
-		offset = 0;
-		while ((read_return = read(fd, g_file + (BUFF_SIZE * offset), BUFF_SIZE)))
-		{
-			if (read_return == -1)
-				throw_error(1, "Error on reading file.");
-			g_file[offset++ * BUFF_SIZE + read_return] = 0;
-			if (!(g_file = realloc(g_file, BUFF_SIZE)))
-				throw_error(11, "Allocation failed!");
-			write(1, g_file, ft_strlen(g_file));
-		}
+		g_file[read_ret + (BUFF_SIZE * offset++)] = 0;
+		if (!(g_file = realloc(g_file, (BUFF_SIZE * (offset + 1)) + 1)))
+			throw_error(2, "Memory reallocation failed!");
 	}
-	else
-		throw_error(1, "Error on file opening!");
+	ft_printf("%s", g_file);
+	g_instructions = NULL;
 }

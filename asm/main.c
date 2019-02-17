@@ -12,20 +12,22 @@
 
 #include "asm.h"
 
-void	throw_error(int error_out, char *str)
+void	throw_error(int error_id, char *str)
 {
 	ft_putendl_fd(str, 2);
-	exit(error_out);
+	exit(error_id);
 }
 
 int		main(int ac, char **av)
 {
 	if (ac != 2)
-		throw_error(1, "usage: asm source_file");
+		throw_error(1, "usage: ./asm source_file");
 	else if (av[1][ft_strlen(av[1]) - 1] == 's'
-		&& av[1][ft_strlen(av[1]) - 2] == '.')
+			&& av[1][ft_strlen(av[1]) - 2] == '.')
 		read_file(av[1]);
 	else
-		throw_error(1, "Invalid file extention!\nEample: sorce_file.s");
+		throw_error(1, "Invalid file extension!\nExample: source_file.s");
+	split_instructions();
+//	system("leaks asm");
 	return (0);
 }
