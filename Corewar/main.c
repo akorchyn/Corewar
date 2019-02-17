@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 23:43:59 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/15 15:53:42 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/17 15:23:27 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/vm.h"
-#include <stdio.h>
 
 int32_t				error(int code, char *msg, char *argument)
 {
@@ -186,15 +185,37 @@ void		initializing(t_corewar *corewar)
 		placement += distance;
 		tmp = tmp->next;
 	}
-	(DEBUG) && ft_printf("%.*m", MEM_SIZE, corewar->map);
+	(DEBUG) && ft_printf("%100.*m", MEM_SIZE, corewar->map);
+}
+
+void		initializing_dispatcher(t_dispatcher *dispatcher)
+{
+	dispatcher[0] = NULL;
+	dispatcher[1] = NULL;
+	dispatcher[2] = NULL;
+	dispatcher[3] = NULL;
+	dispatcher[4] = NULL;
+	dispatcher[5] = NULL;
+	dispatcher[6] = NULL;
+	dispatcher[7] = NULL;
+	dispatcher[8] = NULL;
+	dispatcher[9] = NULL;
+	dispatcher[10] = NULL;
+	dispatcher[11] = NULL;
+	dispatcher[12] = NULL;
+	dispatcher[13] = NULL;
+	dispatcher[14] = NULL;
+	dispatcher[15] = NULL;
 }
 
 int32_t		main(int ac, char **av)
 {
 	t_corewar		corewar;
+	t_dispatcher	dispatcher[16];
 
 	ft_bzero(&corewar, sizeof(corewar));
 	parse_arguments(ac, av, &corewar);
 	initializing(&corewar);
+	initializing_dispatcher(dispatcher);
 	return (0);
 }

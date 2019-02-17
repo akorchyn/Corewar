@@ -45,4 +45,6 @@ typedef struct			s_corewar
 	uint8_t				players_count;
 }						t_corewar;
 
+typedef					void (*t_dispatcher)(t_list *var, t_carriage *carriage);
+
 #endif
