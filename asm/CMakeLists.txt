@@ -6,4 +6,4 @@ set(CMAKE_C_STANDARD 99)
 
 add_executable(asm main.c asm.h file_reading.c)
 
-link_libraries(libft/libft.a)
+target_link_libraries(asm ${CMAKE_SOURCE_DIR}/libft/libft.a)

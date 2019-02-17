@@ -94,6 +94,7 @@ asm_EXTERNAL_OBJECTS =
 asm: CMakeFiles/asm.dir/main.c.o
 asm: CMakeFiles/asm.dir/file_reading.c.o
 asm: CMakeFiles/asm.dir/build.make
+asm: ../libft/libft.a
 asm: CMakeFiles/asm.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/dmlitvin/corewarYE/asm/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking C executable asm"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/asm.dir/link.txt --verbose=$(VERBOSE)

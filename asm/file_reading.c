@@ -15,38 +15,39 @@
 char	*g_file;
 t_list	*g_instructions;
 
-static void	check_last_line(char *start)
+static void	lst_print(t_list *list)
 {
-	while (*start)
+	while (list)
 	{
-		if (*start != ' ' && *start != '\n' && *start != '\t')
-			throw_error(2, "Check the last instruction,"
-						   "maybe you forget to put endline.");
-		start++;
+		ft_printf("%s\n", ((t_insturction*)list->content)->instruction);
+		list = list->next;
 	}
 }
 
-static int	line_not_clear(char *start, char *end)
+static int	line_not_clear(char const *start, char const *end)
 {
-	while (start != end)
-		if (ft_is_whitespace(start++))
-			return (0);
-	return (1);
+	if (end - start > 1)
+		while (start != end)
+			if (!ft_is_whitespace(start++))
+				return (1);
+	return (0);
 }
 
-static void	instruction_add_end(char *start, char *end, t_insturction *instr)
+static void	add_instruction(char *start, char *end, t_insturction *instruction)
 {
 	static t_list	*last = NULL;
 
-	instr->instruction = ft_memcpy(malloc(end - start), start + 1, end - start);
-	instr->instruction[start - end - 1] = 0;
+	instruction->instruction = ft_memcpy(malloc(end - start),
+			(*start == '\n') ? start + 1 : start, end - start - 1);
+	instruction->instruction[end - start - 1] = 0;
 	if (last)
 	{
-		last->next = ft_lstnew(instr, sizeof(t_insturction));
+		last->next = ft_lstnew(instruction, sizeof(t_insturction));
 		last = last->next;
 	}
 	else
-		ft_lstadd(&g_instructions, (last = ft_lstnew(instr, sizeof(*instr))));
+		ft_lstadd(&g_instructions,
+				(last = ft_lstnew(instruction, sizeof(t_insturction))));
 }
 
 void		split_instructions(void)
@@ -59,16 +60,13 @@ void		split_instructions(void)
 	ft_bzero(&insturction, sizeof(t_insturction));
 	while (start)
 	{
-		start = ft_strchr(start, '\n');
-		if (start && (end = ft_strchr(start + 1, '\n')))
-		{
+		if ((end = ft_strchr(start + 1, '\n')))
 			if (line_not_clear(start, end))
-				instruction_add_end(start, end, &insturction);
-		}
-		else
-			check_last_line(start);
+				add_instruction(start, end, &insturction);
 		start = end;
 	}
+//	ft_lstiter(g_instructions, lst_print);
+lst_print(g_instructions);
 }
 
 void		read_file(char *file_name)
@@ -88,6 +86,6 @@ void		read_file(char *file_name)
 		if (!(g_file = realloc(g_file, (BUFF_SIZE * (offset + 1)) + 1)))
 			throw_error(2, "Memory reallocation failed!");
 	}
-	ft_printf("%s", g_file);
+//	ft_printf("%s", g_file);
 	g_instructions = NULL;
 }
