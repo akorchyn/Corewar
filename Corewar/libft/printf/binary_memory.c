@@ -74,7 +74,7 @@ int				print_memory(t_mask *mask, void *data)
 {
 	int				i;
 	int				counter;
-	unsigned char	bytes[16];
+	unsigned char	bytes[mask->width];
 	int				n;
 	int				width;
 

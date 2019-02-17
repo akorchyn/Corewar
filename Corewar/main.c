@@ -6,11 +6,11 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 23:43:59 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/14 23:51:55 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/17 15:23:27 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "vm.h"
+#include "includes/vm.h"
 
 int32_t				error(int code, char *msg, char *argument)
 {
@@ -75,7 +75,7 @@ void		parse_file(int32_t fd, t_carriage *new)
 	new->code[ret] = '\0';
 }
 
-void			create_carriage(char *file, t_carriage **head)
+int8_t			create_carriage(char *file, t_carriage **head)
 {
 	int32_t		fd;
 	size_t		len;
@@ -89,12 +89,47 @@ void			create_carriage(char *file, t_carriage **head)
 		error(6, "Memory allocation failed", NULL);
 	ft_bzero(new, sizeof(t_carriage));
 	new->next = *head;
-	if (!(new->reg = ft_memalloc(REG_SIZE * REG_NUMBER)))
-		error(13, "Memory allocation failed", NULL);
-	// new->reg[0]  function for REG_SIZE
 	parse_file(fd, new);
 	*head = new;
 	close(fd);
+	return (1);
+}
+
+int8_t		id_exists(t_carriage *carriages, int8_t id, t_carriage *self)
+{
+	while (carriages)
+	{
+		if (id == carriages->id && self != carriages)
+			return (1);
+		carriages = carriages->next;
+	}
+	return (0);
+}
+
+int8_t		process_ids(t_carriage *carriages, int8_t players_count)
+{
+	t_carriage	*prev_carriages;
+	t_carriage	*head;
+	int8_t		new_id;
+
+	new_id = players_count;
+	head = carriages;
+	while (carriages)
+	{
+		prev_carriages = head;
+		if (carriages->id > players_count)
+			error(15, "Uniq id is bigger than players count", NULL);
+		while (prev_carriages)
+		{
+			(carriages->id == prev_carriages->id && prev_carriages != carriages
+				&& carriages->id) && error(16, "Uniq id is repeating", NULL);
+//			(id_exists(head, new_id)) && (new_id--);
+			prev_carriages = prev_carriages->next;
+		}
+		!(carriages->id) && (carriages->id = new_id);
+		carriages = carriages->next;
+	}
+	return (1);
 }
 
 void	parse_arguments(int ac, char **av, t_corewar *corewar)
@@ -114,20 +149,73 @@ void	parse_arguments(int ac, char **av, t_corewar *corewar)
 		else if (!ft_strcmp("-n", av[i]))
 		{
 			!ft_isnumeric(av[++i], '\0') && error(2, "Number error", av[i]);
-			create_carriage(av[i + 1], &corewar->carriages);
-			corewar->carriages->player = ft_atoi(av[i++]);
+			create_carriage(av[i + 1], &corewar->carriages) && (corewar->players_count)++;
+			if (!(corewar->carriages->id = ft_atoi(av[i++])))
+				error(14, "Uniq id can't be null", av[i - 1]);
 		}
 		else
-			create_carriage(av[i], &corewar->carriages);
+			create_carriage(av[i], &corewar->carriages) && corewar->players_count++;
 	}
+	process_ids(corewar->carriages, corewar->players_count);
 	DEBUG && ft_printf("Dump on: %d\n", corewar->is_dump);
+}
+
+void		initializing(t_corewar *corewar)
+{
+	t_carriage		*tmp;
+	int32_t			placement;
+	int32_t			distance;
+
+	if (ft_list_counter((void **)corewar->carriages) > MAX_PLAYERS)
+		error(17, "Too many players.", NULL);
+	if (!(corewar->map = (char *)ft_memalloc(sizeof(char) * MEM_SIZE)))
+		error(18, "Allocation battle arena failed.", NULL);
+	distance = MEM_SIZE / corewar->players_count;
+	tmp = corewar->carriages;
+	placement = 0;
+	ft_printf("Introducing contestants...\n");
+	while (tmp)
+	{
+		ft_printf("* Player %d, weighing %d bytes, \"%s\" (\"%s\")\n",
+				tmp->id, tmp->header.prog_size, tmp->header.prog_name,
+				tmp->header.comment);
+		tmp->reg[0] = -tmp->id;
+		ft_memcpy(corewar->map + placement, tmp->code, tmp->header.prog_size);
+		free(tmp->code);
+		placement += distance;
+		tmp = tmp->next;
+	}
+	(DEBUG) && ft_printf("%100.*m", MEM_SIZE, corewar->map);
+}
+
+void		initializing_dispatcher(t_dispatcher *dispatcher)
+{
+	dispatcher[0] = NULL;
+	dispatcher[1] = NULL;
+	dispatcher[2] = NULL;
+	dispatcher[3] = NULL;
+	dispatcher[4] = NULL;
+	dispatcher[5] = NULL;
+	dispatcher[6] = NULL;
+	dispatcher[7] = NULL;
+	dispatcher[8] = NULL;
+	dispatcher[9] = NULL;
+	dispatcher[10] = NULL;
+	dispatcher[11] = NULL;
+	dispatcher[12] = NULL;
+	dispatcher[13] = NULL;
+	dispatcher[14] = NULL;
+	dispatcher[15] = NULL;
 }
 
 int32_t		main(int ac, char **av)
 {
 	t_corewar		corewar;
+	t_dispatcher	dispatcher[16];
 
 	ft_bzero(&corewar, sizeof(corewar));
 	parse_arguments(ac, av, &corewar);
+	initializing(&corewar);
+	initializing_dispatcher(dispatcher);
 	return (0);
 }

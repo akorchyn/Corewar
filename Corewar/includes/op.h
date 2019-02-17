@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   op.h                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/10/04 11:33:27 by zaz               #+#    #+#             */
-/*   Updated: 2019/02/14 22:19:03 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/15 12:11:24 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,3 +79,15 @@ typedef struct		header_s
 	unsigned		prog_size;
 	char			comment[COMMENT_LENGTH + 1];
 }					header_t;
+
+typedef struct		s_op
+{
+	char			*name;
+	uint8_t			variables;
+	int32_t			vars[3];
+	uint8_t			op_index;
+	uint16_t		pause;
+	char			*description;
+	uint8_t			is_codage : 1;
+	uint8_t			is_ind : 1;
+}					t_op;
