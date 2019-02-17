@@ -6,12 +6,11 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 23:43:59 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/15 15:27:52 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/02/17 15:23:27 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/vm.h"
-#include <stdio.h>
 
 int32_t				error(int code, char *msg, char *argument)
 {
@@ -53,7 +52,7 @@ uint32_t			from_bytes_to_dec(unsigned char const *str, int32_t bytes)
 void		parse_file(int32_t fd, t_carriage *new)
 {
 	unsigned char		buff[HEADER_SIZE + 1];
-	ssize_t				ret;
+	int32_t				ret;
 
 	ret = read(fd, buff, HEADER_SIZE);
 	(ret != HEADER_SIZE) && error(7, "Bad file", NULL);
@@ -136,6 +135,7 @@ int8_t		process_ids(t_carriage *carriages, int8_t players_count)
 void	parse_arguments(int ac, char **av, t_corewar *corewar)
 {
 	register int8_t		i;
+	int8_t				number;
 
 	i = 0;
 	while (++i < ac)
@@ -185,15 +185,37 @@ void		initializing(t_corewar *corewar)
 		placement += distance;
 		tmp = tmp->next;
 	}
-	(DEBUG) && ft_printf("%.*m", MEM_SIZE, corewar->map);
+	(DEBUG) && ft_printf("%100.*m", MEM_SIZE, corewar->map);
+}
+
+void		initializing_dispatcher(t_dispatcher *dispatcher)
+{
+	dispatcher[0] = NULL;
+	dispatcher[1] = NULL;
+	dispatcher[2] = NULL;
+	dispatcher[3] = NULL;
+	dispatcher[4] = NULL;
+	dispatcher[5] = NULL;
+	dispatcher[6] = NULL;
+	dispatcher[7] = NULL;
+	dispatcher[8] = NULL;
+	dispatcher[9] = NULL;
+	dispatcher[10] = NULL;
+	dispatcher[11] = NULL;
+	dispatcher[12] = NULL;
+	dispatcher[13] = NULL;
+	dispatcher[14] = NULL;
+	dispatcher[15] = NULL;
 }
 
 int32_t		main(int ac, char **av)
 {
 	t_corewar		corewar;
+	t_dispatcher	dispatcher[16];
 
 	ft_bzero(&corewar, sizeof(corewar));
 	parse_arguments(ac, av, &corewar);
 	initializing(&corewar);
+	initializing_dispatcher(dispatcher);
 	return (0);
 }
