@@ -6,7 +6,7 @@
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 23:43:59 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/18 12:13:45 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/02/18 12:26:21 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,7 +185,7 @@ void		initializing(t_corewar *corewar)
 		placement += distance;
 		tmp = tmp->next;
 	}
-	// (DEBUG) && ft_printf("%100.*m", MEM_SIZE, corewar->map);
+	(DEBUG) && ft_printf("%100.*m", MEM_SIZE, corewar->map);
 }
 
 void		initializing_dispatcher(t_dispatcher *dispatcher)
