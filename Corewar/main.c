@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 23:43:59 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/17 15:23:27 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/18 12:13:45 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,7 +185,7 @@ void		initializing(t_corewar *corewar)
 		placement += distance;
 		tmp = tmp->next;
 	}
-	(DEBUG) && ft_printf("%100.*m", MEM_SIZE, corewar->map);
+	// (DEBUG) && ft_printf("%100.*m", MEM_SIZE, corewar->map);
 }
 
 void		initializing_dispatcher(t_dispatcher *dispatcher)
@@ -217,9 +217,10 @@ int32_t		main(int ac, char **av)
 	parse_arguments(ac, av, &corewar);
 	initializing(&corewar);
 	initializing_dispatcher(dispatcher);
-	for (t_carriage *carriages = corewar.carriages; carriages; carriages = carriages->next)
+	while (corewar.carriages)
 	{
-		ft_printf("%d\n", carriages->id);
-}
+		ft_printf("%d\n", corewar.carriages->id);
+		corewar.carriages = corewar.carriages->next;
+	}
 	return (0);
 }
