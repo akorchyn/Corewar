@@ -6,7 +6,7 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 23:43:59 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/18 13:51:31 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/18 14:42:12 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,6 +161,70 @@ void	parse_arguments(int ac, char **av, t_corewar *corewar)
 	DEBUG && ft_printf("Dump on: %d\n", corewar->is_dump);
 }
 
+void		introduction(t_carriage *tmp)
+{
+	if (!tmp)
+	{
+		ft_printf("Introducing contestants...\n");
+		return;
+	}
+	introduction(tmp->next);
+	ft_printf("* Player %d, weighing %d bytes, \"%s\" (\"%s\")\n",
+			tmp->id, tmp->header.prog_size, tmp->header.prog_name,
+			tmp->header.comment);
+}
+
+t_carriage		*extract_list(t_carriage **head, t_carriage *target)
+{
+	t_carriage		*prev;
+	t_carriage		*tmp;
+
+	tmp = *head;
+	prev = NULL;
+	if (*head == target)
+	{
+		*head = (*head)->next;
+		return (*head);
+	}
+	while (tmp)
+	{
+		if (tmp == target)
+		{
+			if (prev)
+				prev->next = tmp->next;
+			return (*head);
+		}
+		prev = tmp;
+		tmp = tmp->next;
+	}
+	return (*head);
+}
+
+void		sort_list(t_carriage **head)
+{
+	t_carriage	*new_list;
+	t_carriage	*tmp;
+	int8_t		id;
+
+	id = 1;
+	tmp = *head;
+	new_list = NULL;
+	while (tmp)
+	{
+		if (id == tmp->id)
+		{
+			*head = extract_list(head, tmp);
+			tmp->next = new_list;
+			new_list = tmp;
+			id++;
+			tmp = *head;
+		}
+		else
+			tmp = tmp->next;
+	}
+	*head = new_list;
+}
+
 void		initializing(t_corewar *corewar)
 {
 	t_carriage		*tmp;
@@ -170,14 +234,11 @@ void		initializing(t_corewar *corewar)
 		error(17, "Too many players.", NULL);
 	if (!(corewar->map = (char *)ft_memalloc(sizeof(char) * MEM_SIZE)))
 		error(18, "Allocation battle arena failed.", NULL);
+	sort_list(&corewar->carriages);
 	distance = MEM_SIZE / corewar->players_count;
 	tmp = corewar->carriages;
-	ft_printf("Introducing contestants...\n");
 	while (tmp)
 	{
-		ft_printf("* Player %d, weighing %d bytes, \"%s\" (\"%s\")\n",
-				tmp->id, tmp->header.prog_size, tmp->header.prog_name,
-				tmp->header.comment);
 		tmp->reg[0] = -tmp->id;
 		tmp->counter = distance * (tmp->id - 1);
 		ft_memcpy(corewar->map + tmp->counter, tmp->code, tmp->header.prog_size);
@@ -185,6 +246,7 @@ void		initializing(t_corewar *corewar)
 		(DEBUG) && ft_printf("%d id Counter : %d\n", tmp->id, tmp->counter);
 		tmp = tmp->next;
 	}
+	introduction(corewar->carriages);
 	(DEBUG) && ft_printf("%100.*m", MEM_SIZE, corewar->map);
 }
 
@@ -217,10 +279,5 @@ int32_t		main(int ac, char **av)
 	parse_arguments(ac, av, &corewar);
 	initializing(&corewar);
 	initializing_dispatcher(dispatcher);
-	while (corewar.carriages)
-	{
-		ft_printf("%d\n", corewar.carriages->id);
-		corewar.carriages = corewar.carriages->next;
-	}
 	return (0);
 }
