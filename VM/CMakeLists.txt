@@ -1,0 +1,13 @@
+cmake_minimum_required(VERSION 3.13)
+project(Corewar C)
+
+set(CMAKE_C_STANDARD 99)
+include_directories(includes)
+aux_source_directory(libft/printf LIBFT)
+aux_source_directory(libft/standart A)
+aux_source_directory(libft/my_functions B)
+aux_source_directory(libft/lst C)
+include_directories(libft/includes D)
+include_directories(includes F)
+add_executable(corewar main.c includes/vm.h ${LIBFT} ${A} ${B} ${C} ${D})
+#target_link_libraries(corewar ${CMAKE_SOURCE_DIR}/libft/libft.a)
