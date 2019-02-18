@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 23:43:59 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/18 12:26:21 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/02/18 13:51:31 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ int8_t		id_exists(t_carriage *carriages, int8_t id, t_carriage *self)
 {
 	while (carriages)
 	{
-		if (id == carriages->id && self != carriages)
+		if (id == carriages->id)
 			return (1);
 		carriages = carriages->next;
 	}
@@ -126,6 +126,7 @@ int8_t		process_ids(t_carriage *carriages, int8_t players_count)
 			(id_exists(head, new_id, prev_carriages)) && (new_id--);
 			prev_carriages = prev_carriages->next;
 		}
+		DEBUG && ft_printf("%d\n", new_id);
 		!(carriages->id) && (carriages->id = new_id);
 		carriages = carriages->next;
 	}
@@ -163,7 +164,6 @@ void	parse_arguments(int ac, char **av, t_corewar *corewar)
 void		initializing(t_corewar *corewar)
 {
 	t_carriage		*tmp;
-	int32_t			placement;
 	int32_t			distance;
 
 	if (ft_list_counter((void **)corewar->carriages) > MAX_PLAYERS)
@@ -172,7 +172,6 @@ void		initializing(t_corewar *corewar)
 		error(18, "Allocation battle arena failed.", NULL);
 	distance = MEM_SIZE / corewar->players_count;
 	tmp = corewar->carriages;
-	placement = 0;
 	ft_printf("Introducing contestants...\n");
 	while (tmp)
 	{
@@ -180,9 +179,10 @@ void		initializing(t_corewar *corewar)
 				tmp->id, tmp->header.prog_size, tmp->header.prog_name,
 				tmp->header.comment);
 		tmp->reg[0] = -tmp->id;
-		ft_memcpy(corewar->map + placement, tmp->code, tmp->header.prog_size);
+		tmp->counter = distance * (tmp->id - 1);
+		ft_memcpy(corewar->map + tmp->counter, tmp->code, tmp->header.prog_size);
 		free(tmp->code);
-		placement += distance;
+		(DEBUG) && ft_printf("%d id Counter : %d\n", tmp->id, tmp->counter);
 		tmp = tmp->next;
 	}
 	(DEBUG) && ft_printf("%100.*m", MEM_SIZE, corewar->map);
