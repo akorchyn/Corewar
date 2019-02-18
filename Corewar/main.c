@@ -123,7 +123,7 @@ int8_t		process_ids(t_carriage *carriages, int8_t players_count)
 		{
 			(carriages->id == prev_carriages->id && prev_carriages != carriages
 				&& carriages->id) && error(16, "Uniq id is repeating", NULL);
-//			(id_exists(head, new_id)) && (new_id--);
+			(id_exists(head, new_id, prev_carriages)) && (new_id--);
 			prev_carriages = prev_carriages->next;
 		}
 		!(carriages->id) && (carriages->id = new_id);
@@ -217,5 +217,9 @@ int32_t		main(int ac, char **av)
 	parse_arguments(ac, av, &corewar);
 	initializing(&corewar);
 	initializing_dispatcher(dispatcher);
+	for (t_carriage *carriages = corewar.carriages; carriages; carriages = carriages->next)
+	{
+		ft_printf("%d\n", carriages->id);
+}
 	return (0);
 }
