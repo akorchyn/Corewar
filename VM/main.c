@@ -95,7 +95,7 @@ int8_t			create_carriage(char *file, t_carriage **head)
 	return (1);
 }
 
-int8_t		id_exists(t_carriage *carriages, int8_t id, t_carriage *self)
+int8_t		id_exists(t_carriage *carriages, int8_t id)
 {
 	while (carriages)
 	{
@@ -123,7 +123,7 @@ int8_t		process_ids(t_carriage *carriages, int8_t players_count)
 		{
 			(carriages->id == prev_carriages->id && prev_carriages != carriages
 				&& carriages->id) && error(16, "Uniq id is repeating", NULL);
-			(id_exists(head, new_id, prev_carriages)) && (new_id--);
+			(id_exists(head, new_id)) && (new_id--);
 			prev_carriages = prev_carriages->next;
 		}
 		DEBUG && ft_printf("%d\n", new_id);
@@ -136,7 +136,6 @@ int8_t		process_ids(t_carriage *carriages, int8_t players_count)
 void	parse_arguments(int ac, char **av, t_corewar *corewar)
 {
 	register int8_t		i;
-	int8_t				number;
 
 	i = 0;
 	while (++i < ac)
