@@ -37,7 +37,7 @@ typedef struct			s_carriage
 
 typedef struct			s_corewar
 {
-	char				*map;
+	unsigned char		*map;
 	t_carriage			*carriages;
 	int32_t				dump_drop;
 	int32_t				iteration;

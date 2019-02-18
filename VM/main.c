@@ -6,7 +6,7 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 23:43:59 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/18 14:42:12 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/18 17:28:09 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -231,7 +231,7 @@ void		initializing(t_corewar *corewar)
 
 	if (ft_list_counter((void **)corewar->carriages) > MAX_PLAYERS)
 		error(17, "Too many players.", NULL);
-	if (!(corewar->map = (char *)ft_memalloc(sizeof(char) * MEM_SIZE)))
+	if (!(corewar->map = (unsigned char *)ft_memalloc(zeof(char) * MEM_SIZE)))
 		error(18, "Allocation battle arena failed.", NULL);
 	sort_list(&corewar->carriages);
 	distance = MEM_SIZE / corewar->players_count;
