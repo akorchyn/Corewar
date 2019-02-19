@@ -6,12 +6,12 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 16:38:06 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/02/19 09:55:40 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/19 10:36:36 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef COREWAR_VM_H
-#define COREWAR_VM_H
+# define COREWAR_VM_H
 
 # include "op.h"
 # include <errno.h>
@@ -27,11 +27,11 @@ typedef struct			s_carriage
 {
 	struct s_carriage	*next;
 	int64_t				reg[16];
-	header_t			header;
+	t_header			header;
 	int32_t				counter;
 	int32_t				step_size;
-	int32_t 			last_live;
-	int32_t 			pause;
+	int32_t				last_live;
+	int32_t				pause;
 	int8_t				id;
 	uint8_t				carry : 1;
 	char				*code;
@@ -43,7 +43,7 @@ typedef struct			s_corewar
 	t_carriage			*carriages;
 	int32_t				dump_drop;
 	int32_t				iteration;
-	int32_t 			cycles_to_die;
+	int32_t				cycles_to_die;
 	int32_t				count_live_for_cycle;
 	int32_t				to_check;
 	int32_t				player_last_live;
@@ -51,8 +51,8 @@ typedef struct			s_corewar
 	uint8_t				players_count;
 }						t_corewar;
 
-typedef					void (*t_dispatcher)(t_carriage *carriage,
-		t_corewar *corewar);
+typedef	void			(*t_dispatcher)(t_carriage *carriage,
+														t_corewar *corewar);
 
 /*
 ** PARSE SECTION
