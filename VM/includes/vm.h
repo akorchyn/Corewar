@@ -6,7 +6,7 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 16:38:06 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/02/18 14:20:56 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/19 09:09:10 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # define SUCCESS 1
 # define FAILURE 0
 # define DEBUG 1
+
 
 typedef struct			s_carriage
 {
@@ -41,10 +42,15 @@ typedef struct			s_corewar
 	t_carriage			*carriages;
 	int32_t				dump_drop;
 	int32_t				iteration;
+	int32_t 			cycles_to_die;
+	int32_t				count_live_for_cycle;
+	int32_t				to_check;
+	int32_t				player_last_live;
 	uint8_t				is_dump : 1;
 	uint8_t				players_count;
 }						t_corewar;
 
-typedef					void (*t_dispatcher)(t_list *var, t_carriage *carriage);
+typedef					void (*t_dispatcher)(t_carriage *carriage,
+		t_corewar *corewar);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 23:43:59 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/18 17:28:09 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/19 09:18:19 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -231,9 +231,12 @@ void		initializing(t_corewar *corewar)
 
 	if (ft_list_counter((void **)corewar->carriages) > MAX_PLAYERS)
 		error(17, "Too many players.", NULL);
-	if (!(corewar->map = (unsigned char *)ft_memalloc(zeof(char) * MEM_SIZE)))
+	if (!(corewar->map = (unsigned char *)ft_memalloc(sizeof(char) * MEM_SIZE)))
 		error(18, "Allocation battle arena failed.", NULL);
 	sort_list(&corewar->carriages);
+	corewar->player_last_live = corewar->carriages->id;
+	corewar->count_live_for_cycle = CYCLE_TO_DIE;
+	corewar->cycles_to_die = CYCLE_TO_DIE;
 	distance = MEM_SIZE / corewar->players_count;
 	tmp = corewar->carriages;
 	while (tmp)
@@ -249,10 +252,54 @@ void		initializing(t_corewar *corewar)
 	(DEBUG) && ft_printf("%100.*m", MEM_SIZE, corewar->map);
 }
 
+void		live(t_carriage *carriage, t_corewar *corewar) // Наверное неправильная
+{
+	if (from_bytes_to_dec(corewar->map + carriage->counter + 1, DIR_SIZE)
+				== -carriage->id)
+	{
+		corewar->player_last_live = carriage->id;
+		corewar->count_live_for_cycle++;
+		carriage->last_live = corewar->iteration;
+	}
+}
+
+void		ld(t_carriage *carriage, t_corewar *corewar)
+{
+	uint64_t		value;
+	uint64_t		position;
+	uint64_t		codage;
+	uint32_t		arg1;
+	uint32_t		arg2;
+
+	codage = from_bytes_to_dec(corewar->map + carriage->counter + 1, 1);
+	arg2 = from_bytes_to_dec(corewar->map + carriage->counter + 2 + REG_SIZE,
+			REG_SIZE);
+	if (codage >> 6 == IND_CODE)
+	{
+		arg1 = from_bytes_to_dec(corewar->map + carriage->counter + 2,
+				IND_SIZE);
+		position = (carriage->counter + (arg1 % IDX_MOD)) % MEM_SIZE;
+		value = from_bytes_to_dec(corewar->map + position, REG_SIZE);
+	}
+	else
+		value = from_bytes_to_dec(corewar->map + carriage->counter + 2,
+								 DIR_SIZE);
+	if (arg2 > 0 && arg2 <= REG_NUMBER)
+	{
+		carriage->carry = (value == 0) ? 1 : 0;
+		carriage->reg[arg2 - 1] = value;
+	}
+}
+
+//void		st(t_vars *vars, t_carriage *carriage, t_corewar *corewar)
+//{
+//	if ()
+//}
+
 void		initializing_dispatcher(t_dispatcher *dispatcher)
 {
-	dispatcher[0] = NULL;
-	dispatcher[1] = NULL;
+	dispatcher[0] = live;
+	dispatcher[1] = ld;
 	dispatcher[2] = NULL;
 	dispatcher[3] = NULL;
 	dispatcher[4] = NULL;
