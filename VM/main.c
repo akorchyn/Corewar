@@ -6,11 +6,13 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 23:43:59 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/19 09:18:19 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/19 09:34:23 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/vm.h"
+
+t_op				g_op_tab[17];
 
 int32_t				error(int code, char *msg, char *argument)
 {
@@ -291,10 +293,15 @@ void		ld(t_carriage *carriage, t_corewar *corewar)
 	}
 }
 
-//void		st(t_vars *vars, t_carriage *carriage, t_corewar *corewar)
-//{
-//	if ()
-//}
+void		st(t_carriage *carriage, t_corewar *corewar)
+{
+	uint64_t		value;
+	uint64_t		position;
+	uint64_t		codage;
+	uint32_t		arg1;
+	uint32_t		arg2;
+
+}
 
 void		initializing_dispatcher(t_dispatcher *dispatcher)
 {
@@ -316,6 +323,40 @@ void		initializing_dispatcher(t_dispatcher *dispatcher)
 	dispatcher[15] = NULL;
 }
 
+void		initializing_op_tab()
+{
+	g_op_tab[0] = (t_op){"live", 1, {T_DIR}, 1, 10, "alive", 0, 0};
+	g_op_tab[1] = (t_op){"ld", 2, {T_DIR | T_IND, T_REG}, 2, 5, "load", 1, 0};
+	g_op_tab[2] = (t_op){"st", 2, {T_REG, T_IND | T_REG}, 3, 5, "store", 1, 0};
+	g_op_tab[3] = (t_op){"add", 3, {T_REG, T_REG, T_REG}, 4, 10,
+					  "addition", 1, 0};
+	g_op_tab[4] = (t_op){"sub", 3, {T_REG, T_REG, T_REG}, 5, 10, "soustraction",
+					  1, 0};
+	g_op_tab[5] = (t_op){"and", 3,
+					  {T_REG | T_DIR | T_IND, T_REG | T_IND | T_DIR, T_REG},
+					  6, 6, "et (and  r1, r2, r3   r1&r2 -> r3", 1, 0};
+	g_op_tab[6] = (t_op){"or", 3,
+					  {T_REG | T_IND | T_DIR, T_REG | T_IND | T_DIR, T_REG},
+					  7, 6, "ou  (or   r1, r2, r3   r1 | r2 -> r3", 1, 0};
+	g_op_tab[7] = (t_op){"xor", 3,
+					  {T_REG | T_IND | T_DIR, T_REG | T_IND | T_DIR, T_REG},
+					  8, 6, "ou (xor  r1, r2, r3   r1^r2 -> r3", 1, 0};
+	g_op_tab[8] = (t_op){"zjmp", 1, {T_DIR}, 9, 20, "jump if zero", 0, 1};
+	g_op_tab[9] = (t_op){"ldi", 3, {T_REG | T_DIR | T_IND, T_DIR | T_REG,
+								 T_REG}, 10, 25, "load index", 1, 1};
+	g_op_tab[10] = (t_op){"ldi", 3, {T_REG | T_DIR | T_IND, T_DIR | T_REG,
+								  T_REG}, 10, 25, "load index", 1, 1};
+	g_op_tab[11] = (t_op){"sti", 3, {T_REG, T_REG | T_DIR | T_IND,
+								  T_DIR | T_REG}, 11, 25, "store index", 1, 1};
+	g_op_tab[12] = (t_op){"fork", 1, {T_DIR}, 12, 800, "fork", 0, 1};
+	g_op_tab[13] = (t_op){"lld", 2, {T_DIR | T_IND, T_REG}, 13, 10,
+					   "long load", 1, 0};
+	g_op_tab[14] = (t_op){"lldi", 3, {T_REG | T_DIR | T_IND, T_DIR | T_REG,
+								   T_REG}, 14, 50, "long load index", 1, 1};
+	g_op_tab[15] = (t_op){"lfork", 1, {T_DIR}, 15, 1000, "long fork", 0, 1};
+	g_op_tab[16] = (t_op){"aff", 1, {T_REG}, 16, 2, "aff", 1, 0};
+}
+
 int32_t		main(int ac, char **av)
 {
 	t_corewar		corewar;
@@ -324,6 +365,7 @@ int32_t		main(int ac, char **av)
 	ft_bzero(&corewar, sizeof(corewar));
 	parse_arguments(ac, av, &corewar);
 	initializing(&corewar);
+	initializing_op_tab();
 	initializing_dispatcher(dispatcher);
 	return (0);
 }
