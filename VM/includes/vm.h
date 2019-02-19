@@ -6,7 +6,7 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 16:38:06 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/02/19 10:36:36 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/19 11:03:23 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ typedef struct			s_carriage
 	int32_t				step_size;
 	int32_t				last_live;
 	int32_t				pause;
+	int32_t				operation_id;
 	int8_t				id;
 	uint8_t				carry : 1;
 	char				*code;
@@ -51,7 +52,7 @@ typedef struct			s_corewar
 	uint8_t				players_count;
 }						t_corewar;
 
-typedef	void			(*t_dispatcher)(t_carriage *carriage,
+typedef	int8_t			(*t_dispatcher)(t_carriage *carriage,
 														t_corewar *corewar);
 
 /*
@@ -72,9 +73,9 @@ void					initializing_op_tab(void);
 ** DISPATCHER SECTION
 */
 
-void					live(t_carriage *carriage, t_corewar *corewar);
-void					ld(t_carriage *carriage, t_corewar *corewar);
-void					st(t_carriage *carriage, t_corewar *corewar);
+int8_t					live(t_carriage *carriage, t_corewar *corewar);
+int8_t					ld(t_carriage *carriage, t_corewar *corewar);
+int8_t					st(t_carriage *carriage, t_corewar *corewar);
 
 /*
 ** USEFUL FUNCTION SECTION

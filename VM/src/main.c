@@ -6,59 +6,65 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 23:43:59 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/19 10:47:04 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/19 11:39:09 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vm.h"
 
-void		live(t_carriage *carriage, t_corewar *corewar) // Наверное неправильная
+void		set_operation_code(t_carriage *carriage, t_corewar *corewar)
 {
-	if ((int32_t)from_bytes_to_dec(corewar->map + carriage->counter + 1,
-				DIR_SIZE) == -carriage->id)
+	int32_t		operation;
+
+	if (!carriage)
+		return ;
+	set_operation_code(carriage->next, corewar);
+	operation = from_bytes_to_dec(corewar->map + carriage->counter, 1);
+	if (operation != carriage->operation_id)
 	{
-		corewar->player_last_live = carriage->id;
-		corewar->count_live_for_cycle++;
-		carriage->last_live = corewar->iteration;
+		carriage->operation_id = operation;
+		carriage->pause = (operation > 0 && operation < 17)
+						  ? g_op_tab[operation - 1].pause
+						  : 0;
 	}
 }
 
-void		ld(t_carriage *carriage, t_corewar *corewar)
+void		decrement_pause(t_carriage *carriage)
 {
-	uint64_t		value;
-	uint64_t		position;
-	uint64_t		codage;
-	uint32_t		arg1;
-	uint32_t		arg2;
+	if (!carriage)
+		return ;
+	decrement_pause(carriage->next);
+	if (carriage->pause > 0)
+		carriage->pause--;
+}
 
-	codage = from_bytes_to_dec(corewar->map + carriage->counter + 1, 1);
-	arg2 = from_bytes_to_dec(corewar->map + carriage->counter + 2 + REG_SIZE,
-			REG_SIZE);
-	if (codage >> 6 == IND_CODE)
+void		operation(t_corewar *corewar, t_dispatcher *dispatcher,
+		t_carriage *carriage)
+{
+	if (!carriage)
+		return ;
+	operation(corewar, dispatcher, carriage->next);
+	if (carriage->pause)
+		return ;
+	if (carriage->operation_id > 0 && carriage->operation_id < 17)
 	{
-		arg1 = from_bytes_to_dec(corewar->map + carriage->counter + 2,
-				IND_SIZE);
-		position = (carriage->counter + (arg1 % IDX_MOD)) % MEM_SIZE;
-		value = from_bytes_to_dec(corewar->map + position, REG_SIZE);
+		if (dispatcher[carriage->operation_id](carriage, corewar))
 	}
 	else
-		value = from_bytes_to_dec(corewar->map + carriage->counter + 2,
-								DIR_SIZE);
-	if (arg2 > 0 && arg2 <= REG_NUMBER)
-	{
-		carriage->carry = (value == 0) ? 1 : 0;
-		carriage->reg[arg2 - 1] = value;
-	}
+		carriage->counter++;
 }
 
-//void		st(t_carriage *carriage, t_corewar *corewar)
-//{
-//	uint64_t		value;
-//	uint64_t		position;
-//	uint64_t		codage;
-//	uint32_t		arg1;
-//	uint32_t		arg2;
-//}
+void		cycle(t_corewar *corewar, t_dispatcher *dispatcher)
+{
+	while (corewar->carriages)
+	{
+		corewar->iteration++;
+		corewar->to_check--;
+		set_operation_code(corewar->carriages, corewar);
+		decrement_pause(corewar->carriages);
+		operation(corewar, dispatcher, corewar->carriages);
+	}
+}
 
 int32_t		main(int ac, char **av)
 {
@@ -70,5 +76,6 @@ int32_t		main(int ac, char **av)
 	initializing(&corewar);
 	initializing_op_tab();
 	initializing_dispatcher(dispatcher);
+	cycle(&corewar, dispatcher);
 	return (0);
 }
