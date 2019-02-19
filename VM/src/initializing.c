@@ -90,8 +90,8 @@ void			initializing(t_corewar *corewar)
 
 void			initializing_dispatcher(t_dispatcher *dispatcher)
 {
-	dispatcher[0] = live;
-	dispatcher[1] = ld;
+	dispatcher[0] = NULL;
+	dispatcher[1] = NULL;
 	dispatcher[2] = NULL;
 	dispatcher[3] = NULL;
 	dispatcher[4] = NULL;

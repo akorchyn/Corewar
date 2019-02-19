@@ -6,7 +6,7 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 16:38:06 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/02/19 11:03:23 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/19 22:14:10 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ typedef struct			s_carriage
 	int32_t				step_size;
 	int32_t				last_live;
 	int32_t				pause;
-	int32_t				operation_id;
+	int8_t				operation_id;
 	int8_t				id;
 	uint8_t				carry : 1;
 	char				*code;
@@ -51,6 +51,15 @@ typedef struct			s_corewar
 	uint8_t				is_dump : 1;
 	uint8_t				players_count;
 }						t_corewar;
+
+typedef struct			s_variables
+{
+	int32_t				var1;
+	int32_t				var2;
+	int32_t				var3;
+	int8_t				codage;
+	int32_t				parsed_codage[3];
+}						t_vars;
 
 typedef	int8_t			(*t_dispatcher)(t_carriage *carriage,
 														t_corewar *corewar);
