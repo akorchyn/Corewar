@@ -6,7 +6,7 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 16:38:06 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/02/19 09:09:10 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/19 09:55:40 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # define FAILURE 0
 # define DEBUG 1
 
+t_op					g_op_tab[17];
 
 typedef struct			s_carriage
 {
@@ -52,5 +53,36 @@ typedef struct			s_corewar
 
 typedef					void (*t_dispatcher)(t_carriage *carriage,
 		t_corewar *corewar);
+
+/*
+** PARSE SECTION
+*/
+
+void					parse_arguments(int ac, char **av, t_corewar *corewar);
+
+/*
+** INITIALIZE SECTION
+*/
+
+void					initializing_dispatcher(t_dispatcher *dispatcher);
+void					initializing(t_corewar *corewar);
+void					initializing_op_tab(void);
+
+/*
+** DISPATCHER SECTION
+*/
+
+void					live(t_carriage *carriage, t_corewar *corewar);
+void					ld(t_carriage *carriage, t_corewar *corewar);
+void					st(t_carriage *carriage, t_corewar *corewar);
+
+/*
+** USEFUL FUNCTION SECTION
+*/
+
+int32_t					error(int code, char *msg, char *argument);
+void					sort_list(t_carriage **head);
+uint32_t				from_bytes_to_dec(unsigned char const *str,
+										int32_t bytes);
 
 #endif
