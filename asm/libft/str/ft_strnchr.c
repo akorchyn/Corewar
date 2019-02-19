@@ -1,33 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   asm.h                                              :+:      :+:    :+:   */
+/*   ft_strnchr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dmlitvin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/02/14 18:19:37 by dmlitvin          #+#    #+#             */
-/*   Updated: 2019/02/14 18:26:00 by dmlitvin         ###   ########.fr       */
+/*   Created: 2019/02/19 15:04:03 by dmlitvin          #+#    #+#             */
+/*   Updated: 2019/02/19 15:04:03 by dmlitvin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ASM_H
-# define ASM_H
+#include "libft.h"
 
-# include "libft.h"
-# include <fcntl.h>
-
-extern t_list	*g_instructions;
-
-void			throw_error(int error_id, char *str);
-void			parse_file(char *file_name, char *file);
-
-typedef struct	s_instruction
+char	*ft_strnchr(const char *s, int c, size_t n)
 {
-	char		*instruction;
-	char		*label_name;
-	char		*instruction_code;
-	size_t		instruction_size;
-	size_t		global_size;
-}				t_instruction;
-
-#endif
+	while (n--)
+		if (*s++ == (unsigned char)c)
+			return ((char*)(s - 1));
+	return (NULL);
+}

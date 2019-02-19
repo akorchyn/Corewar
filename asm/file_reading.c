@@ -11,81 +11,96 @@
 /* ************************************************************************** */
 
 #include "asm.h"
+#include "op.h"
 
-char	*g_file;
 t_list	*g_instructions;
-
-static void	lst_print(t_list *list)
-{
-	while (list)
-	{
-		ft_printf("%s\n", ((t_insturction*)list->content)->instruction);
-		list = list->next;
-	}
-}
 
 static int	line_not_clear(char const *start, char const *end)
 {
 	if (end - start > 1)
-		while (start != end)
+		while (start != end &&
+		*start != ALT_COMMENT_CHAR && *start != COMMENT_CHAR)
 			if (!ft_is_whitespace(start++))
 				return (1);
 	return (0);
 }
 
-static void	add_instruction(char *start, char *end, t_insturction *instruction)
+static size_t	get_instruction_size(char const *start, char *end)
 {
+	size_t	size;
+	char	*comment;
+	char	*alt_comment;
+
+	size = end - start;
+	comment = ft_strnchr(start, COMMENT_CHAR, end - start - 1);
+	alt_comment = ft_strnchr(start, ALT_COMMENT_CHAR, end - start - 1);
+	comment = (!comment) ? alt_comment : comment;
+	comment = (alt_comment) ? MIN(comment, alt_comment) : comment;
+	size = (comment) ? comment - start : size;
+	while (ft_is_whitespace(start - 1 + size))
+		size--;
+	return (size);
+}
+
+static void	add_instruction(char const *start, char *end,
+		t_instruction *instruction)
+{
+	size_t			instruction_size;
 	static t_list	*last = NULL;
 
-	instruction->instruction = ft_memcpy(malloc(end - start),
-			(*start == '\n') ? start + 1 : start, end - start - 1);
-	instruction->instruction[end - start - 1] = 0;
+	instruction_size = get_instruction_size(start, end);
+	instruction->instruction = ft_memcpy(malloc(instruction_size + 1),
+			start, instruction_size);
+	instruction->instruction[instruction_size] = 0;
 	if (last)
 	{
-		last->next = ft_lstnew(instruction, sizeof(t_insturction));
+		last->next = ft_lstnew(instruction, sizeof(t_instruction));
 		last = last->next;
 	}
 	else
 		ft_lstadd(&g_instructions,
-				(last = ft_lstnew(instruction, sizeof(t_insturction))));
+				(last = ft_lstnew(instruction, sizeof(t_instruction))));
 }
 
-void		split_instructions(void)
+static void	split_instructions(char *file)
 {
-	t_insturction	insturction;
+	t_instruction	instruction;
 	char			*end;
 	char			*start;
 
-	start = g_file;
-	ft_bzero(&insturction, sizeof(t_insturction));
+	start = file;
+	ft_bzero(&instruction, sizeof(t_instruction));
 	while (start)
 	{
-		if ((end = ft_strchr(start + 1, '\n')))
+		if ((end = ft_strchr(start, '\n')))
+		{
 			if (line_not_clear(start, end))
-				add_instruction(start, end, &insturction);
-		start = end;
+				add_instruction(start, end, &instruction);
+		}
+		else
+			(line_not_clear(start, start + ft_strlen(start)))
+				? throw_error(2, "Can't find last delimeter!") : 0;
+		start = (end) ? end + 1 : end;
 	}
-//	ft_lstiter(g_instructions, lst_print);
-lst_print(g_instructions);
+	free(file);
 }
 
-void		read_file(char *file_name)
+void		parse_file(char *file_name, char *file)
 {
 	ssize_t	read_ret;
 	size_t	offset;
 	int		fd;
 
-	if (!(g_file = malloc(BUFF_SIZE + 1)))
+	if (!(file = malloc(BUFF_SIZE + 1)))
 		throw_error(2, "Memory allocation failed!");
-	if ((fd = open(file_name, O_RDONLY)) == -1 || read(fd, g_file, 0) == -1)
+	if ((fd = open(file_name, O_RDONLY)) == -1 || read(fd, file, 0) == -1)
 		throw_error(2, "Error on file opening or reading!");
 	offset = 0;
-	while ((read_ret = read(fd, g_file + (BUFF_SIZE * offset), BUFF_SIZE)))
+	while ((read_ret = read(fd, file + (BUFF_SIZE * offset), BUFF_SIZE)))
 	{
-		g_file[read_ret + (BUFF_SIZE * offset++)] = 0;
-		if (!(g_file = realloc(g_file, (BUFF_SIZE * (offset + 1)) + 1)))
+		file[read_ret + (BUFF_SIZE * offset++)] = 0;
+		if (!(file = realloc(file, (BUFF_SIZE * (offset + 1)) + 1)))
 			throw_error(2, "Memory reallocation failed!");
 	}
-//	ft_printf("%s", g_file);
-	g_instructions = NULL;
+	split_instructions(file);
 }

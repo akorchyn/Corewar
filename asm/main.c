@@ -20,14 +20,13 @@ void	throw_error(int error_id, char *str)
 
 int		main(int ac, char **av)
 {
+	g_instructions = NULL;
 	if (ac != 2)
 		throw_error(1, "usage: ./asm source_file");
 	else if (av[1][ft_strlen(av[1]) - 1] == 's'
 			&& av[1][ft_strlen(av[1]) - 2] == '.')
-		read_file(av[1]);
+		parse_file(av[1], NULL);
 	else
 		throw_error(1, "Invalid file extension!\nExample: source_file.s");
-	split_instructions();
-//	system("leaks asm");
 	return (0);
 }

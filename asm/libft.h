@@ -6,7 +6,7 @@
 /*   By: dmlitvin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/29 18:21:05 by dmlitvin          #+#    #+#             */
-/*   Updated: 2019/02/07 00:16:11 by dmlitvin         ###   ########.fr       */
+/*   Updated: 2019/02/19 15:12:17 by dmlitvin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,8 @@
 */
 
 # define ABS(x) (((x) < 0) ? (-(x)) : (x))
+# define MAX(x1, x2) (x1 > x2) ? x1 : x2
+# define MIN(x1, x2) (x1 > x2) ? x2 : x1
 # define ULL unsigned long long
 
 /*
@@ -170,6 +172,7 @@ char					*ft_strncat(char *s1, const char *s2, size_t n);
 char					*ft_strcat(char *s1, const char *s2);
 char					*ft_strrchr(const char *s, int c);
 char					*ft_strchr(const char *s, int c);
+char					*ft_strnchr(const char *s, int c, size_t n);
 char					*ft_strstr(const char *haystack, const char *needle);
 char					*ft_strnstr(const char *haystack, const char *needle,
 							size_t len);

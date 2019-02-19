@@ -1,33 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   asm.h                                              :+:      :+:    :+:   */
+/*   ft_lstadd_end.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dmlitvin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/02/14 18:19:37 by dmlitvin          #+#    #+#             */
-/*   Updated: 2019/02/14 18:26:00 by dmlitvin         ###   ########.fr       */
+/*   Created: 2019/02/19 21:14:12 by dmlitvin          #+#    #+#             */
+/*   Updated: 2019/02/19 21:14:24 by dmlitvin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ASM_H
-# define ASM_H
+#include "libft.h"
 
-# include "libft.h"
-# include <fcntl.h>
-
-extern t_list	*g_instructions;
-
-void			throw_error(int error_id, char *str);
-void			parse_file(char *file_name, char *file);
-
-typedef struct	s_instruction
+void	ft_lstadd_end(t_list **head, t_list *new)
 {
-	char		*instruction;
-	char		*label_name;
-	char		*instruction_code;
-	size_t		instruction_size;
-	size_t		global_size;
-}				t_instruction;
+	static t_list	*last;
 
-#endif
+	if (*head)
+	{
+		last->next = new;
+		last = last->next;
+	}
+	else
+		ft_lstadd(head, (last = new));
+}
