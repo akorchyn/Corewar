@@ -6,7 +6,7 @@
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 16:38:06 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/02/20 13:25:47 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/02/20 13:31:57 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@
 # define SUCCESS 1
 # define FAILURE 0
 # define DEBUG 1
-# define FOR(iter, value, cond, incr, body) for(iter = value; cond; incr) { body }
 
 typedef struct			s_carriage
 {
