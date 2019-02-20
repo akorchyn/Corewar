@@ -6,7 +6,7 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 23:43:59 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/20 16:21:54 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/20 16:45:20 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,7 +206,7 @@ void		and(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 			values[i] = vars->vars[i];
 		else if (vars->parsed_codage[i] == T_IND)
 			values[i] = from_bytes_to_dec(corewar->map + (carriage->counter +
-					(int16_t )vars->vars[i] % IDX_MOD) % MEM_SIZE, 4);
+					(int16_t)vars->vars[i] % IDX_MOD) % MEM_SIZE, 4);
 	}
 	carriage->reg[vars->vars[2] - 1] = values[0] & values[1];
 	carriage->carry = carriage->reg[vars->vars[2] - 1] == 0 ? 1 : 0;
@@ -234,7 +234,7 @@ void		or(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 			values[i] = vars->vars[i];
 		else if (vars->parsed_codage[i] == T_IND)
 			values[i] = from_bytes_to_dec(corewar->map + (carriage->counter +
-					(int16_t )vars->vars[i] % IDX_MOD) % MEM_SIZE, 4);
+					(int16_t)vars->vars[i] % IDX_MOD) % MEM_SIZE, 4);
 	}
 	carriage->reg[vars->vars[2] - 1] = values[0] | values[1];
 	carriage->carry = carriage->reg[vars->vars[2] - 1] == 0 ? 1 : 0;
@@ -262,10 +262,22 @@ void		xor(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 			values[i] = vars->vars[i];
 		else if (vars->parsed_codage[i] == T_IND)
 			values[i] = from_bytes_to_dec(corewar->map + (carriage->counter +
-					(int16_t )vars->vars[i] % IDX_MOD) % MEM_SIZE, 4);
+					(int16_t)vars->vars[i] % IDX_MOD) % MEM_SIZE, 4);
 	}
 	carriage->reg[vars->vars[2] - 1] = values[0] ^ values[1];
 	carriage->carry = carriage->reg[vars->vars[2] - 1] == 0 ? 1 : 0;
+}
+
+void		zjmp(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
+{
+	carriage->step_size = get_step_size(carriage, vars);
+	get_variables(carriage, vars, corewar);
+	if (carriage->carry)
+	{
+		carriage->step_size = 0;
+		carriage->counter = (carriage->counter + (vars->vars[0] % IDX_MOD))
+							% MEM_SIZE;
+	}
 }
 
 void		operation(t_corewar *corewar, t_dispatcher *dispatcher,
@@ -284,8 +296,8 @@ void		operation(t_corewar *corewar, t_dispatcher *dispatcher,
 		ft_bzero(&vars, sizeof(t_vars));
 		is_codage = g_op_tab[carriage->operation_id].is_codage;
 		if (is_codage)
-			vars.codage = from_bytes_to_dec(corewar->map + carriage->counter + 1
-					, 1);
+			vars.codage = from_bytes_to_dec(corewar->map
+					+ carriage->counter + 1, 1);
 		if (!is_codage || check_codage(carriage, &vars))
 			dispatcher[carriage->operation_id](carriage, corewar, &vars);
 		else
