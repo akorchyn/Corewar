@@ -89,6 +89,12 @@
 		<Unit filename="/Users/dmlitvin/corewarYE/asm/main.c">
 			<Option target="asm"/>
 		</Unit>
+		<Unit filename="/Users/dmlitvin/corewarYE/asm/op.c">
+			<Option target="asm"/>
+		</Unit>
+		<Unit filename="/Users/dmlitvin/corewarYE/asm/op.h">
+			<Option target="asm"/>
+		</Unit>
 		<Unit filename="/Users/dmlitvin/corewarYE/asm/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>

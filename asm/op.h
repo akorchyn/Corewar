@@ -10,17 +10,17 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdint.h>
+#ifndef OP_H
+# define OP_H
+# include <stdint.h>
 
 # define IND_SIZE				2
 # define REG_SIZE				4
 # define DIR_SIZE				REG_SIZE
 
-
 # define REG_CODE				1
 # define DIR_CODE				2
 # define IND_CODE				3
-
 
 # define MAX_ARGS_NUMBER		4
 # define MAX_PLAYERS			4
@@ -46,10 +46,6 @@
 # define NBR_LIVE				21
 # define MAX_CHECKS				10
 
-/*
-**
-*/
-
 typedef char					t_arg_type;
 
 # define T_REG					1
@@ -57,30 +53,21 @@ typedef char					t_arg_type;
 # define T_IND					4
 # define T_LAB					8
 
-/*
-**
-*/
-
 # define PROG_NAME_LENGTH		(128)
 # define COMMENT_LENGTH			(2048)
 # define MAGIC_LENGTH			(4)
 # define PROG_SIZE_LENGTH		(4)
 # define NULL_SIZE				(4)
-
-/*
-** PROG_NAME_LENGTH + COMMENT_LENGTH + MAGIC_LENGTH + 2 *NULL_SIZE + PROG_SIZE_LENGTH
-*/
-
 # define HEADER_SIZE 			2192
 # define COREWAR_EXEC_MAGIC		0xea83f3
 
-typedef struct					header_s
+typedef struct					s_header
 {
 	unsigned					magic;
 	char						prog_name[PROG_NAME_LENGTH + 1];
 	unsigned					prog_size;
 	char						comment[COMMENT_LENGTH + 1];
-}								header_t;
+}								t_header;
 
 typedef struct					s_op
 {
@@ -93,3 +80,5 @@ typedef struct					s_op
 	uint8_t						is_codage : 1;
 	uint8_t						is_ind : 1;
 }								t_op;
+
+#endif

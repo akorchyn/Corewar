@@ -85,10 +85,11 @@ static void	split_instructions(char *file)
 	free(file);
 }
 
-void		parse_file(char *file_name, char *file)
+void		parse_file(char *file_name)
 {
 	ssize_t	read_ret;
 	size_t	offset;
+	char	*file;
 	int		fd;
 
 	if (!(file = malloc(BUFF_SIZE + 1)))

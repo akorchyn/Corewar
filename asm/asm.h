@@ -19,12 +19,12 @@
 extern t_list	*g_instructions;
 
 void			throw_error(int error_id, char *str);
-void			parse_file(char *file_name, char *file);
+void			parse_file(char *file_name);
 
 typedef struct	s_instruction
 {
 	char		*instruction;
-	char		*label_name;
+	t_list		*label;
 	char		*instruction_code;
 	size_t		instruction_size;
 	size_t		global_size;

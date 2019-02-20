@@ -177,6 +177,33 @@ main.c.s:
 	$(MAKE) -f CMakeFiles/asm.dir/build.make CMakeFiles/asm.dir/main.c.s
 .PHONY : main.c.s
 
+op.o: op.c.o
+
+.PHONY : op.o
+
+# target to build an object file
+op.c.o:
+	$(MAKE) -f CMakeFiles/asm.dir/build.make CMakeFiles/asm.dir/op.c.o
+.PHONY : op.c.o
+
+op.i: op.c.i
+
+.PHONY : op.i
+
+# target to preprocess a source file
+op.c.i:
+	$(MAKE) -f CMakeFiles/asm.dir/build.make CMakeFiles/asm.dir/op.c.i
+.PHONY : op.c.i
+
+op.s: op.c.s
+
+.PHONY : op.s
+
+# target to generate assembly for a file
+op.c.s:
+	$(MAKE) -f CMakeFiles/asm.dir/build.make CMakeFiles/asm.dir/op.c.s
+.PHONY : op.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -192,6 +219,9 @@ help:
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... op.o"
+	@echo "... op.i"
+	@echo "... op.s"
 .PHONY : help
 
 
