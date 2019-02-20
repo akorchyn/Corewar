@@ -6,7 +6,7 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 23:43:59 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/20 15:55:41 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/20 16:21:54 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,17 +196,17 @@ void		and(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 		return ;
 	while (++i < 2)
 	{
-		if (vars->parsed_codage[0] == T_REG)
+		if (vars->parsed_codage[i] == T_REG)
 		{
-			if (vars->vars[0] < 1 || vars->vars[0] > REG_NUMBER)
+			if (vars->vars[i] < 1 || vars->vars[i] > REG_NUMBER)
 				return ;
-			values[i] = carriage->reg[vars->vars[0] - 1];
+			values[i] = carriage->reg[vars->vars[i] - 1];
 		}
-		else if (vars->parsed_codage[0] == T_DIR)
-			values[i] = vars->vars[0];
-		else if (vars->parsed_codage[0] == T_IND)
-			values[i] = from_bytes_to_dec(corewar->map +
-				(carriage->counter + vars->vars[0] % IDX_MOD) % MEM_SIZE, 4);
+		else if (vars->parsed_codage[i] == T_DIR)
+			values[i] = vars->vars[i];
+		else if (vars->parsed_codage[i] == T_IND)
+			values[i] = from_bytes_to_dec(corewar->map + (carriage->counter +
+					(int16_t )vars->vars[i] % IDX_MOD) % MEM_SIZE, 4);
 	}
 	carriage->reg[vars->vars[2] - 1] = values[0] & values[1];
 	carriage->carry = carriage->reg[vars->vars[2] - 1] == 0 ? 1 : 0;
@@ -224,17 +224,17 @@ void		or(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 		return ;
 	while (++i < 2)
 	{
-		if (vars->parsed_codage[0] == T_REG)
+		if (vars->parsed_codage[i] == T_REG)
 		{
-			if (vars->vars[0] < 1 || vars->vars[0] > REG_NUMBER)
+			if (vars->vars[i] < 1 || vars->vars[i] > REG_NUMBER)
 				return ;
-			values[i] = carriage->reg[vars->vars[0] - 1];
+			values[i] = carriage->reg[vars->vars[i] - 1];
 		}
-		else if (vars->parsed_codage[0] == T_DIR)
-			values[i] = vars->vars[0];
-		else if (vars->parsed_codage[0] == T_IND)
-			values[i] = from_bytes_to_dec(corewar->map +
-				(carriage->counter + vars->vars[0] % IDX_MOD) % MEM_SIZE, 4);
+		else if (vars->parsed_codage[i] == T_DIR)
+			values[i] = vars->vars[i];
+		else if (vars->parsed_codage[i] == T_IND)
+			values[i] = from_bytes_to_dec(corewar->map + (carriage->counter +
+					(int16_t )vars->vars[i] % IDX_MOD) % MEM_SIZE, 4);
 	}
 	carriage->reg[vars->vars[2] - 1] = values[0] | values[1];
 	carriage->carry = carriage->reg[vars->vars[2] - 1] == 0 ? 1 : 0;
@@ -252,17 +252,17 @@ void		xor(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 		return ;
 	while (++i < 2)
 	{
-		if (vars->parsed_codage[0] == T_REG)
+		if (vars->parsed_codage[i] == T_REG)
 		{
-			if (vars->vars[0] < 1 || vars->vars[0] > REG_NUMBER)
+			if (vars->vars[i] < 1 || vars->vars[i] > REG_NUMBER)
 				return ;
-			values[i] = carriage->reg[vars->vars[0] - 1];
+			values[i] = carriage->reg[vars->vars[i] - 1];
 		}
-		else if (vars->parsed_codage[0] == T_DIR)
-			values[i] = vars->vars[0];
-		else if (vars->parsed_codage[0] == T_IND)
-			values[i] = from_bytes_to_dec(corewar->map +
-				(carriage->counter + vars->vars[0] % IDX_MOD) % MEM_SIZE, 4);
+		else if (vars->parsed_codage[i] == T_DIR)
+			values[i] = vars->vars[i];
+		else if (vars->parsed_codage[i] == T_IND)
+			values[i] = from_bytes_to_dec(corewar->map + (carriage->counter +
+					(int16_t )vars->vars[i] % IDX_MOD) % MEM_SIZE, 4);
 	}
 	carriage->reg[vars->vars[2] - 1] = values[0] ^ values[1];
 	carriage->carry = carriage->reg[vars->vars[2] - 1] == 0 ? 1 : 0;
