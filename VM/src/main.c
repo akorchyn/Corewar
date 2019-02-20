@@ -6,7 +6,7 @@
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 23:43:59 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/20 15:52:08 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/02/20 16:13:34 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -258,6 +258,16 @@ void		xor(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 	}
 	carriage->reg[vars->vars[2] - 1] = values[0] ^ values[1];
 	carriage->carry = carriage->reg[vars->vars[2] - 1] == 0 ? 1 : 0;
+}
+
+void		zjmp(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
+{
+	if (carriage->carry)
+	{
+		if (vars->parsed_codage[0] != T_DIR)
+			return ;
+		carriage->counter = (carriage->counter + (vars->vars[0] % IDX_MOD)) % MEM_SIZE;
+	}
 }
 
 void		operation(t_corewar *corewar, t_dispatcher *dispatcher,
