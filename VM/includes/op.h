@@ -6,7 +6,7 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/10/04 11:33:27 by zaz               #+#    #+#             */
-/*   Updated: 2019/02/19 10:34:25 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/20 09:29:15 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,14 @@
 # define DIR_CODE				2
 # define IND_CODE				3
 
-# define MAX_ARGS_NUMBER			4
-# define MAX_PLAYERS				4
+# define REG_BYTES				1
+# define IND_BYTES				2
+# define DIR_BYTES				4
+
+# define MAX_ARGS_NUMBER		4
+# define MAX_PLAYERS			4
 # define MEM_SIZE				(4 * 1024)
-# define IDX_MOD					(MEM_SIZE / 8)
+# define IDX_MOD				(MEM_SIZE / 8)
 # define CHAMP_MAX_SIZE			(MEM_SIZE / 6)
 
 # define COMMENT_CHAR			'#'
@@ -67,6 +71,7 @@ typedef char	t_arg_type;
 
 # define HEADER_SIZE 			2192
 # define COREWAR_EXEC_MAGIC		0xea83f3
+# define OPERATIONS				16
 
 typedef struct		s_header
 {
@@ -87,5 +92,7 @@ typedef struct		s_op
 	uint8_t			is_codage : 1;
 	uint8_t			is_ind : 1;
 }					t_op;
+
+extern t_op			g_op_tab[17];
 
 #endif

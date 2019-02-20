@@ -6,7 +6,7 @@
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 16:38:06 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/02/19 14:07:58 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/02/20 13:25:47 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,6 @@
 # define DEBUG 1
 # define FOR(iter, value, cond, incr, body) for(iter = value; cond; incr) { body }
 
-t_op					g_op_tab[17];
-
 typedef struct			s_carriage
 {
 	struct s_carriage	*next;
@@ -33,7 +31,7 @@ typedef struct			s_carriage
 	int32_t				step_size;
 	int32_t				last_live;
 	int32_t				pause;
-	int32_t				operation_id;
+	int8_t				operation_id;
 	int8_t				id;
 	uint8_t				carry : 1;
 	char				*code;
@@ -53,8 +51,16 @@ typedef struct			s_corewar
 	uint8_t				players_count;
 }						t_corewar;
 
-typedef	int8_t			(*t_dispatcher)(t_carriage *carriage,
-														t_corewar *corewar);
+typedef struct			s_variables
+{
+	int32_t				vars[3];
+	int8_t				codage;
+	int8_t				parsed_codage[3];
+	int8_t				bytes_codage[3];
+}						t_vars;
+
+typedef	void			(*t_dispatcher)(t_carriage *carriage,
+											t_corewar *corewar, t_vars *vars);
 
 /*
 ** PARSE SECTION
@@ -68,15 +74,15 @@ void					parse_arguments(int ac, char **av, t_corewar *corewar);
 
 void					initializing_dispatcher(t_dispatcher *dispatcher);
 void					initializing(t_corewar *corewar);
-void					initializing_op_tab(void);
 
 /*
 ** DISPATCHER SECTION
 */
 
-int8_t					live(t_carriage *carriage, t_corewar *corewar);
-int8_t					ld(t_carriage *carriage, t_corewar *corewar);
-int8_t					st(t_carriage *carriage, t_corewar *corewar);
+void					st(t_carriage *carriage, t_corewar *corewar,
+									t_vars *vars);
+void					ld(t_carriage *carriage, t_corewar *corewar,
+									t_vars *vars);
 
 /*
 ** USEFUL FUNCTION SECTION
@@ -84,7 +90,9 @@ int8_t					st(t_carriage *carriage, t_corewar *corewar);
 
 int32_t					error(int code, char *msg, char *argument);
 void					sort_list(t_carriage **head);
-uint32_t				from_bytes_to_dec(unsigned char const *str,
+int32_t					from_bytes_to_dec(unsigned char const *str,
 										int32_t bytes);
+void					put_bytes(uint32_t value, unsigned char *placement,
+										int8_t bytes);
 
 #endif
