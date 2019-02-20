@@ -1,58 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/02/14 23:43:59 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/17 15:23:27 by akorchyn         ###   ########.fr       */
+/*   Created: 2019/02/19 09:51:52 by akorchyn          #+#    #+#             */
+/*   Updated: 2019/02/19 10:16:00 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "includes/vm.h"
+#include "vm.h"
 
-int32_t				error(int code, char *msg, char *argument)
-{
-	ft_putstr_fd(msg, 2);
-	if (argument)
-	{
-		ft_putstr_fd(" on argument:\n", 2);
-		ft_putstr_fd(argument, 2);
-	}
-	ft_putstr_fd("\n", 2);
-	exit(code);
-	return (1);
-}
-
-/*
-** Function translate from some bytes to one united number;
-**
-** EXAMPLE: 1th byte - ff 2nd byte - ff
-** 			Result of work 65535 (0xffff)
-*/
-
-uint32_t			from_bytes_to_dec(unsigned char const *str, int32_t bytes)
-{
-	uint32_t		res;
-	int32_t			i;
-	int32_t			number;
-
-	res = 0;
-	i = -1;
-	while (++i < bytes)
-	{
-		number = str[i];
-		res <<= 8;
-		res |= number;
-	}
-	return (res);
-}
-
-void		parse_file(int32_t fd, t_carriage *new)
+static void			parse_file(int32_t fd, t_carriage *new)
 {
 	unsigned char		buff[HEADER_SIZE + 1];
-	int32_t				ret;
+	uint32_t			ret;
 
 	ret = read(fd, buff, HEADER_SIZE);
 	(ret != HEADER_SIZE) && error(7, "Bad file", NULL);
@@ -60,7 +23,7 @@ void		parse_file(int32_t fd, t_carriage *new)
 	if (new->header.magic != COREWAR_EXEC_MAGIC)
 		error(8, "Bad magic number", NULL);
 	ft_strncpy(new->header.prog_name, (char *)buff + MAGIC_LENGTH,
-							PROG_NAME_LENGTH);
+			PROG_NAME_LENGTH);
 	new->header.prog_size = from_bytes_to_dec(buff + MAGIC_LENGTH
 							+ PROG_NAME_LENGTH + NULL_SIZE, PROG_SIZE_LENGTH);
 	if (new->header.prog_size > CHAMP_MAX_SIZE)
@@ -75,7 +38,7 @@ void		parse_file(int32_t fd, t_carriage *new)
 	new->code[ret] = '\0';
 }
 
-int8_t			create_carriage(char *file, t_carriage **head)
+static int8_t		create_carriage(char *file, t_carriage **head)
 {
 	int32_t		fd;
 	size_t		len;
@@ -95,18 +58,18 @@ int8_t			create_carriage(char *file, t_carriage **head)
 	return (1);
 }
 
-int8_t		id_exists(t_carriage *carriages, int8_t id, t_carriage *self)
+static int8_t		id_exists(t_carriage *carriages, int8_t id)
 {
 	while (carriages)
 	{
-		if (id == carriages->id && self != carriages)
+		if (id == carriages->id)
 			return (1);
 		carriages = carriages->next;
 	}
 	return (0);
 }
 
-int8_t		process_ids(t_carriage *carriages, int8_t players_count)
+static int8_t		process_ids(t_carriage *carriages, int8_t players_count)
 {
 	t_carriage	*prev_carriages;
 	t_carriage	*head;
@@ -123,19 +86,19 @@ int8_t		process_ids(t_carriage *carriages, int8_t players_count)
 		{
 			(carriages->id == prev_carriages->id && prev_carriages != carriages
 				&& carriages->id) && error(16, "Uniq id is repeating", NULL);
-//			(id_exists(head, new_id)) && (new_id--);
+			(id_exists(head, new_id)) && (new_id--);
 			prev_carriages = prev_carriages->next;
 		}
+		DEBUG && ft_printf("%d\n", new_id);
 		!(carriages->id) && (carriages->id = new_id);
 		carriages = carriages->next;
 	}
 	return (1);
 }
 
-void	parse_arguments(int ac, char **av, t_corewar *corewar)
+void				parse_arguments(int ac, char **av, t_corewar *corewar)
 {
 	register int8_t		i;
-	int8_t				number;
 
 	i = 0;
 	while (++i < ac)
@@ -149,73 +112,15 @@ void	parse_arguments(int ac, char **av, t_corewar *corewar)
 		else if (!ft_strcmp("-n", av[i]))
 		{
 			!ft_isnumeric(av[++i], '\0') && error(2, "Number error", av[i]);
-			create_carriage(av[i + 1], &corewar->carriages) && (corewar->players_count)++;
+			create_carriage(av[i + 1], &corewar->carriages)
+					&& (corewar->players_count)++;
 			if (!(corewar->carriages->id = ft_atoi(av[i++])))
 				error(14, "Uniq id can't be null", av[i - 1]);
 		}
 		else
-			create_carriage(av[i], &corewar->carriages) && corewar->players_count++;
+			create_carriage(av[i], &corewar->carriages)
+					&& corewar->players_count++;
 	}
 	process_ids(corewar->carriages, corewar->players_count);
 	DEBUG && ft_printf("Dump on: %d\n", corewar->is_dump);
-}
-
-void		initializing(t_corewar *corewar)
-{
-	t_carriage		*tmp;
-	int32_t			placement;
-	int32_t			distance;
-
-	if (ft_list_counter((void **)corewar->carriages) > MAX_PLAYERS)
-		error(17, "Too many players.", NULL);
-	if (!(corewar->map = (char *)ft_memalloc(sizeof(char) * MEM_SIZE)))
-		error(18, "Allocation battle arena failed.", NULL);
-	distance = MEM_SIZE / corewar->players_count;
-	tmp = corewar->carriages;
-	placement = 0;
-	ft_printf("Introducing contestants...\n");
-	while (tmp)
-	{
-		ft_printf("* Player %d, weighing %d bytes, \"%s\" (\"%s\")\n",
-				tmp->id, tmp->header.prog_size, tmp->header.prog_name,
-				tmp->header.comment);
-		tmp->reg[0] = -tmp->id;
-		ft_memcpy(corewar->map + placement, tmp->code, tmp->header.prog_size);
-		free(tmp->code);
-		placement += distance;
-		tmp = tmp->next;
-	}
-	(DEBUG) && ft_printf("%100.*m", MEM_SIZE, corewar->map);
-}
-
-void		initializing_dispatcher(t_dispatcher *dispatcher)
-{
-	dispatcher[0] = NULL;
-	dispatcher[1] = NULL;
-	dispatcher[2] = NULL;
-	dispatcher[3] = NULL;
-	dispatcher[4] = NULL;
-	dispatcher[5] = NULL;
-	dispatcher[6] = NULL;
-	dispatcher[7] = NULL;
-	dispatcher[8] = NULL;
-	dispatcher[9] = NULL;
-	dispatcher[10] = NULL;
-	dispatcher[11] = NULL;
-	dispatcher[12] = NULL;
-	dispatcher[13] = NULL;
-	dispatcher[14] = NULL;
-	dispatcher[15] = NULL;
-}
-
-int32_t		main(int ac, char **av)
-{
-	t_corewar		corewar;
-	t_dispatcher	dispatcher[16];
-
-	ft_bzero(&corewar, sizeof(corewar));
-	parse_arguments(ac, av, &corewar);
-	initializing(&corewar);
-	initializing_dispatcher(dispatcher);
-	return (0);
 }
