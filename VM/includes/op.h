@@ -6,7 +6,7 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/10/04 11:33:27 by zaz               #+#    #+#             */
-/*   Updated: 2019/02/19 21:42:24 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/20 09:29:15 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,5 +92,7 @@ typedef struct		s_op
 	uint8_t			is_codage : 1;
 	uint8_t			is_ind : 1;
 }					t_op;
+
+extern t_op			g_op_tab[17];
 
 #endif

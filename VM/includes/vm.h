@@ -21,8 +21,6 @@
 # define FAILURE 0
 # define DEBUG 1
 
-t_op					g_op_tab[17];
-
 typedef struct			s_carriage
 {
 	struct s_carriage	*next;
