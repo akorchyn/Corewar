@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 23:43:59 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/19 11:39:09 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/19 14:08:35 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void		operation(t_corewar *corewar, t_dispatcher *dispatcher,
 		return ;
 	if (carriage->operation_id > 0 && carriage->operation_id < 17)
 	{
-		if (dispatcher[carriage->operation_id](carriage, corewar))
+		// if (dispatcher[carriage->operation_id](carriage, corewar));
 	}
 	else
 		carriage->counter++;
@@ -68,14 +68,17 @@ void		cycle(t_corewar *corewar, t_dispatcher *dispatcher)
 
 int32_t		main(int ac, char **av)
 {
-	t_corewar		corewar;
-	t_dispatcher	dispatcher[16];
+	// t_corewar		corewar;
+	// t_dispatcher	dispatcher[16];
 
-	ft_bzero(&corewar, sizeof(corewar));
-	parse_arguments(ac, av, &corewar);
-	initializing(&corewar);
-	initializing_op_tab();
-	initializing_dispatcher(dispatcher);
-	cycle(&corewar, dispatcher);
+	// ft_bzero(&corewar, sizeof(corewar));
+	// parse_arguments(ac, av, &corewar);
+	// !(corewar.players_count) ? error(200, "No players.", NULL) : 0;
+	// initializing(&corewar);
+	// initializing_op_tab();
+	// initializing_dispatcher(dispatcher);
+	// cycle(&corewar, dispatcher);
+	av[ac] = 0;
+	FOR(int i, 0, i != 20, ++i, { a + b });
 	return (0);
 }
