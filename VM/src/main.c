@@ -6,7 +6,7 @@
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 23:43:59 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/20 13:25:37 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/02/20 14:32:29 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,6 +155,61 @@ void		st(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 	put_bytes(carriage->reg[vars->vars[0] - 1], corewar->map + address,
 																	REG_SIZE);
 	(DEBUG) && ft_printf("\n\n\n\n\n\n\n%100.*m", 340, corewar->map);
+}
+
+void		add(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
+{
+	carriage->step_size = get_step_size(carriage, vars) + 1;
+	get_variables(carriage, vars, corewar);
+	if (vars->vars[0] < 0 || vars->vars[0] > REG_NUMBER ||
+		vars->vars[1] < 0 || vars->vars[1] > REG_NUMBER ||
+		vars->vars[2] < 0 || vars->vars[2] > REG_NUMBER)
+		return ;
+	carriage->reg[vars->vars[2]] = vars->vars[0] + vars->vars[1];
+}
+
+void		sub(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
+{
+	carriage->step_size = get_step_size(carriage, vars) + 1;
+	get_variables(carriage, vars, corewar);
+	if (vars->vars[0] < 0 || vars->vars[0] > REG_NUMBER ||
+		vars->vars[1] < 0 || vars->vars[1] > REG_NUMBER ||
+		vars->vars[2] < 0 || vars->vars[2] > REG_NUMBER)
+		return ;
+	carriage->reg[vars->vars[2]] = vars->vars[0] - vars->vars[1];
+}
+
+void		and(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
+{
+	carriage->step_size = get_step_size(carriage, vars) + 1;
+	get_variables(carriage, vars, corewar);
+	// if (vars->vars[0] < 0 || vars->vars[0] > REG_NUMBER ||
+	// 	vars->vars[1] < 0 || vars->vars[1] > REG_NUMBER ||
+	// 	vars->vars[2] < 0 || vars->vars[2] > REG_NUMBER)
+	// 	return ;
+	// carriage->reg[vars->vars[2]] = vars->vars[0] & vars->vars[1];
+}
+
+void		or(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
+{
+	carriage->step_size = get_step_size(carriage, vars) + 1;
+	get_variables(carriage, vars, corewar);
+	// if (vars->vars[0] < 0 || vars->vars[0] > REG_NUMBER ||
+	// 	vars->vars[1] < 0 || vars->vars[1] > REG_NUMBER ||
+	// 	vars->vars[2] < 0 || vars->vars[2] > REG_NUMBER)
+	// 	return ;
+	// carriage->reg[vars->vars[2]] = vars->vars[0] | vars->vars[1];
+}
+
+void		or(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
+{
+	carriage->step_size = get_step_size(carriage, vars) + 1;
+	get_variables(carriage, vars, corewar);
+	// if (vars->vars[0] < 0 || vars->vars[0] > REG_NUMBER ||
+	// 	vars->vars[1] < 0 || vars->vars[1] > REG_NUMBER ||
+	// 	vars->vars[2] < 0 || vars->vars[2] > REG_NUMBER)
+	// 	return ;
+	// carriage->reg[vars->vars[2]] = vars->vars[0] ^ vars->vars[1];
 }
 
 void		operation(t_corewar *corewar, t_dispatcher *dispatcher,
