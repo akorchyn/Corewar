@@ -6,7 +6,7 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 16:38:06 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/02/19 22:14:10 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/20 11:29:46 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,15 +52,14 @@ typedef struct			s_corewar
 
 typedef struct			s_variables
 {
-	int32_t				var1;
-	int32_t				var2;
-	int32_t				var3;
+	int32_t				vars[3];
 	int8_t				codage;
-	int32_t				parsed_codage[3];
+	int8_t				parsed_codage[3];
+	int8_t				bytes_codage[3];
 }						t_vars;
 
-typedef	int8_t			(*t_dispatcher)(t_carriage *carriage,
-														t_corewar *corewar);
+typedef	void			(*t_dispatcher)(t_carriage *carriage,
+											t_corewar *corewar, t_vars *vars);
 
 /*
 ** PARSE SECTION
@@ -74,15 +73,15 @@ void					parse_arguments(int ac, char **av, t_corewar *corewar);
 
 void					initializing_dispatcher(t_dispatcher *dispatcher);
 void					initializing(t_corewar *corewar);
-void					initializing_op_tab(void);
 
 /*
 ** DISPATCHER SECTION
 */
 
-int8_t					live(t_carriage *carriage, t_corewar *corewar);
-int8_t					ld(t_carriage *carriage, t_corewar *corewar);
-int8_t					st(t_carriage *carriage, t_corewar *corewar);
+void					st(t_carriage *carriage, t_corewar *corewar,
+									t_vars *vars);
+void					ld(t_carriage *carriage, t_corewar *corewar,
+									t_vars *vars);
 
 /*
 ** USEFUL FUNCTION SECTION
@@ -90,7 +89,9 @@ int8_t					st(t_carriage *carriage, t_corewar *corewar);
 
 int32_t					error(int code, char *msg, char *argument);
 void					sort_list(t_carriage **head);
-uint32_t				from_bytes_to_dec(unsigned char const *str,
+int32_t					from_bytes_to_dec(unsigned char const *str,
 										int32_t bytes);
+void					put_bytes(uint32_t value, unsigned char *placement,
+										int8_t bytes);
 
 #endif

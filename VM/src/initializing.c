@@ -6,7 +6,7 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/19 09:40:23 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/20 09:32:56 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/20 10:08:31 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,8 +85,8 @@ void			initializing(t_corewar *corewar)
 void			initializing_dispatcher(t_dispatcher *dispatcher)
 {
 	dispatcher[0] = NULL;
-	dispatcher[1] = NULL;
-	dispatcher[2] = NULL;
+	dispatcher[1] = ld;
+	dispatcher[2] = st;
 	dispatcher[3] = NULL;
 	dispatcher[4] = NULL;
 	dispatcher[5] = NULL;

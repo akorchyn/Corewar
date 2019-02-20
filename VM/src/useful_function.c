@@ -6,7 +6,7 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/19 09:49:17 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/19 09:51:42 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/20 11:29:46 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,16 @@ int32_t					error(int code, char *msg, char *argument)
 	return (1);
 }
 
+void					put_bytes(uint32_t value, unsigned char *placement,
+									int8_t bytes)
+{
+	while (bytes--)
+	{
+		placement[bytes] = value & 255;
+		value >>= 8;
+	}
+}
+
 /*
 ** Function translate from some bytes to one united number;
 **
@@ -32,7 +42,7 @@ int32_t					error(int code, char *msg, char *argument)
 ** 			Result of work 65535 (0xffff)
 */
 
-uint32_t				from_bytes_to_dec(unsigned char const *str,
+int32_t					from_bytes_to_dec(unsigned char const *str,
 									int32_t bytes)
 {
 	uint32_t		res;
