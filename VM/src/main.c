@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 23:43:59 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/20 14:32:29 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/02/20 15:35:15 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,7 +165,10 @@ void		add(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 		vars->vars[1] < 0 || vars->vars[1] > REG_NUMBER ||
 		vars->vars[2] < 0 || vars->vars[2] > REG_NUMBER)
 		return ;
-	carriage->reg[vars->vars[2]] = vars->vars[0] + vars->vars[1];
+	carriage->reg[vars->vars[2] - 1] = carriage->reg[vars->vars[0] - 1]
+			+ carriage->reg[vars->vars[1] - 1];
+	carriage->carry = (carriage->reg[vars->vars[2]] - 1) ? 0 : 1;
+	printf("%lld\n", carriage->reg[vars->vars[2] - 1]);
 }
 
 void		sub(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
@@ -176,7 +179,9 @@ void		sub(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 		vars->vars[1] < 0 || vars->vars[1] > REG_NUMBER ||
 		vars->vars[2] < 0 || vars->vars[2] > REG_NUMBER)
 		return ;
-	carriage->reg[vars->vars[2]] = vars->vars[0] - vars->vars[1];
+	carriage->reg[vars->vars[2] - 1] = carriage->reg[vars->vars[0] - 1]
+									   - carriage->reg[vars->vars[1] - 1];
+	carriage->carry = (carriage->reg[vars->vars[2]] - 1) ? 0 : 1;
 }
 
 void		and(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
@@ -201,7 +206,7 @@ void		or(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 	// carriage->reg[vars->vars[2]] = vars->vars[0] | vars->vars[1];
 }
 
-void		or(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
+void		xor(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 {
 	carriage->step_size = get_step_size(carriage, vars) + 1;
 	get_variables(carriage, vars, corewar);
