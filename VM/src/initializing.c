@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   initializing.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/19 09:40:23 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/21 22:18:22 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/21 16:50:13 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void			initializing(t_corewar *corewar)
 
 void			initializing_dispatcher(t_dispatcher *dispatcher)
 {
-	dispatcher[0] = NULL;
+	dispatcher[0] = live;
 	dispatcher[1] = ld;
 	dispatcher[2] = st;
 	dispatcher[3] = add;
@@ -94,10 +94,10 @@ void			initializing_dispatcher(t_dispatcher *dispatcher)
 	dispatcher[7] = xor;
 	dispatcher[8] = zjmp;
 	dispatcher[9] = ldi;
-	dispatcher[10] = NULL;
-	dispatcher[11] = NULL;
-	dispatcher[12] = NULL;
-	dispatcher[13] = NULL;
-	dispatcher[14] = NULL;
-	dispatcher[15] = NULL;
+	dispatcher[10] = sti;
+	dispatcher[11] = fork;
+	dispatcher[12] = lld;
+	dispatcher[13] = lldi;
+	dispatcher[14] = lfork;
+	dispatcher[15] = aff;
 }
