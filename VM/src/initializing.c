@@ -93,7 +93,7 @@ void			initializing_dispatcher(t_dispatcher *dispatcher)
 	dispatcher[6] = or;
 	dispatcher[7] = xor;
 	dispatcher[8] = zjmp;
-	dispatcher[9] = NULL;
+	dispatcher[9] = ldi;
 	dispatcher[10] = NULL;
 	dispatcher[11] = NULL;
 	dispatcher[12] = NULL;

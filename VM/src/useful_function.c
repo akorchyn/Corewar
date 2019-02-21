@@ -42,7 +42,7 @@ void					put_bytes(uint32_t value, unsigned char *placement,
 ** 			Result of work 65535 (0xffff)
 */
 
-int32_t					from_bytes_to_dec(unsigned char const *str,
+int32_t					bytes_to_dec(unsigned char const *str,
 									int32_t bytes)
 {
 	uint32_t		res;

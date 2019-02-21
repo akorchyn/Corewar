@@ -3,14 +3,28 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 23:43:59 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/21 14:15:57 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/02/21 15:07:07 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vm.h"
+
+int			bad_register_id(t_vars *vars, t_carriage *carriage)
+{
+	int8_t		i;
+
+	i = -1;
+	while (++i < g_op_tab[carriage->operation_id].variables)
+	{
+		if (vars->parsed_codage[i] == T_REG
+			&& (vars->vars[i] < 1 || vars->vars[i] > REG_NUMBER))
+			return (1);
+	}
+	return (0);
+}
 
 void		set_operation_code(t_carriage *carriage, t_corewar *corewar)
 {
@@ -19,7 +33,7 @@ void		set_operation_code(t_carriage *carriage, t_corewar *corewar)
 	if (!carriage)
 		return ;
 	set_operation_code(carriage->next, corewar);
-	operation = from_bytes_to_dec(corewar->map + carriage->counter, 1);
+	operation = bytes_to_dec(corewar->map + carriage->counter, 1);
 	if (operation != carriage->operation_id + 1)
 	{
 		carriage->operation_id = operation - 1;
@@ -91,7 +105,7 @@ int32_t			get_step_size(t_carriage *const carriage, t_vars *vars)
 	}
 	if (vars->codage)
 		result += 1;
-	return (result);
+	return (result + 1);
 }
 
 void		get_variables(t_carriage *carriage, t_vars *vars,
@@ -107,7 +121,7 @@ void		get_variables(t_carriage *carriage, t_vars *vars,
 	{
 		memory_shift = (carriage->counter + read_bytes +
 				g_op_tab[carriage->operation_id].is_codage) % MEM_SIZE;
-		vars->vars[i] = from_bytes_to_dec(corewar->map + memory_shift + 1,
+		vars->vars[i] = bytes_to_dec(corewar->map + memory_shift + 1,
 				vars->bytes_codage[i]);
 		read_bytes += vars->bytes_codage[i];
 	}
@@ -117,9 +131,7 @@ void		ld(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 {
 	int32_t		address;
 
-	carriage->step_size = get_step_size(carriage, vars) + 1;
-	get_variables(carriage, vars, corewar);
-	if (vars->vars[1] < 1 || vars->vars[1] > REG_NUMBER)
+	if (bad_register_id(vars, carriage))
 		return ;
 	if (vars->parsed_codage[0] == T_DIR)
 	{
@@ -129,7 +141,7 @@ void		ld(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 		return ;
 	}
 	address = (carriage->counter + (int16_t)vars->vars[0] % IDX_MOD) % MEM_SIZE;
-	carriage->reg[vars->vars[1] - 1] = from_bytes_to_dec(corewar->map + address,
+	carriage->reg[vars->vars[1] - 1] = bytes_to_dec(corewar->map + address,
 			REG_SIZE);
 	carriage->carry = carriage->reg[vars->vars[1] - 1] ? 0 : 1;
 	printf("%lld\n", carriage->reg[vars->vars[1] - 1]);
@@ -139,14 +151,10 @@ void		st(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 {
 	int32_t		address;
 
-	carriage->step_size = get_step_size(carriage, vars) + 1;
-	get_variables(carriage, vars, corewar);
-	if (vars->vars[0] < 1 || vars->vars[0] > REG_NUMBER)
+	if (bad_register_id(vars, carriage))
 		return ;
 	if (vars->parsed_codage[1] == REG_CODE)
 	{
-		if (vars->vars[1] < 1 || vars->vars[1] > REG_NUMBER)
-			return ;
 		carriage->reg[vars->vars[1] - 1] = carriage->reg[vars->vars[0] - 1];
 		return ;
 	}
@@ -159,11 +167,8 @@ void		st(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 
 void		add(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 {
-	carriage->step_size = get_step_size(carriage, vars) + 1;
-	get_variables(carriage, vars, corewar);
-	if (vars->vars[0] < 1 || vars->vars[0] > REG_NUMBER ||
-		vars->vars[1] < 1 || vars->vars[1] > REG_NUMBER ||
-		vars->vars[2] < 1 || vars->vars[2] > REG_NUMBER)
+	UNUSED_VARIABLE(corewar);
+	if (bad_register_id(vars, carriage))
 		return ;
 	carriage->reg[vars->vars[2] - 1] = carriage->reg[vars->vars[0] - 1]
 			+ carriage->reg[vars->vars[1] - 1];
@@ -173,11 +178,8 @@ void		add(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 
 void		sub(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 {
-	carriage->step_size = get_step_size(carriage, vars) + 1;
-	get_variables(carriage, vars, corewar);
-	if (vars->vars[0] < 1 || vars->vars[0] > REG_NUMBER ||
-		vars->vars[1] < 1 || vars->vars[1] > REG_NUMBER ||
-		vars->vars[2] < 1 || vars->vars[2] > REG_NUMBER)
+	UNUSED_VARIABLE(corewar);
+	if (bad_register_id(vars, carriage))
 		return ;
 	carriage->reg[vars->vars[2] - 1] = carriage->reg[vars->vars[0] - 1]
 											- carriage->reg[vars->vars[1] - 1];
@@ -190,22 +192,16 @@ void		and(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 	int64_t		values[2];
 
 	i = -1;
-	carriage->step_size = get_step_size(carriage, vars) + 1;
-	get_variables(carriage, vars, corewar);
-	if (vars->vars[2] < 1 || vars->vars[2] > REG_NUMBER)
+	if (bad_register_id(vars, carriage))
 		return ;
 	while (++i < 2)
 	{
 		if (vars->parsed_codage[i] == T_REG)
-		{
-			if (vars->vars[i] < 1 || vars->vars[i] > REG_NUMBER)
-				return ;
 			values[i] = carriage->reg[vars->vars[i] - 1];
-		}
 		else if (vars->parsed_codage[i] == T_DIR)
 			values[i] = vars->vars[i];
 		else if (vars->parsed_codage[i] == T_IND)
-			values[i] = from_bytes_to_dec(corewar->map + (carriage->counter +
+			values[i] = bytes_to_dec(corewar->map + (carriage->counter +
 					(int16_t)vars->vars[i] % IDX_MOD) % MEM_SIZE, 4);
 	}
 	carriage->reg[vars->vars[2] - 1] = values[0] & values[1];
@@ -218,22 +214,16 @@ void		or(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 	int64_t		values[2];
 
 	i = -1;
-	carriage->step_size = get_step_size(carriage, vars) + 1;
-	get_variables(carriage, vars, corewar);
-	if (vars->vars[2] < 1 || vars->vars[2] > REG_NUMBER)
+	if (bad_register_id(vars, carriage))
 		return ;
 	while (++i < 2)
 	{
 		if (vars->parsed_codage[i] == T_REG)
-		{
-			if (vars->vars[i] < 1 || vars->vars[i] > REG_NUMBER)
-				return ;
 			values[i] = carriage->reg[vars->vars[i] - 1];
-		}
 		else if (vars->parsed_codage[i] == T_DIR)
 			values[i] = vars->vars[i];
 		else if (vars->parsed_codage[i] == T_IND)
-			values[i] = from_bytes_to_dec(corewar->map + (carriage->counter +
+			values[i] = bytes_to_dec(corewar->map + (carriage->counter +
 					(int16_t)vars->vars[i] % IDX_MOD) % MEM_SIZE, 4);
 	}
 	carriage->reg[vars->vars[2] - 1] = values[0] | values[1];
@@ -246,22 +236,16 @@ void		xor(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 	int64_t		values[2];
 
 	i = -1;
-	carriage->step_size = get_step_size(carriage, vars) + 1;
-	get_variables(carriage, vars, corewar);
-	if (vars->vars[2] < 1 || vars->vars[2] > REG_NUMBER)
+	if (bad_register_id(vars, carriage))
 		return ;
 	while (++i < 2)
 	{
 		if (vars->parsed_codage[i] == T_REG)
-		{
-			if (vars->vars[i] < 1 || vars->vars[i] > REG_NUMBER)
-				return ;
 			values[i] = carriage->reg[vars->vars[i] - 1];
-		}
 		else if (vars->parsed_codage[i] == T_DIR)
 			values[i] = vars->vars[i];
 		else if (vars->parsed_codage[i] == T_IND)
-			values[i] = from_bytes_to_dec(corewar->map + (carriage->counter +
+			values[i] = bytes_to_dec(corewar->map + (carriage->counter +
 					(int16_t)vars->vars[i] % IDX_MOD) % MEM_SIZE, 4);
 	}
 	carriage->reg[vars->vars[2] - 1] = values[0] ^ values[1];
@@ -270,8 +254,7 @@ void		xor(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 
 void		zjmp(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 {
-	carriage->step_size = get_step_size(carriage, vars);
-	get_variables(carriage, vars, corewar);
+	UNUSED_VARIABLE(corewar);
 	if (carriage->carry)
 	{
 		carriage->step_size = 0;
@@ -284,32 +267,28 @@ void		ldi(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 {
 	int32_t		values[2];
 
-	values[0] = ERROR_CODE;
-	values[1] = ERROR_CODE;
-	if (vars->vars[2] < 1 || vars->vars[2] > REG_NUMBER)
+	if (bad_register_id(vars, carriage))
 		return ;
 	if (vars->parsed_codage[0] == T_REG)
 		values[0] = carriage->reg[vars->vars[0] - 1];
-	else if (vars->parsed_codage[0] == T_DIR)
-		values[0] = vars->vars[0];
 	else if (vars->parsed_codage[0] == T_IND)
-		values[0] = from_bytes_to_dec(corewar->map,
-				(carriage->counter + vars->vars[0] % IDX_MOD) % MEM_SIZE);
+		values[0] = bytes_to_dec(corewar->map + (carriage->counter +
+				(int16_t)vars->vars[0] % IDX_MOD) % MEM_SIZE, REG_SIZE);
+	else
+		values[0] = vars->vars[0];
 	if (vars->parsed_codage[1] == T_REG)
 		values[1] = carriage->reg[vars->vars[1] - 1];
-	else if (vars->parsed_codage[1] == T_DIR)
+	else
 		values[1] = vars->vars[1];
-	if (values[0] == ERROR_CODE || values[1] == ERROR_CODE)
-		return ;
-	carriage->reg[vars->vars[2] - 1] = carriage->counter +
-			(values[0] + values[1]) % IDX_MOD;
+	carriage->reg[vars->vars[2] - 1] = bytes_to_dec(corewar->map +
+			(carriage->counter + (values[0] + values[1]) % IDX_MOD) % MEM_SIZE,
+																	REG_SIZE);
 }
 
 void		operation(t_corewar *corewar, t_dispatcher *dispatcher,
 		t_carriage *carriage)
 {
 	t_vars		vars;
-	int8_t		is_codage;
 
 	if (!carriage)
 		return ;
@@ -319,14 +298,16 @@ void		operation(t_corewar *corewar, t_dispatcher *dispatcher,
 	if (carriage->operation_id > 0 && carriage->operation_id < OPERATIONS + 1)
 	{
 		ft_bzero(&vars, sizeof(t_vars));
-		is_codage = g_op_tab[carriage->operation_id].is_codage;
-		if (is_codage)
-			vars.codage = from_bytes_to_dec(corewar->map
-					+ carriage->counter + 1, 1);
-		if (!is_codage || check_codage(carriage, &vars))
+		if (g_op_tab[carriage->operation_id].is_codage)
+			vars.codage = bytes_to_dec(corewar->map + carriage->counter + 1, 1);
+		if (!vars.codage || check_codage(carriage, &vars))
+		{
+			carriage->step_size = get_step_size(carriage, &vars);
+			get_variables(carriage, &vars, corewar);
 			dispatcher[carriage->operation_id](carriage, corewar, &vars);
+		}
 		else
-			carriage->step_size = get_step_size(carriage, &vars) + 1;
+			carriage->step_size = get_step_size(carriage, &vars);
 		carriage->counter = (carriage->counter + carriage->step_size)
 																	% MEM_SIZE;
 	}

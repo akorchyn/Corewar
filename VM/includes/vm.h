@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vm.h                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 16:38:06 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/02/21 14:15:21 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/02/21 14:35:29 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@
 # define DEBUG 1
 
 # define ERROR_CODE 424242
+
+# define UNUSED_VARIABLE(x) x = NULL
 
 typedef struct			s_carriage
 {
@@ -96,6 +98,8 @@ void					xor(t_carriage *carriage, t_corewar *corewar,
 									t_vars *vars);
 void					zjmp(t_carriage *carriage, t_corewar *corewar,
 									t_vars *vars);
+void					ldi(t_carriage *carriage, t_corewar *corewar,
+									t_vars *vars);
 
 /*
 ** USEFUL FUNCTION SECTION
@@ -103,7 +107,7 @@ void					zjmp(t_carriage *carriage, t_corewar *corewar,
 
 int32_t					error(int code, char *msg, char *argument);
 void					sort_list(t_carriage **head);
-int32_t					from_bytes_to_dec(unsigned char const *str,
+int32_t					bytes_to_dec(unsigned char const *str,
 										int32_t bytes);
 void					put_bytes(uint32_t value, unsigned char *placement,
 										int8_t bytes);

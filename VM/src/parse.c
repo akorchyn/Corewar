@@ -19,12 +19,12 @@ static void			parse_file(int32_t fd, t_carriage *new)
 
 	ret = read(fd, buff, HEADER_SIZE);
 	(ret != HEADER_SIZE) && error(7, "Bad file", NULL);
-	new->header.magic = from_bytes_to_dec(buff, 4);
+	new->header.magic = bytes_to_dec(buff, 4);
 	if (new->header.magic != COREWAR_EXEC_MAGIC)
 		error(8, "Bad magic number", NULL);
 	ft_strncpy(new->header.prog_name, (char *)buff + MAGIC_LENGTH,
 			PROG_NAME_LENGTH);
-	new->header.prog_size = from_bytes_to_dec(buff + MAGIC_LENGTH
+	new->header.prog_size = bytes_to_dec(buff + MAGIC_LENGTH
 							+ PROG_NAME_LENGTH + NULL_SIZE, PROG_SIZE_LENGTH);
 	if (new->header.prog_size > CHAMP_MAX_SIZE)
 		error(9, "Exec code too big.", NULL);
