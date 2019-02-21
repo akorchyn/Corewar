@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vm.h                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 16:38:06 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/02/21 14:35:29 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/21 16:46:38 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,6 @@
 # define SUCCESS 1
 # define FAILURE 0
 # define DEBUG 1
-
-# define ERROR_CODE 424242
 
 # define UNUSED_VARIABLE(x) x = NULL
 
@@ -82,6 +80,8 @@ void					initializing(t_corewar *corewar);
 ** DISPATCHER SECTION
 */
 
+void					live(t_carriage *carriage, t_corewar *corewar,
+									t_vars *vars);
 void					st(t_carriage *carriage, t_corewar *corewar,
 									t_vars *vars);
 void					ld(t_carriage *carriage, t_corewar *corewar,
@@ -100,7 +100,18 @@ void					zjmp(t_carriage *carriage, t_corewar *corewar,
 									t_vars *vars);
 void					ldi(t_carriage *carriage, t_corewar *corewar,
 									t_vars *vars);
-
+void					sti(t_carriage *carriage, t_corewar *corewar,
+									t_vars *vars);
+void					fork(t_carriage *carriage, t_corewar *corewar,
+									t_vars *vars);
+void					lld(t_carriage *carriage, t_corewar *corewar,
+									t_vars *vars);
+void					lldi(t_carriage *carriage, t_corewar *corewar,
+									t_vars *vars);
+void					lfork(t_carriage *carriage, t_corewar *corewar,
+									t_vars *vars);
+void					aff(t_carriage *carriage, t_corewar *corewar,
+									t_vars *vars);
 /*
 ** USEFUL FUNCTION SECTION
 */
