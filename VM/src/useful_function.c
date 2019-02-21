@@ -6,7 +6,7 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/19 09:49:17 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/20 11:29:46 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/21 22:16:20 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,13 +86,13 @@ t_carriage				*extract_list(t_carriage **head, t_carriage *target)
 	return (*head);
 }
 
-void					sort_list(t_carriage **head)
+void					sort_list(t_carriage **head, t_corewar *corewar)
 {
 	t_carriage	*new_list;
 	t_carriage	*tmp;
 	int8_t		id;
 
-	id = 1;
+	id = corewar->players_count;
 	tmp = *head;
 	new_list = NULL;
 	while (tmp)
@@ -102,7 +102,7 @@ void					sort_list(t_carriage **head)
 			*head = extract_list(head, tmp);
 			tmp->next = new_list;
 			new_list = tmp;
-			id++;
+			id--;
 			tmp = *head;
 		}
 		else

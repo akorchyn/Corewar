@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vm.h                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 16:38:06 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/02/21 16:46:38 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/02/21 23:26:25 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 
 # define SUCCESS 1
 # define FAILURE 0
-# define DEBUG 1
+# define DEBUG 0
 
 # define UNUSED_VARIABLE(x) x = NULL
 
@@ -103,7 +103,7 @@ void					ldi(t_carriage *carriage, t_corewar *corewar,
 									t_vars *vars);
 void					sti(t_carriage *carriage, t_corewar *corewar,
 									t_vars *vars);
-void					fork(t_carriage *carriage, t_corewar *corewar,
+void					forks(t_carriage *carriage, t_corewar *corewar,
 									t_vars *vars);
 void					lld(t_carriage *carriage, t_corewar *corewar,
 									t_vars *vars);
@@ -119,7 +119,7 @@ void					aff(t_carriage *carriage, t_corewar *corewar,
 
 int32_t					error(int code, char *msg, char *argument);
 t_carriage				*extract_list(t_carriage **head, t_carriage *target);
-void					sort_list(t_carriage **head);
+void					sort_list(t_carriage **head, t_corewar *corewar);
 int32_t					bytes_to_dec(unsigned char const *str,
 										int32_t bytes);
 void					put_bytes(uint32_t value, unsigned char *placement,
