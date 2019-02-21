@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vm.h                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 16:38:06 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/02/20 15:30:18 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/21 16:46:38 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@
 # define SUCCESS 1
 # define FAILURE 0
 # define DEBUG 1
+
+# define UNUSED_VARIABLE(x) x = NULL
 
 typedef struct			s_carriage
 {
@@ -78,6 +80,8 @@ void					initializing(t_corewar *corewar);
 ** DISPATCHER SECTION
 */
 
+void					live(t_carriage *carriage, t_corewar *corewar,
+									t_vars *vars);
 void					st(t_carriage *carriage, t_corewar *corewar,
 									t_vars *vars);
 void					ld(t_carriage *carriage, t_corewar *corewar,
@@ -94,14 +98,27 @@ void					xor(t_carriage *carriage, t_corewar *corewar,
 									t_vars *vars);
 void					zjmp(t_carriage *carriage, t_corewar *corewar,
 									t_vars *vars);
-
+void					ldi(t_carriage *carriage, t_corewar *corewar,
+									t_vars *vars);
+void					sti(t_carriage *carriage, t_corewar *corewar,
+									t_vars *vars);
+void					fork(t_carriage *carriage, t_corewar *corewar,
+									t_vars *vars);
+void					lld(t_carriage *carriage, t_corewar *corewar,
+									t_vars *vars);
+void					lldi(t_carriage *carriage, t_corewar *corewar,
+									t_vars *vars);
+void					lfork(t_carriage *carriage, t_corewar *corewar,
+									t_vars *vars);
+void					aff(t_carriage *carriage, t_corewar *corewar,
+									t_vars *vars);
 /*
 ** USEFUL FUNCTION SECTION
 */
 
 int32_t					error(int code, char *msg, char *argument);
 void					sort_list(t_carriage **head);
-int32_t					from_bytes_to_dec(unsigned char const *str,
+int32_t					bytes_to_dec(unsigned char const *str,
 										int32_t bytes);
 void					put_bytes(uint32_t value, unsigned char *placement,
 										int8_t bytes);
