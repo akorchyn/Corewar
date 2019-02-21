@@ -6,7 +6,7 @@
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 23:43:59 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/21 13:47:22 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/02/21 14:15:57 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -278,6 +278,31 @@ void		zjmp(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 		carriage->counter = (carriage->counter + (vars->vars[0] % IDX_MOD))
 							% MEM_SIZE;
 	}
+}
+
+void		ldi(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
+{
+	int32_t		values[2];
+
+	values[0] = ERROR_CODE;
+	values[1] = ERROR_CODE;
+	if (vars->vars[2] < 1 || vars->vars[2] > REG_NUMBER)
+		return ;
+	if (vars->parsed_codage[0] == T_REG)
+		values[0] = carriage->reg[vars->vars[0] - 1];
+	else if (vars->parsed_codage[0] == T_DIR)
+		values[0] = vars->vars[0];
+	else if (vars->parsed_codage[0] == T_IND)
+		values[0] = from_bytes_to_dec(corewar->map,
+				(carriage->counter + vars->vars[0] % IDX_MOD) % MEM_SIZE);
+	if (vars->parsed_codage[1] == T_REG)
+		values[1] = carriage->reg[vars->vars[1] - 1];
+	else if (vars->parsed_codage[1] == T_DIR)
+		values[1] = vars->vars[1];
+	if (values[0] == ERROR_CODE || values[1] == ERROR_CODE)
+		return ;
+	carriage->reg[vars->vars[2] - 1] = carriage->counter +
+			(values[0] + values[1]) % IDX_MOD;
 }
 
 void		operation(t_corewar *corewar, t_dispatcher *dispatcher,

@@ -6,7 +6,7 @@
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 16:38:06 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/02/21 13:47:40 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/02/21 14:15:21 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@
 # define SUCCESS 1
 # define FAILURE 0
 # define DEBUG 1
+
+# define ERROR_CODE 424242
 
 typedef struct			s_carriage
 {
