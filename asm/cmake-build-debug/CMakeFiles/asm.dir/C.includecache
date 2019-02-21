@@ -15,6 +15,8 @@ fcntl.h
 /Users/dmlitvin/corewarYE/asm/file_reading.c
 asm.h
 /Users/dmlitvin/corewarYE/asm/asm.h
+op.h
+/Users/dmlitvin/corewarYE/asm/op.h
 
 /Users/dmlitvin/corewarYE/asm/libft.h
 string.h
@@ -24,5 +26,9 @@ stdlib.h
 unistd.h
 -
 stdarg.h
+-
+
+/Users/dmlitvin/corewarYE/asm/op.h
+stdint.h
 -
 

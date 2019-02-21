@@ -6,7 +6,7 @@
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 16:38:06 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/02/20 13:31:57 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/02/21 13:47:40 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,18 @@ void					initializing(t_corewar *corewar);
 void					st(t_carriage *carriage, t_corewar *corewar,
 									t_vars *vars);
 void					ld(t_carriage *carriage, t_corewar *corewar,
+									t_vars *vars);
+void					add(t_carriage *carriage, t_corewar *corewar,
+									t_vars *vars);
+void					sub(t_carriage *carriage, t_corewar *corewar,
+									t_vars *vars);
+void					and(t_carriage *carriage, t_corewar *corewar,
+									t_vars *vars);
+void					or(t_carriage *carriage, t_corewar *corewar,
+									t_vars *vars);
+void					xor(t_carriage *carriage, t_corewar *corewar,
+									t_vars *vars);
+void					zjmp(t_carriage *carriage, t_corewar *corewar,
 									t_vars *vars);
 
 /*

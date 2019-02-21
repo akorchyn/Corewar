@@ -16,23 +16,18 @@
 # include "libft.h"
 # include <fcntl.h>
 
-extern char		*g_file;
 extern t_list	*g_instructions;
 
-void		throw_error(int error_id, char *str);
-void		read_file(char *file_name);
-void		split_instructions(void);
+void			throw_error(int error_id, char *str);
+void			parse_file(char *file_name);
 
 typedef struct	s_instruction
 {
 	char		*instruction;
-	char		**inst_content;
+	t_list		*label;
+	char		*instruction_code;
 	size_t		instruction_size;
-}				t_insturction;
-
-typedef struct	s_label
-{
-
-}				t_label;
+	size_t		global_size;
+}				t_instruction;
 
 #endif

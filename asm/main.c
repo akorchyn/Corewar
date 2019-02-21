@@ -12,22 +12,39 @@
 
 #include "asm.h"
 
-void	throw_error(int error_id, char *str)
+void		throw_error(int error_id, char *str)
 {
 	ft_putendl_fd(str, 2);
 	exit(error_id);
 }
 
-int		main(int ac, char **av)
+static void	write_output(char *file_name)
 {
-	if (ac != 2)
-		throw_error(1, "usage: ./asm source_file");
-	else if (av[1][ft_strlen(av[1]) - 1] == 's'
-			&& av[1][ft_strlen(av[1]) - 2] == '.')
-		read_file(av[1]);
+	if (g_instructions)
+		ft_lstdel(g_instructions, del_instruction);
+	g_instructions = NULL;
+	parse_file(file_name);
+}
+
+int			main(int ac, char **av)
+{
+	size_t	arg_len;
+
+	g_instructions = NULL;
+	if (ac > 1)
+	{
+		while (ac--)
+			if ((arg_len = ft_strlen(av[ac])) > 2 && av[ac][arg_len - 1] == '.'
+			&& av[ac][arg_len - 2] == 's')
+				write_output(av[ac]);
+			else
+			{
+				ft_putstr_fd("Invalid extension for ", 2);
+				ft_putendl_fd(av[ac], 2);
+				ft_putstr_fd("!Example: source_file.s", 2);
+			}
+	}
 	else
-		throw_error(1, "Invalid file extension!\nExample: source_file.s");
-	split_instructions();
-//	system("leaks asm");
+		throw_error(1, "usage: ./asm source_file.s");
 	return (0);
 }

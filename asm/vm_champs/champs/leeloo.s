@@ -79,7 +79,7 @@ separ2:	live %3
 
 	xor r2,r2,r2
 	zjmp %:toto
-	
+
 padec2:	live %1
 	fork %:suite
 	live %1

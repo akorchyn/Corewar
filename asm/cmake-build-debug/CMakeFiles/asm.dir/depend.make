@@ -4,6 +4,7 @@
 CMakeFiles/asm.dir/file_reading.c.o: ../asm.h
 CMakeFiles/asm.dir/file_reading.c.o: ../file_reading.c
 CMakeFiles/asm.dir/file_reading.c.o: ../libft.h
+CMakeFiles/asm.dir/file_reading.c.o: ../op.h
 
 CMakeFiles/asm.dir/main.c.o: ../asm.h
 CMakeFiles/asm.dir/main.c.o: ../libft.h
