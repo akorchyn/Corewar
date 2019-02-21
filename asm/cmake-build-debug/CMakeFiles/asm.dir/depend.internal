@@ -6,7 +6,19 @@ CMakeFiles/asm.dir/file_reading.c.o
  /Users/dmlitvin/corewarYE/asm/file_reading.c
  /Users/dmlitvin/corewarYE/asm/libft.h
  /Users/dmlitvin/corewarYE/asm/op.h
+CMakeFiles/asm.dir/instruction.c.o
+ /Users/dmlitvin/corewarYE/asm/asm.h
+ /Users/dmlitvin/corewarYE/asm/instruction.c
+ /Users/dmlitvin/corewarYE/asm/libft.h
+CMakeFiles/asm.dir/label.c.o
+ /Users/dmlitvin/corewarYE/asm/asm.h
+ /Users/dmlitvin/corewarYE/asm/label.c
+ /Users/dmlitvin/corewarYE/asm/libft.h
+ /Users/dmlitvin/corewarYE/asm/op.h
 CMakeFiles/asm.dir/main.c.o
  /Users/dmlitvin/corewarYE/asm/asm.h
  /Users/dmlitvin/corewarYE/asm/libft.h
  /Users/dmlitvin/corewarYE/asm/main.c
+CMakeFiles/asm.dir/op.c.o
+ /Users/dmlitvin/corewarYE/asm/op.c
+ /Users/dmlitvin/corewarYE/asm/op.h

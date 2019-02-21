@@ -86,6 +86,12 @@
 		<Unit filename="/Users/dmlitvin/corewarYE/asm/file_reading.c">
 			<Option target="asm"/>
 		</Unit>
+		<Unit filename="/Users/dmlitvin/corewarYE/asm/instruction.c">
+			<Option target="asm"/>
+		</Unit>
+		<Unit filename="/Users/dmlitvin/corewarYE/asm/label.c">
+			<Option target="asm"/>
+		</Unit>
 		<Unit filename="/Users/dmlitvin/corewarYE/asm/main.c">
 			<Option target="asm"/>
 		</Unit>

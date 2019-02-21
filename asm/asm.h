@@ -16,17 +16,28 @@
 # include "libft.h"
 # include <fcntl.h>
 
+# define GET_INSTRUCTION(lst) ((t_instruction*)lst->content)
+
 extern t_list	*g_instructions;
 
 void			throw_error(int error_id, char *str);
 void			parse_file(char *file_name);
+void			set_inst_sizes(t_list *inst);
+void			read_labels(t_list *inst);
+
+typedef struct	s_lexem
+{
+	char		*command;
+	t_list		*argument;
+	char		*code;
+	size_t		size;
+}				t_lexem;
 
 typedef struct	s_instruction
 {
 	char		*instruction;
 	t_list		*label;
-	char		*instruction_code;
-	size_t		instruction_size;
+	t_lexem		lexem;
 	size_t		global_size;
 }				t_instruction;
 
