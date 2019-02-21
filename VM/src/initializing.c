@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   initializing.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/19 09:40:23 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/20 13:26:19 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/02/20 15:33:16 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,11 +87,11 @@ void			initializing_dispatcher(t_dispatcher *dispatcher)
 	dispatcher[0] = NULL;
 	dispatcher[1] = ld;
 	dispatcher[2] = st;
-	dispatcher[3] = NULL;
-	dispatcher[4] = NULL;
-	dispatcher[5] = NULL;
-	dispatcher[6] = NULL;
-	dispatcher[7] = NULL;
+	dispatcher[3] = add;
+	dispatcher[4] = sub;
+	dispatcher[5] = and;
+	dispatcher[6] = or;
+	dispatcher[7] = xor;
 	dispatcher[8] = NULL;
 	dispatcher[9] = NULL;
 	dispatcher[10] = NULL;
