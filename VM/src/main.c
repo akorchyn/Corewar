@@ -6,9 +6,14 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 23:43:59 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/22 00:29:02 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/22 00:36:29 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+/*
+ * CHECK FOR CARRY GAGNANT DOESNT WORK
+ */
+
 
 #include "vm.h"
 
@@ -146,7 +151,7 @@ void		ld(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 	{
 		carriage->reg[vars->vars[1] - 1] = vars->vars[0];
 		carriage->carry = (vars->vars[0]) ? 0 : 1;
-		ft_printf("ld : %hd r%hd\n", carriage->reg[vars->vars[1] - 1], vars->vars[1]);
+		ft_printf("ld : %d r%hd\n", carriage->reg[vars->vars[1] - 1], vars->vars[1]);
 		return ;
 	}
 	address = (carriage->counter + (int16_t)vars->vars[0] % IDX_MOD) % MEM_SIZE;
@@ -182,7 +187,7 @@ void		add(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 	carriage->reg[vars->vars[2] - 1] = carriage->reg[vars->vars[0] - 1]
 			+ carriage->reg[vars->vars[1] - 1];
 	carriage->carry = (carriage->reg[vars->vars[2]] - 1) ? 0 : 1;
-	ft_printf("add : r%hd r%hd r%hd\n", vars[0], vars[1], vars[2]);
+	ft_printf("add : r%d r%d r%d\n", vars->vars[0], vars->vars[1], vars->vars[2]);
 }
 
 void		sub(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
@@ -193,7 +198,7 @@ void		sub(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 	carriage->reg[vars->vars[2] - 1] = carriage->reg[vars->vars[0] - 1]
 											- carriage->reg[vars->vars[1] - 1];
 	carriage->carry = (carriage->reg[vars->vars[2]] - 1) ? 0 : 1;
-	ft_printf("sub : r%hd r%hd r%hd\n", vars[0], vars[1], vars[2]);
+	ft_printf("sub : r%hd r%hd r%hd\n", vars->vars[0], vars->vars[1], vars->vars[2]);
 }
 
 void		and(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
