@@ -6,7 +6,7 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/19 09:40:23 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/20 15:33:16 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/21 22:18:22 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void			initializing(t_corewar *corewar)
 		error(18, "Allocation battle arena failed.", NULL);
 	sort_list(&corewar->carriages);
 	corewar->player_last_live = corewar->carriages->id;
-	corewar->count_live_for_cycle = CYCLE_TO_DIE;
+	corewar->to_check = CYCLE_TO_DIE;
 	corewar->cycles_to_die = CYCLE_TO_DIE;
 	distance = MEM_SIZE / corewar->players_count;
 	tmp = corewar->carriages;

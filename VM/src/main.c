@@ -315,15 +315,42 @@ void		operation(t_corewar *corewar, t_dispatcher *dispatcher,
 		carriage->counter = (carriage->counter + 1) % MEM_SIZE;
 }
 
+void		cycle_to_die(t_corewar *corewar, t_carriage *carriages)
+{
+	if (--corewar->to_check > 0)
+		return ;
+	while (carriages)
+	{
+		if (corewar->iteration - carriages->last_live > 0)
+		{
+			corewar->carriages = extract_list(&corewar->carriages, carriages);
+			free(carriages);
+			return;
+		}
+		carriages->last_live = 0;
+		carriages = carriages->next;
+	}
+	if (corewar->count_live_for_cycle > NBR_LIVE ||
+											corewar->count_checks == MAX_CHECKS)
+	{
+		corewar->count_checks = 0;
+		corewar->cycles_to_die -= CYCLE_DELTA;
+	}
+	else
+		corewar->count_checks++;
+	corewar->to_check = corewar->cycles_to_die;
+}
+
 void		cycle(t_corewar *corewar, t_dispatcher *dispatcher)
 {
 	while (corewar->carriages)
 	{
 		corewar->iteration++;
-		corewar->to_check--;
 		set_operation_code(corewar->carriages, corewar);
 		decrement_pause(corewar->carriages);
 		operation(corewar, dispatcher, corewar->carriages);
+		cycle_to_die(corewar, corewar->carriages);
+		printf("%d\n", corewar->iteration);
 	}
 }
 

@@ -50,6 +50,7 @@ typedef struct			s_corewar
 	int32_t				count_live_for_cycle;
 	int32_t				to_check;
 	int32_t				player_last_live;
+	int8_t				count_checks;
 	uint8_t				is_dump : 1;
 	uint8_t				players_count;
 }						t_corewar;
@@ -106,6 +107,7 @@ void					ldi(t_carriage *carriage, t_corewar *corewar,
 */
 
 int32_t					error(int code, char *msg, char *argument);
+t_carriage				*extract_list(t_carriage **head, t_carriage *target);
 void					sort_list(t_carriage **head);
 int32_t					bytes_to_dec(unsigned char const *str,
 										int32_t bytes);

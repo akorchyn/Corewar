@@ -60,7 +60,7 @@ int32_t					bytes_to_dec(unsigned char const *str,
 	return (res);
 }
 
-static t_carriage		*extract_list(t_carriage **head, t_carriage *target)
+t_carriage				*extract_list(t_carriage **head, t_carriage *target)
 {
 	t_carriage		*prev;
 	t_carriage		*tmp;
