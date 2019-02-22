@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   initializing.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/19 09:40:23 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/21 16:50:13 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/02/21 23:59:26 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ static void		introduction(t_carriage *tmp)
 		return ;
 	}
 	introduction(tmp->next);
-	ft_printf("* Player %d, weighing %d bytes, \"%s\" (\"%s\")\n",
+	ft_printf("* Player %d, weighing %d bytes, \"%s\" (\"%s\") !\n",
 			tmp->id, tmp->header.prog_size, tmp->header.prog_name,
 			tmp->header.comment);
 }
@@ -62,9 +62,9 @@ void			initializing(t_corewar *corewar)
 		error(17, "Too many players.", NULL);
 	if (!(corewar->map = (unsigned char *)ft_memalloc(sizeof(char) * MEM_SIZE)))
 		error(18, "Allocation battle arena failed.", NULL);
-	sort_list(&corewar->carriages);
-	corewar->player_last_live = corewar->carriages->id;
-	corewar->count_live_for_cycle = CYCLE_TO_DIE;
+	sort_list(&corewar->carriages, corewar);
+	corewar->player_last_live = corewar->players_count;
+	corewar->to_check = CYCLE_TO_DIE;
 	corewar->cycles_to_die = CYCLE_TO_DIE;
 	distance = MEM_SIZE / corewar->players_count;
 	tmp = corewar->carriages;
@@ -95,7 +95,7 @@ void			initializing_dispatcher(t_dispatcher *dispatcher)
 	dispatcher[8] = zjmp;
 	dispatcher[9] = ldi;
 	dispatcher[10] = sti;
-	dispatcher[11] = fork;
+	dispatcher[11] = forks;
 	dispatcher[12] = lld;
 	dispatcher[13] = lldi;
 	dispatcher[14] = lfork;
