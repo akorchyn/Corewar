@@ -6,7 +6,7 @@
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 23:43:59 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/22 16:56:16 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/02/22 18:31:51 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -526,7 +526,10 @@ int32_t		main(int ac, char **av)
 	t_dispatcher	dispatcher[16];
 	int				sock;
 
-	sock = set_connection_to_visualization();
+	if (ac > 1 && !ft_strcmp(av[1], "-n"))
+		sock = set_connection_to_visualization();
+	else
+		sock = 0;
 	ft_bzero(&corewar, sizeof(corewar));
 	parse_arguments(ac, av, &corewar);
 	!(corewar.players_count) ? error(200, "No players.", NULL) : 0;
