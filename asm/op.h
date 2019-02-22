@@ -81,5 +81,6 @@ typedef struct					s_op
 	uint8_t						is_ind : 1;
 }								t_op;
 
-extern t_op	g_op_tab;
+extern t_op	g_op_tab[17];
+
 #endif

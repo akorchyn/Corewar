@@ -246,7 +246,6 @@ int						print_char(t_printf *info, void *data);
 int						print_percent(t_printf *info);
 int						print_pointer(t_printf *info, void *data);
 int						print_string(t_printf *info, void *data);
-int						print_pointer(t_printf *info, void *data);
 int						print_decimal(t_printf *info, void *data);
 int						print_numeric(t_printf *info, void *data);
 int						print_float(t_printf *info, float data);

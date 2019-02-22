@@ -1,5 +1,7 @@
 file(REMOVE_RECURSE
   "CMakeFiles/asm.dir/op.c.o"
+  "CMakeFiles/asm.dir/instruction.c.o"
+  "CMakeFiles/asm.dir/label.c.o"
   "CMakeFiles/asm.dir/main.c.o"
   "CMakeFiles/asm.dir/file_reading.c.o"
   "asm.pdb"

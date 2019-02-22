@@ -15,7 +15,7 @@
 
 t_list	*g_instructions;
 
-static int	line_not_clear(char const *start, char const *end)
+static int		line_not_clear(char const *start, char const *end)
 {
 	if (end - start > 1)
 		while (start != end &&
@@ -42,12 +42,14 @@ static size_t	get_instruction_size(char const *start, char *end)
 	return (size);
 }
 
-static void	add_instruction(char const *start, char *end,
+static void		add_instruction(char const *start, char *end,
 		t_instruction *instruction)
 {
 	size_t			instruction_size;
 	static t_list	*last = NULL;
 
+	while (ft_is_whitespace(start))
+		start++;
 	instruction_size = get_instruction_size(start, end);
 	instruction->instruction = ft_memcpy(malloc(instruction_size + 1),
 			start, instruction_size);
@@ -62,7 +64,7 @@ static void	add_instruction(char const *start, char *end,
 				(last = ft_lstnew(instruction, sizeof(t_instruction))));
 }
 
-static void	split_instructions(char *file)
+static void		split_instructions(char *file)
 {
 	t_instruction	instruction;
 	char			*end;
@@ -85,7 +87,7 @@ static void	split_instructions(char *file)
 	free(file);
 }
 
-void		parse_file(char *file_name)
+void			parse_file(char *file_name)
 {
 	ssize_t	read_ret;
 	size_t	offset;

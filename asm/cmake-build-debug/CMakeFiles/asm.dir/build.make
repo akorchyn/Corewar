@@ -70,9 +70,35 @@ CMakeFiles/asm.dir/op.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/asm.dir/op.c.s"
 	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /Users/dmlitvin/corewarYE/asm/op.c -o CMakeFiles/asm.dir/op.c.s
 
+CMakeFiles/asm.dir/instruction.c.o: CMakeFiles/asm.dir/flags.make
+CMakeFiles/asm.dir/instruction.c.o: ../instruction.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/dmlitvin/corewarYE/asm/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/asm.dir/instruction.c.o"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/asm.dir/instruction.c.o   -c /Users/dmlitvin/corewarYE/asm/instruction.c
+
+CMakeFiles/asm.dir/instruction.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/asm.dir/instruction.c.i"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /Users/dmlitvin/corewarYE/asm/instruction.c > CMakeFiles/asm.dir/instruction.c.i
+
+CMakeFiles/asm.dir/instruction.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/asm.dir/instruction.c.s"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /Users/dmlitvin/corewarYE/asm/instruction.c -o CMakeFiles/asm.dir/instruction.c.s
+
+CMakeFiles/asm.dir/label.c.o: CMakeFiles/asm.dir/flags.make
+CMakeFiles/asm.dir/label.c.o: ../label.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/dmlitvin/corewarYE/asm/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/asm.dir/label.c.o"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/asm.dir/label.c.o   -c /Users/dmlitvin/corewarYE/asm/label.c
+
+CMakeFiles/asm.dir/label.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/asm.dir/label.c.i"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /Users/dmlitvin/corewarYE/asm/label.c > CMakeFiles/asm.dir/label.c.i
+
+CMakeFiles/asm.dir/label.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/asm.dir/label.c.s"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /Users/dmlitvin/corewarYE/asm/label.c -o CMakeFiles/asm.dir/label.c.s
+
 CMakeFiles/asm.dir/main.c.o: CMakeFiles/asm.dir/flags.make
 CMakeFiles/asm.dir/main.c.o: ../main.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/dmlitvin/corewarYE/asm/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/asm.dir/main.c.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/dmlitvin/corewarYE/asm/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object CMakeFiles/asm.dir/main.c.o"
 	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/asm.dir/main.c.o   -c /Users/dmlitvin/corewarYE/asm/main.c
 
 CMakeFiles/asm.dir/main.c.i: cmake_force
@@ -85,7 +111,7 @@ CMakeFiles/asm.dir/main.c.s: cmake_force
 
 CMakeFiles/asm.dir/file_reading.c.o: CMakeFiles/asm.dir/flags.make
 CMakeFiles/asm.dir/file_reading.c.o: ../file_reading.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/dmlitvin/corewarYE/asm/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/asm.dir/file_reading.c.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/dmlitvin/corewarYE/asm/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building C object CMakeFiles/asm.dir/file_reading.c.o"
 	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/asm.dir/file_reading.c.o   -c /Users/dmlitvin/corewarYE/asm/file_reading.c
 
 CMakeFiles/asm.dir/file_reading.c.i: cmake_force
@@ -99,6 +125,8 @@ CMakeFiles/asm.dir/file_reading.c.s: cmake_force
 # Object files for target asm
 asm_OBJECTS = \
 "CMakeFiles/asm.dir/op.c.o" \
+"CMakeFiles/asm.dir/instruction.c.o" \
+"CMakeFiles/asm.dir/label.c.o" \
 "CMakeFiles/asm.dir/main.c.o" \
 "CMakeFiles/asm.dir/file_reading.c.o"
 
@@ -106,12 +134,14 @@ asm_OBJECTS = \
 asm_EXTERNAL_OBJECTS =
 
 asm: CMakeFiles/asm.dir/op.c.o
+asm: CMakeFiles/asm.dir/instruction.c.o
+asm: CMakeFiles/asm.dir/label.c.o
 asm: CMakeFiles/asm.dir/main.c.o
 asm: CMakeFiles/asm.dir/file_reading.c.o
 asm: CMakeFiles/asm.dir/build.make
 asm: ../libft/libft.a
 asm: CMakeFiles/asm.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/dmlitvin/corewarYE/asm/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking C executable asm"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/dmlitvin/corewarYE/asm/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking C executable asm"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/asm.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
