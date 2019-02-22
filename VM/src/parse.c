@@ -6,7 +6,7 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/19 09:51:52 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/19 10:16:00 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/21 23:26:02 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,6 @@ static int8_t		process_ids(t_carriage *carriages, int8_t players_count)
 			(id_exists(head, new_id)) && (new_id--);
 			prev_carriages = prev_carriages->next;
 		}
-		DEBUG && ft_printf("%d\n", new_id);
 		!(carriages->id) && (carriages->id = new_id);
 		carriages = carriages->next;
 	}
@@ -119,8 +118,7 @@ void				parse_arguments(int ac, char **av, t_corewar *corewar)
 		}
 		else
 			create_carriage(av[i], &corewar->carriages)
-					&& corewar->players_count++;
+					&& ++(corewar->players_count);
 	}
 	process_ids(corewar->carriages, corewar->players_count);
-	DEBUG && ft_printf("Dump on: %d\n", corewar->is_dump);
 }

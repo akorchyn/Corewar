@@ -6,7 +6,7 @@
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 16:38:06 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/02/21 16:55:55 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/02/22 12:35:46 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 
 # define SUCCESS 1
 # define FAILURE 0
-# define DEBUG 1
+# define DEBUG 0
 
 # define UNUSED_VARIABLE(x) x = NULL
 
@@ -48,6 +48,7 @@ typedef struct			s_corewar
 	int32_t				count_live_for_cycle;
 	int32_t				to_check;
 	int32_t				player_last_live;
+	int8_t				count_checks;
 	uint8_t				is_dump : 1;
 	uint8_t				players_count;
 }						t_corewar;
@@ -102,7 +103,7 @@ void					ldi(t_carriage *carriage, t_corewar *corewar,
 									t_vars *vars);
 void					sti(t_carriage *carriage, t_corewar *corewar,
 									t_vars *vars);
-void					fork(t_carriage *carriage, t_corewar *corewar,
+void					forks(t_carriage *carriage, t_corewar *corewar,
 									t_vars *vars);
 void					lld(t_carriage *carriage, t_corewar *corewar,
 									t_vars *vars);
@@ -117,7 +118,8 @@ void					aff(t_carriage *carriage, t_corewar *corewar,
 */
 
 int32_t					error(int code, char *msg, char *argument);
-void					sort_list(t_carriage **head);
+t_carriage				*extract_list(t_carriage **head, t_carriage *target);
+void					sort_list(t_carriage **head, t_corewar *corewar);
 int32_t					bytes_to_dec(unsigned char const *str,
 										int32_t bytes);
 void					put_bytes(uint32_t value, unsigned char *placement,
