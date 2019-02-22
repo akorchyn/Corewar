@@ -6,9 +6,16 @@
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 23:43:59 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/22 12:38:06 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/02/22 16:56:16 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <unistd.h>
 
 /*
  * CHECK FOR CARRY GAGNANT DOESNT WORK
@@ -401,6 +408,26 @@ void		aff(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 	ft_printf("%c", (char)carriage->reg[vars->vars[0] - 1]);
 }
 
+void		draw_map(t_corewar *corewar)
+{
+	int i = 0;
+	char hex[16] = "0123456789abcdef";
+	while (i < 4096)
+	{
+		int j = -1;
+		while (++j < 64)
+		{
+			write(1, &hex[*(corewar->map + i + j) / 16], 1);
+			write(1, &hex[*(corewar->map + i + j) % 16], 1);
+			write(1, " ", 1);
+		}
+		write(1, "\n", 1);
+		i += 64;
+	}
+	usleep(10000);
+	system("clear");
+}
+
 void		operation(t_corewar *corewar, t_dispatcher *dispatcher,
 		t_carriage *carriage)
 {
@@ -458,10 +485,11 @@ void		cycle_to_die(t_corewar *corewar, t_carriage *carriages)
 	corewar->count_live_for_cycle = 0;
 }
 
-void		cycle(t_corewar *corewar, t_dispatcher *dispatcher)
+void		cycle(t_corewar *corewar, t_dispatcher *dispatcher, int sock)
 {
 	while (corewar->carriages)
 	{
+		send(sock, corewar->map, 4096, 0);
 		corewar->iteration++;
 		set_operation_code(corewar->carriages, corewar);
 		decrement_pause(corewar->carriages);
@@ -472,16 +500,39 @@ void		cycle(t_corewar *corewar, t_dispatcher *dispatcher)
 	ft_printf("ctd: %d\n", corewar->cycles_to_die);
 }
 
+int			set_connection_to_visualization()
+{
+	int sock;
+	char *msg;
+
+	msg = "Connection is set!\n";
+	sock = socket(AF_INET, SOCK_STREAM, 0);
+	struct sockaddr_in server_address;
+	server_address.sin_family = AF_INET;
+	server_address.sin_port = htons(4242);
+	server_address.sin_addr.s_addr = INADDR_ANY;
+	if (connect(sock, (struct sockaddr *)&server_address, sizeof(server_address)) == -1)
+	{
+		ft_printf("Shit happened. You cannot connect to the server...");
+		exit(EXIT_FAILURE);
+	}
+	send(sock, msg, sizeof(msg), 0);
+	return (sock);
+}
+
 int32_t		main(int ac, char **av)
 {
 	t_corewar		corewar;
 	t_dispatcher	dispatcher[16];
+	int				sock;
 
+	sock = set_connection_to_visualization();
 	ft_bzero(&corewar, sizeof(corewar));
 	parse_arguments(ac, av, &corewar);
 	!(corewar.players_count) ? error(200, "No players.", NULL) : 0;
 	initializing(&corewar);
 	initializing_dispatcher(dispatcher);
-	cycle(&corewar, dispatcher);
+	cycle(&corewar, dispatcher, sock);
+	close(sock);
 	return (0);
 }
