@@ -12,17 +12,7 @@ libft.h
 fcntl.h
 -
 
-/Users/dmlitvin/corewarYE/asm/file_reading.c
-asm.h
-/Users/dmlitvin/corewarYE/asm/asm.h
-op.h
-/Users/dmlitvin/corewarYE/asm/op.h
-
 /Users/dmlitvin/corewarYE/asm/instruction.c
-asm.h
-/Users/dmlitvin/corewarYE/asm/asm.h
-
-/Users/dmlitvin/corewarYE/asm/label.c
 asm.h
 /Users/dmlitvin/corewarYE/asm/asm.h
 op.h
@@ -37,10 +27,6 @@ unistd.h
 -
 stdarg.h
 -
-
-/Users/dmlitvin/corewarYE/asm/main.c
-asm.h
-/Users/dmlitvin/corewarYE/asm/asm.h
 
 /Users/dmlitvin/corewarYE/asm/op.h
 stdint.h

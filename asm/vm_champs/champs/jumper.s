@@ -3,4 +3,4 @@
 ;.comment "en fait C forker !"
 ;.name "Jumper !"
 
-label:st r2, 10
+live 1

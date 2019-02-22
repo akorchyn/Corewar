@@ -9,6 +9,7 @@ CMakeFiles/asm.dir/file_reading.c.o: ../op.h
 CMakeFiles/asm.dir/instruction.c.o: ../asm.h
 CMakeFiles/asm.dir/instruction.c.o: ../instruction.c
 CMakeFiles/asm.dir/instruction.c.o: ../libft.h
+CMakeFiles/asm.dir/instruction.c.o: ../op.h
 
 CMakeFiles/asm.dir/label.c.o: ../asm.h
 CMakeFiles/asm.dir/label.c.o: ../label.c

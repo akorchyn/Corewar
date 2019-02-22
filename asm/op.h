@@ -78,7 +78,7 @@ typedef struct					s_op
 	uint16_t					pause;
 	char						*description;
 	uint8_t						has_arg_type : 1;
-	uint8_t						is_ind : 1;
+	uint8_t						is_dir_equal_ind : 1;
 }								t_op;
 
 extern t_op	g_op_tab[17];

@@ -6,7 +6,7 @@
 #    By: dmlitvin <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/02/06 22:47:34 by dmlitvin          #+#    #+#              #
-#    Updated: 2019/02/21 22:42:51 by dmlitvin         ###   ########.fr        #
+#    Updated: 2019/02/22 23:44:59 by dmlitvin         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ FLAGS=-Wall -Wextra -Werror -I libft/include
 
 CC=clang $(FLAGS)
 
-SRC=main.c file_reading.c instruction.c label.c
+SRC=main.c file_reading.c instruction.c label.c count_size1-6.c
 
 SRO=$(SRC:.c=.o)
 

@@ -10,6 +10,7 @@ CMakeFiles/asm.dir/instruction.c.o
  /Users/dmlitvin/corewarYE/asm/asm.h
  /Users/dmlitvin/corewarYE/asm/instruction.c
  /Users/dmlitvin/corewarYE/asm/libft.h
+ /Users/dmlitvin/corewarYE/asm/op.h
 CMakeFiles/asm.dir/label.c.o
  /Users/dmlitvin/corewarYE/asm/asm.h
  /Users/dmlitvin/corewarYE/asm/label.c

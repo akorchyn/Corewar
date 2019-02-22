@@ -11,13 +11,20 @@
 /* ************************************************************************** */
 
 #include "asm.h"
-#include "op.h"
 
-static int8_t	is_label(char const *instruction, char const *label)
+static int8_t	is_label(char const *instruction, char const *label,
+		const size_t line)
 {
-	while (instruction != label)
-		if (!ft_strchr(LABEL_CHARS, *instruction++))
+	if (instruction != label)
+	{
+		if (ft_is_whitespace(label - 1) || *(label - 1) == SEPARATOR_CHAR)
 			return (0);
+		while (instruction != label)
+			if (!ft_strchr(LABEL_CHARS, *instruction++))
+				throw_error(5, "Invalid label declaration on line ", line);
+	}
+	else
+		throw_error(3, "Lexical error with label! Line ", line);
 	return (1);
 }
 
@@ -40,6 +47,8 @@ static void		add_label(t_list *inst, t_instruction *instr, char *label)
 		[label - instr->instruction] = 0;
 	else
 		((char*)instr->label->content)[label - instr->instruction] = 0;
+	while (ft_is_whitespace(label + 1))
+		label++;
 	ft_cycle_move(instr->instruction, 1, (int)ft_strlen(instr->instruction),
 		-1 * ((int)(label - instr->instruction + 1)));
 	instr->instruction[ft_strlen(instr->instruction) -
@@ -53,7 +62,8 @@ void			read_labels(t_list *inst)
 	while (inst)
 	{
 		if ((label = ft_strchr(((t_instruction*)inst->content)->instruction,
-		LABEL_CHAR)) && is_label(GET_INSTRUCTION(inst)->instruction, label))
+		LABEL_CHAR)) && is_label(GET_INSTRUCTION(inst)->instruction, label,
+				GET_INSTRUCTION(inst)->line))
 			add_label(inst, inst->content, label);
 		inst = inst->next;
 	}
