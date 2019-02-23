@@ -18,6 +18,10 @@
 
 # define GET_INSTRUCTION(lst) ((t_instruction*)lst->content)
 
+/*
+** Start coding instruction!
+*/
+
 typedef struct		s_lexem
 {
 	char			*command;
