@@ -71,7 +71,7 @@ typedef char	t_arg_type;
 
 # define HEADER_SIZE 			2192
 # define COREWAR_EXEC_MAGIC		0xea83f3
-# define OPERATIONS				16
+# define COMANDS				16
 
 typedef struct		s_header
 {
@@ -85,7 +85,7 @@ typedef struct		s_op
 {
 	char			*name;
 	uint8_t			variables;
-	int32_t			vars[3];
+	int32_t			vars[MAX_ARGS_NUMBER];
 	uint8_t			op_index;
 	uint16_t		pause;
 	char			*description;

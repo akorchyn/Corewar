@@ -6,7 +6,7 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 16:38:06 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/02/21 23:26:25 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/25 16:30:59 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,18 +23,21 @@
 
 # define UNUSED_VARIABLE(x) x = NULL
 
+extern int32_t			g_id;
+
 typedef struct			s_carriage
 {
 	struct s_carriage	*next;
-	int64_t				reg[16];
-	t_header			header;
+	struct s_carriage	*prev;
+	uint32_t			reg[16];
+	t_header			*header;
 	int32_t				counter;
-	int32_t				step_size;
 	int32_t				last_live;
 	int32_t				pause;
-	int8_t				operation_id;
+	int8_t				op_id;
 	int8_t				id;
 	uint8_t				carry : 1;
+	int32_t				p_number;
 	char				*code;
 }						t_carriage;
 
@@ -55,10 +58,11 @@ typedef struct			s_corewar
 
 typedef struct			s_variables
 {
-	int32_t				vars[3];
-	int8_t				codage;
-	int8_t				parsed_codage[3];
-	int8_t				bytes_codage[3];
+	int32_t				vars[MAX_ARGS_NUMBER];
+	uint8_t				codage;
+	int8_t				parsed_codage[MAX_ARGS_NUMBER];
+	int8_t				bytes[MAX_ARGS_NUMBER];
+	int16_t				skip;
 }						t_vars;
 
 typedef	void			(*t_dispatcher)(t_carriage *carriage,
@@ -75,7 +79,8 @@ void					parse_arguments(int ac, char **av, t_corewar *corewar);
 */
 
 void					initializing_dispatcher(t_dispatcher *dispatcher);
-void					initializing(t_corewar *corewar);
+void					initializing(t_corewar *corewar, t_header **header);
+
 
 /*
 ** DISPATCHER SECTION
@@ -120,9 +125,11 @@ void					aff(t_carriage *carriage, t_corewar *corewar,
 int32_t					error(int code, char *msg, char *argument);
 t_carriage				*extract_list(t_carriage **head, t_carriage *target);
 void					sort_list(t_carriage **head, t_corewar *corewar);
-int32_t					bytes_to_dec(unsigned char const *str,
+int32_t					bytes_to_dec(unsigned char const *str, int16_t position,
 										int32_t bytes);
+int8_t					bad_register_id(t_vars *vars, t_carriage *carriage);
+int16_t					shift(t_carriage *carriage, int16_t movement);
 void					put_bytes(uint32_t value, unsigned char *placement,
-										int8_t bytes);
+								  int16_t position, int8_t bytes);
 
 #endif

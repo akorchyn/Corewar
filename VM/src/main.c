@@ -6,111 +6,11 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 23:43:59 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/22 00:36:29 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/25 17:33:17 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-/*
- * CHECK FOR CARRY GAGNANT DOESNT WORK
- */
-
-
 #include "vm.h"
-
-int			bad_register_id(t_vars *vars, t_carriage *carriage)
-{
-	int8_t		i;
-
-	i = -1;
-	while (++i < g_op_tab[carriage->operation_id].variables)
-	{
-		if (vars->parsed_codage[i] == T_REG
-			&& (vars->vars[i] < 1 || vars->vars[i] > REG_NUMBER))
-			return (1);
-	}
-	return (0);
-}
-
-void		set_operation_code(t_carriage *carriage, t_corewar *corewar)
-{
-	int32_t		operation;
-
-	if (!carriage)
-		return ;
-	set_operation_code(carriage->next, corewar);
-	if (carriage->pause)
-		return ;
-	operation = bytes_to_dec(corewar->map + carriage->counter, 1);
-	carriage->operation_id = operation - 1;
-	carriage->pause = (operation > 0 && operation < OPERATIONS + 1)
-			? g_op_tab[operation - 1].pause
-			: 0;
-}
-
-void		decrement_pause(t_carriage *carriage)
-{
-	if (!carriage)
-		return ;
-	decrement_pause(carriage->next);
-	if (carriage->pause > 0)
-		carriage->pause--;
-}
-
-int8_t		check_codage(t_carriage *carriage, t_vars *vars)
-{
-	int8_t		value;
-	int8_t		shift;
-	int8_t		counter;
-
-	counter = g_op_tab[carriage->operation_id].variables;
-	shift = 2 + (2 * (3 - g_op_tab[carriage->operation_id].variables));
-	while (--counter > -1)
-	{
-		value = (vars->codage >> shift) & 0b11;
-		if (value == REG_CODE)
-			vars->parsed_codage[counter] = T_REG;
-		else if (value == IND_CODE)
-			vars->parsed_codage[counter] = T_IND;
-		else if (value == DIR_CODE)
-			vars->parsed_codage[counter] = T_DIR;
-		else
-			vars->parsed_codage[counter] = 0;
-		shift += 2;
-	}
-	while (++counter < g_op_tab[carriage->operation_id].variables)
-		if (!(g_op_tab[carriage->operation_id].vars[counter]
-			& vars->parsed_codage[counter]))
-			return (0);
-	return ((int8_t)(vars->codage << counter * 2) == 0 ? 1 : 0);
-}
-
-int32_t			get_step_size(t_carriage *const carriage, t_vars *vars)
-{
-	int32_t		result;
-	int8_t		i;
-	int8_t		type;
-
-	result = 0;
-	i = -1;
-	while (++i < g_op_tab[carriage->operation_id].variables)
-	{
-		type = (vars->codage) ? vars->parsed_codage[i]
-							: g_op_tab[carriage->operation_id].vars[i];
-		if (type == T_IND)
-			(vars->bytes_codage[i] = IND_BYTES) && (result += IND_BYTES);
-		else if (type == T_DIR)
-		{
-			vars->bytes_codage[i] = (g_op_tab[carriage->operation_id].is_ind)
-					? IND_BYTES : DIR_BYTES;
-			result += vars->bytes_codage[i];
-		}
-		else if (type == T_REG)
-			(vars->bytes_codage[i] = REG_BYTES) && (result += REG_BYTES);
-	}
-	if (vars->codage)
-		result += 1;
-	return (result + 1);
-}
 
 void		get_variables(t_carriage *carriage, t_vars *vars,
 		t_corewar *corewar)
@@ -121,367 +21,206 @@ void		get_variables(t_carriage *carriage, t_vars *vars,
 
 	i = -1;
 	read_bytes = 0;
-	while (++i < g_op_tab[carriage->operation_id].variables)
+	while (++i < g_op_tab[carriage->op_id].variables)
 	{
 		memory_shift = (carriage->counter + read_bytes +
-				g_op_tab[carriage->operation_id].is_codage) % MEM_SIZE;
-		vars->vars[i] = bytes_to_dec(corewar->map + memory_shift + 1,
-				vars->bytes_codage[i]);
-		read_bytes += vars->bytes_codage[i];
+				g_op_tab[carriage->op_id].is_codage) % MEM_SIZE;
+		vars->vars[i] = bytes_to_dec(corewar->map, memory_shift + 1,
+				vars->bytes[i]);
+		read_bytes += vars->bytes[i];
 	}
 }
 
-void		live(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
+
+uint8_t		generate_cadage(int8_t op_num)
 {
-	ft_printf("live : %hd\n", vars->vars[0]);
-	if (vars->vars[0] != -carriage->id)
-		return ;
-	corewar->player_last_live = carriage->id;
-	corewar->count_live_for_cycle++;
-	carriage->last_live = corewar->iteration;
-}
-
-void		ld(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
-{
-	int32_t		address;
-
-	if (bad_register_id(vars, carriage))
-		return ;
-	if (vars->parsed_codage[0] == T_DIR)
-	{
-		carriage->reg[vars->vars[1] - 1] = vars->vars[0];
-		carriage->carry = (vars->vars[0]) ? 0 : 1;
-		ft_printf("ld : %d r%hd\n", carriage->reg[vars->vars[1] - 1], vars->vars[1]);
-		return ;
-	}
-	address = (carriage->counter + (int16_t)vars->vars[0] % IDX_MOD) % MEM_SIZE;
-	carriage->reg[vars->vars[1] - 1] = bytes_to_dec(corewar->map + address,
-			REG_SIZE);
-	carriage->carry = carriage->reg[vars->vars[1] - 1] ? 0 : 1;
-	ft_printf("ld : %hd r%hd\n", carriage->reg[vars->vars[1] - 1], vars->vars[1]);
-}
-
-void		st(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
-{
-	int32_t		address;
-
-	if (bad_register_id(vars, carriage))
-		return ;
-	if (vars->parsed_codage[1] == REG_CODE)
-	{
-		carriage->reg[vars->vars[1] - 1] = carriage->reg[vars->vars[0] - 1];
-		ft_printf("st : r%hd r%hd\n", vars->vars[0], vars->vars[1]);
-		return ;
-	}
-	address = (carriage->counter + (int16_t)vars->vars[1] % IDX_MOD) % MEM_SIZE;
-	put_bytes(carriage->reg[vars->vars[0] - 1], corewar->map + address,
-																	REG_SIZE);
-	ft_printf("st : r%hd %hd\n", vars->vars[0], vars->vars[1]);
-}
-
-void		add(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
-{
-	UNUSED_VARIABLE(corewar);
-	if (bad_register_id(vars, carriage))
-		return ;
-	carriage->reg[vars->vars[2] - 1] = carriage->reg[vars->vars[0] - 1]
-			+ carriage->reg[vars->vars[1] - 1];
-	carriage->carry = (carriage->reg[vars->vars[2]] - 1) ? 0 : 1;
-	ft_printf("add : r%d r%d r%d\n", vars->vars[0], vars->vars[1], vars->vars[2]);
-}
-
-void		sub(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
-{
-	UNUSED_VARIABLE(corewar);
-	if (bad_register_id(vars, carriage))
-		return ;
-	carriage->reg[vars->vars[2] - 1] = carriage->reg[vars->vars[0] - 1]
-											- carriage->reg[vars->vars[1] - 1];
-	carriage->carry = (carriage->reg[vars->vars[2]] - 1) ? 0 : 1;
-	ft_printf("sub : r%hd r%hd r%hd\n", vars->vars[0], vars->vars[1], vars->vars[2]);
-}
-
-void		and(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
-{
+	uint8_t		value;
 	int8_t		i;
-	int64_t		values[2];
 
+	value = 0;
 	i = -1;
-	if (bad_register_id(vars, carriage))
-		return ;
-	while (++i < 2)
+	while (++i < MAX_ARGS_NUMBER)
 	{
-		if (vars->parsed_codage[i] == T_REG)
-			values[i] = carriage->reg[vars->vars[i] - 1];
-		else if (vars->parsed_codage[i] == T_DIR)
-			values[i] = vars->vars[i];
-		else if (vars->parsed_codage[i] == T_IND)
-			values[i] = bytes_to_dec(corewar->map + (carriage->counter +
-					(int16_t)vars->vars[i] % IDX_MOD) % MEM_SIZE, 4);
+		value <<= 2;
+		if (g_op_tab[op_num].vars[i] == T_REG)
+			value |= T_REG;
+		else if (g_op_tab[op_num].vars[i] == T_IND)
+			value |= T_IND;
+		else if (g_op_tab[op_num].vars[i] == T_DIR)
+			value |= T_DIR;
 	}
-	carriage->reg[vars->vars[2] - 1] = values[0] & values[1];
-	carriage->carry = carriage->reg[vars->vars[2] - 1] == 0 ? 1 : 0;
-	ft_printf("and : %hd %hd r%hd\n", values[0], values[1], vars->vars[2]);
+	return (value);
 }
 
-void		or(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
+void		print_dump(uint8_t *map, int16_t bytes_in_line, int16_t size)
 {
-	int8_t		i;
-	int64_t		values[2];
+	int16_t		memory;
+	int16_t		i;
 
-	i = -1;
-	if (bad_register_id(vars, carriage))
-		return ;
-	while (++i < 2)
+	memory = 0;
+	ft_printf("0x");
+	while (memory < size)
 	{
-		if (vars->parsed_codage[i] == T_REG)
-			values[i] = carriage->reg[vars->vars[i] - 1];
-		else if (vars->parsed_codage[i] == T_DIR)
-			values[i] = vars->vars[i];
-		else if (vars->parsed_codage[i] == T_IND)
-			values[i] = bytes_to_dec(corewar->map + (carriage->counter +
-					(int16_t)vars->vars[i] % IDX_MOD) % MEM_SIZE, 4);
+		ft_printf("%#.4x : ", memory);
+		i = -1;
+		while (++i < bytes_in_line)
+			ft_printf("%.2x ", map[memory + i]);
+		ft_printf("\n");
+		memory += bytes_in_line;
 	}
-	carriage->reg[vars->vars[2] - 1] = values[0] | values[1];
-	carriage->carry = carriage->reg[vars->vars[2] - 1] == 0 ? 1 : 0;
-	ft_printf("or : %hd %hd r%hd\n", values[0], values[1], vars->vars[2]);
 }
 
-void		xor(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
+void		get_info_from_cadage(t_vars *vars, int8_t value, int8_t i,
+				int8_t op_id)
 {
-	int8_t		i;
-	int64_t		values[2];
-
-	i = -1;
-	if (bad_register_id(vars, carriage))
-		return ;
-	while (++i < 2)
+	if (value == REG_CODE)
 	{
-		if (vars->parsed_codage[i] == T_REG)
-			values[i] = carriage->reg[vars->vars[i] - 1];
-		else if (vars->parsed_codage[i] == T_DIR)
-			values[i] = vars->vars[i];
-		else if (vars->parsed_codage[i] == T_IND)
-			values[i] = bytes_to_dec(corewar->map + (carriage->counter +
-					(int16_t)vars->vars[i] % IDX_MOD) % MEM_SIZE, 4);
+		vars->parsed_codage[i] = T_REG;
+		vars->bytes[i] = REG_BYTES;
 	}
-	carriage->reg[vars->vars[2] - 1] = values[0] ^ values[1];
-	carriage->carry = carriage->reg[vars->vars[2] - 1] == 0 ? 1 : 0;
-	ft_printf("xor : %hd %hd r%hd\n", values[0], values[1], vars->vars[2]);
-}
-
-void		zjmp(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
-{
-	UNUSED_VARIABLE(corewar);
-	if (carriage->carry)
+	else if (value == IND_CODE)
 	{
-		ft_printf("zjmp : %hd OK\n", vars->vars[0]);
-		carriage->step_size = 0;
-		carriage->counter = (carriage->counter
-				+ ((int16_t )vars->vars[0]% IDX_MOD)) % MEM_SIZE;
+		vars->parsed_codage[i] = T_IND;
+		vars->bytes[i] = IND_BYTES;
+	}
+	else if (value == DIR_CODE)
+	{
+		vars->parsed_codage[i] = T_DIR;
+		(vars->bytes[i] = (int8_t) ((g_op_tab[op_id].is_ind)
+									? IND_BYTES : DIR_BYTES));
 	}
 	else
-		ft_printf("zjmp : %hd FAILED\n", vars->vars[0]);
+		vars->parsed_codage[i] = 0;
 }
 
-void		ldi(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
+int8_t		check_valid(t_carriage *pc, t_corewar *corewar, t_vars *vars)
 {
-	int32_t		values[2];
+	int8_t	shift;
+	int8_t	value;
+	int8_t	i;
+	int8_t	answer;
 
-	if (bad_register_id(vars, carriage))
-		return ;
-	if (vars->parsed_codage[0] == T_REG)
-		values[0] = carriage->reg[vars->vars[0] - 1];
-	else if (vars->parsed_codage[0] == T_IND)
-		values[0] = bytes_to_dec(corewar->map + (carriage->counter +
-				(int16_t)vars->vars[0] % IDX_MOD) % MEM_SIZE, REG_SIZE);
-	else
-		values[0] = vars->vars[0];
-	values[1] = (vars->parsed_codage[2] == T_REG) ?
-						carriage->reg[vars->vars[1] - 1] : vars->vars[1];
-	carriage->reg[vars->vars[2] - 1] = bytes_to_dec(corewar->map +
-			(carriage->counter + (values[0] + values[1]) % IDX_MOD) % MEM_SIZE,
-																	REG_SIZE);
-	ft_printf("ldi : %hd %hd r%hd\n", values[0], values[1], vars->vars[2]);
-}
-
-void		sti(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
-{
-	int32_t		values[2];
-
-	if (bad_register_id(vars, carriage))
-		return ;
-	if (vars->parsed_codage[1] == T_REG)
-		values[0] = carriage->reg[vars->vars[1] - 1];
-	else if (vars->parsed_codage[1] == T_IND)
-		values[0] = bytes_to_dec(corewar->map + (carriage->counter +
-					(int16_t)vars->vars[1] % IDX_MOD) % MEM_SIZE, REG_SIZE);
-	else
-		values[0] = vars->vars[1];
-	values[1] = (vars->parsed_codage[2] == T_REG)
-				? carriage->reg[vars->vars[2] - 1] : vars->vars[2];
-	put_bytes(carriage->reg[vars->vars[0] - 1], corewar->map +
-		(carriage->counter + (values[0] + values[1]) % IDX_MOD) % MEM_SIZE,
-															REG_SIZE);
-	ft_printf("sti : r%hd %hd %hd\n", vars->vars[0], values[0], values[1]);
-}
-
-void		forks(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
-{
-	t_carriage		*new;
-
-	if (!(new = (t_carriage *)ft_memalloc(sizeof(t_carriage))))
-		error(55, "Allocation memory to new carriage failed.", NULL);
-	ft_memcpy(new, carriage, sizeof(t_carriage));
-	new->counter = (new->counter + (int16_t )vars->vars[0] % IDX_MOD)
-										% MEM_SIZE;
-	new->next = corewar->carriages;
-	corewar->carriages = new;
-	ft_printf("fork : %hd (%hd)\n", vars->vars[0], new->counter);
-}
-
-void		lld(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
-{
-	int32_t		address;
-
-	if (bad_register_id(vars, carriage))
-		return ;
-	if (vars->parsed_codage[0] == T_DIR)
+	vars->codage = (g_op_tab[pc->op_id].is_codage)
+			? bytes_to_dec(corewar->map, pc->counter + 1, 1)
+			: generate_cadage(pc->op_id);
+	(g_op_tab[pc->op_id].is_codage) ? vars->skip++ : 0;
+	shift = 6;
+	i = 0;
+	answer = 1;
+	while (shift > 0)
 	{
-		carriage->reg[vars->vars[1] - 1] = vars->vars[0];
-		carriage->carry = (vars->vars[0]) ? 0 : 1;
-		ft_printf("lld : %hd r%hd", vars->vars[0], vars->vars[1]);
-		return ;
+		value = (int8_t)((vars->codage >> shift) & 0b11);
+		get_info_from_cadage(vars, value, i, pc->op_id);
+		if (!(vars->parsed_codage[i] & g_op_tab[pc->op_id].vars[i]
+			  || vars->parsed_codage[i] == g_op_tab[pc->op_id].vars[i]))
+			answer = 0;
+		vars->skip += vars->bytes[i++];
+		shift -= 2;
 	}
-	address = (carriage->counter + (int16_t)vars->vars[0]) % MEM_SIZE;
-	carriage->reg[vars->vars[1] - 1] = bytes_to_dec(corewar->map + address,
-			REG_SIZE);
-	carriage->carry = carriage->reg[vars->vars[1] - 1] ? 0 : 1;
-	ft_printf("lld : %hd r%hd", vars->vars[0], vars->vars[1]);
+	return (answer);
 }
 
-void		lldi(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
-{
-	int32_t		values[2];
-
-	if (bad_register_id(vars, carriage))
-		return ;
-	if (vars->parsed_codage[0] == T_REG)
-		values[0] = carriage->reg[vars->vars[0] - 1];
-	else if (vars->parsed_codage[0] == T_IND)
-		values[0] = bytes_to_dec(corewar->map + (carriage->counter +
-				(int16_t)vars->vars[0] % IDX_MOD) % MEM_SIZE, REG_SIZE);
-	else
-		values[0] = vars->vars[0];
-	values[1] = (vars->parsed_codage[2] == T_REG) ?
-						carriage->reg[vars->vars[1] - 1] : vars->vars[1];
-	carriage->reg[vars->vars[2] - 1] = bytes_to_dec(corewar->map +
-			(carriage->counter + values[0] + values[1]) % MEM_SIZE, REG_SIZE);
-	ft_printf("lldi : %hd %hd r%hd", values[0], values[1], vars->vars[2]);
-}
-
-void		lfork(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
-{
-	t_carriage		*new;
-
-	if (!(new = (t_carriage *)ft_memalloc(sizeof(t_carriage))))
-		error(55, "Allocation memory to new carriage failed.", NULL);
-	ft_memcpy(new, carriage, sizeof(t_carriage));
-	new->counter = (new->counter + vars->vars[0]) % MEM_SIZE;
-	new->next = corewar->carriages;
-	corewar->carriages = new;
-	ft_printf("lfork : %hd (%hd)\n", vars->vars[0], new->counter);
-}
-
-void		aff(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
-{
-	UNUSED_VARIABLE(corewar);
-	if (bad_register_id(vars, carriage))
-		return ;
-	ft_printf("%c", (char)carriage->reg[vars->vars[0] - 1]);
-}
-
-void		operation(t_corewar *corewar, t_dispatcher *dispatcher,
-		t_carriage *carriage)
+void		operation(t_carriage *pc, t_corewar *corewar, t_dispatcher *funcs)
 {
 	t_vars		vars;
 
-	if (!carriage)
-		return ;
-	if (!carriage->pause)
+	while (pc)
 	{
-		if (carriage->operation_id > -1 && carriage->operation_id < OPERATIONS)
+		if (!pc->pause)
 		{
-			ft_bzero(&vars, sizeof(t_vars));
-			if (g_op_tab[carriage->operation_id].is_codage)
-				vars.codage = bytes_to_dec(corewar->map + carriage->counter + 1,
-										   1);
-			if (!vars.codage || check_codage(carriage, &vars))
+			pc->op_id = bytes_to_dec(corewar->map, pc->counter, 1) - 1;
+			if (pc->op_id > -1 && pc->op_id < COMANDS)
+				pc->pause = g_op_tab[pc->op_id].pause - 1;
+			else
+				pc->counter = (pc->counter + 1) % MEM_SIZE;
+		}
+		else if (!(--pc->pause))
+		{
+			ft_bzero(&vars, sizeof(vars));
+			if (check_valid(pc, corewar, &vars))
 			{
-				carriage->step_size = get_step_size(carriage, &vars);
-				get_variables(carriage, &vars, corewar);
-				dispatcher[carriage->operation_id](carriage, corewar, &vars);
-			} else
-				carriage->step_size = get_step_size(carriage, &vars);
-			carriage->counter = (carriage->counter + carriage->step_size)
-								% MEM_SIZE;
-		} else
-			carriage->counter = (carriage->counter + 1) % MEM_SIZE;
-		carriage->operation_id = 0;
+				get_variables(pc, &vars, corewar);
+				funcs[pc->op_id](pc, corewar, &vars);
+			}
+			pc->counter = (pc->counter + vars.skip + 1) % MEM_SIZE;
+		}
+		pc = pc->next;
 	}
-	operation(corewar, dispatcher, carriage->next);
 }
 
-void		cycle_to_die(t_corewar *corewar, t_carriage *carriages)
+void		cycle_to_die(t_corewar *corewar, t_carriage *pc)
 {
-	if (--corewar->to_check > 0)
-		return ;
-	while (carriages)
+	t_carriage	*tmp;
+
+	corewar->count_checks++;
+	while (pc)
 	{
-		if (corewar->iteration - carriages->last_live >= corewar->cycles_to_die)
+		tmp = pc->next;
+		if (corewar->iteration - pc->last_live >= corewar->cycles_to_die
+			|| corewar->cycles_to_die < 0)
 		{
-			corewar->carriages = extract_list(&corewar->carriages, carriages);
-			free(carriages);
+			(pc->prev) ? pc->prev->next = pc->next : 0;
+			(pc->next) ? pc->next->prev = pc->prev : 0;
+			(corewar->carriages == pc) ? corewar->carriages = pc->next : 0;
+			free(pc);
 		}
-		carriages->last_live = 0;
-		carriages = carriages->next;
+		else
+			pc->last_live = 0;
+		pc = tmp;
 	}
 	if (corewar->count_live_for_cycle >= NBR_LIVE ||
-											corewar->count_checks == MAX_CHECKS)
+			corewar->count_checks >= MAX_CHECKS)
 	{
-		corewar->count_checks = 1;
 		corewar->cycles_to_die -= CYCLE_DELTA;
+		corewar->count_checks = 0;
 	}
-	else
-		corewar->count_checks++;
 	corewar->to_check = corewar->cycles_to_die;
 	corewar->count_live_for_cycle = 0;
 }
 
-void		cycle(t_corewar *corewar, t_dispatcher *dispatcher)
+void		cycle(t_corewar *corewar, t_dispatcher *dispatcher, t_header **head)
 {
 	while (corewar->carriages)
 	{
+		if (corewar->iteration == 4894)
+			printf("ok");
 		corewar->iteration++;
-		set_operation_code(corewar->carriages, corewar);
-		decrement_pause(corewar->carriages);
-		operation(corewar, dispatcher, corewar->carriages);
-		cycle_to_die(corewar, corewar->carriages);
+		operation(corewar->carriages, corewar, dispatcher);
+		if (--corewar->to_check < 1)
+			cycle_to_die(corewar, corewar->carriages);
 	}
 	ft_printf("%d\n", corewar->iteration);
 	ft_printf("ctd: %d\n", corewar->cycles_to_die);
+	ft_printf("Contestant %d, \"%s\", has won !\n", corewar->player_last_live,
+				head[corewar->player_last_live - 1]->prog_name);
+}
+
+void		dump(t_corewar *corewar, t_dispatcher *dispatcher)
+{
+	while (corewar->carriages && ++corewar->iteration <= corewar->dump_drop)
+	{
+		operation(corewar->carriages, corewar, dispatcher);
+		if (--corewar->to_check < 1)
+			cycle_to_die(corewar, corewar->carriages);
+	}
+	print_dump(corewar->map, 64, MEM_SIZE);
 }
 
 int32_t		main(int ac, char **av)
 {
 	t_corewar		corewar;
 	t_dispatcher	dispatcher[16];
+	t_header		*header[4];
 
 	ft_bzero(&corewar, sizeof(corewar));
 	parse_arguments(ac, av, &corewar);
 	!(corewar.players_count) ? error(200, "No players.", NULL) : 0;
-	initializing(&corewar);
+	g_id = corewar.players_count;
+	initializing(&corewar, header);
 	initializing_dispatcher(dispatcher);
-	cycle(&corewar, dispatcher);
+	if (!corewar.is_dump)
+		cycle(&corewar, dispatcher, header);
+	else
+		dump(&corewar, dispatcher);
 	return (0);
 }

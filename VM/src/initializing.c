@@ -6,7 +6,7 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/19 09:40:23 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/21 23:59:26 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/24 18:29:08 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,17 +43,14 @@ t_op	g_op_tab[17] =
 static void		introduction(t_carriage *tmp)
 {
 	if (!tmp)
-	{
-		ft_printf("Introducing contestants...\n");
 		return ;
-	}
-	introduction(tmp->next);
 	ft_printf("* Player %d, weighing %d bytes, \"%s\" (\"%s\") !\n",
-			tmp->id, tmp->header.prog_size, tmp->header.prog_name,
-			tmp->header.comment);
+			tmp->id, tmp->header->prog_size, tmp->header->prog_name,
+			tmp->header->comment);
+	introduction(tmp->next);
 }
 
-void			initializing(t_corewar *corewar)
+void			initializing(t_corewar *corewar, t_header **header)
 {
 	t_carriage		*tmp;
 	int32_t			distance;
@@ -62,6 +59,7 @@ void			initializing(t_corewar *corewar)
 		error(17, "Too many players.", NULL);
 	if (!(corewar->map = (unsigned char *)ft_memalloc(sizeof(char) * MEM_SIZE)))
 		error(18, "Allocation battle arena failed.", NULL);
+	ft_printf("Introducing contestants...\n");
 	sort_list(&corewar->carriages, corewar);
 	corewar->player_last_live = corewar->players_count;
 	corewar->to_check = CYCLE_TO_DIE;
@@ -71,9 +69,10 @@ void			initializing(t_corewar *corewar)
 	while (tmp)
 	{
 		tmp->reg[0] = -tmp->id;
+		header[tmp->id - 1] = tmp->header;
 		tmp->counter = distance * (tmp->id - 1);
 		ft_memcpy(corewar->map + tmp->counter, tmp->code,
-				tmp->header.prog_size);
+				tmp->header->prog_size);
 		free(tmp->code);
 		(DEBUG) && ft_printf("%d id Counter : %d\n", tmp->id, tmp->counter);
 		tmp = tmp->next;
