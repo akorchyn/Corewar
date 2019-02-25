@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   window.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kpshenyc <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/28 13:33:28 by kpshenyc          #+#    #+#             */
-/*   Updated: 2018/12/28 13:33:30 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/02/25 18:10:04 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef WINDOW_H
-# define WINDOW_H
+#pragma once
 
 # include <iostream>
 # include <string>
@@ -35,5 +34,3 @@ public:
 	void clear();
 	~Window();
 };
-
-#endif
