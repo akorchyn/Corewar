@@ -6,7 +6,7 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/19 09:51:52 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/25 17:32:56 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/25 21:18:00 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,13 @@ static void			parse_file(int32_t fd, t_carriage *new)
 		error(8, "Bad magic number", NULL);
 	ft_strncpy(new->header->prog_name, (char *)buff + MAGIC_LENGTH,
 			PROG_NAME_LENGTH);
-	new->header->prog_size = bytes_to_dec(buff,  MAGIC_LENGTH
+	new->header->prog_size = bytes_to_dec(buff, MAGIC_LENGTH
 							+ PROG_NAME_LENGTH + NULL_SIZE, PROG_SIZE_LENGTH);
 	if (new->header->prog_size > CHAMP_MAX_SIZE)
 		error(9, "Exec code too big.", NULL);
 	ft_strncpy(new->header->comment, (char *)buff + MAGIC_LENGTH +
 			PROG_NAME_LENGTH + NULL_SIZE + PROG_SIZE_LENGTH, COMMENT_LENGTH);
-	if (!(new->code = (char *)malloc(sizeof(char) * new->header->prog_size + 1)))
+	if (!(new->code = (char *)malloc(new->header->prog_size + 1)))
 		error(10, "Memory allocation failed", NULL);
 	ret = read(fd, new->code, new->header->prog_size + 1);
 	if (ret != new->header->prog_size)
@@ -73,18 +73,18 @@ static int8_t		id_exists(t_carriage *carriages, int8_t id)
 	return (0);
 }
 
-static int8_t		process_ids(t_carriage *carriages, int8_t players_count)
+int8_t				process_ids(t_carriage *carriages, int8_t players)
 {
 	t_carriage	*prev_carriages;
 	t_carriage	*head;
 	int8_t		new_id;
 
-	new_id = players_count;
+	new_id = players;
 	head = carriages;
 	while (carriages)
 	{
 		prev_carriages = head;
-		if (carriages->id > players_count)
+		if (carriages->id > players)
 			error(15, "Uniq id is bigger than players count", NULL);
 		while (prev_carriages)
 		{
@@ -106,8 +106,7 @@ void				parse_arguments(int ac, char **av, t_corewar *corewar)
 
 	i = 0;
 	while (++i < ac)
-	{
-		if (!ft_strcmp("-dump", av[i]))
+		if (!ft_strcmp("-dump", av[i]) || !ft_strcmp("-d", av[i]))
 		{
 			!ft_isnumeric(av[++i], '\0') && error(1, "Dump error", av[i]);
 			corewar->is_dump = 1;
@@ -117,13 +116,15 @@ void				parse_arguments(int ac, char **av, t_corewar *corewar)
 		{
 			!ft_isnumeric(av[++i], '\0') && error(2, "Number error", av[i]);
 			create_carriage(av[i + 1], &corewar->carriages)
-					&& (corewar->players_count)++;
+					&& (corewar->players)++;
 			if (!(corewar->carriages->id = ft_atoi(av[i++])))
 				error(14, "Uniq id can't be null", av[i - 1]);
 		}
+		else if (!ft_strcmp("-v", av[i]))
+		{
+			!ft_isnumeric(av[++i], '\0') && error(2, "Verbose error", av[i]);
+			corewar->verbose = ft_atoi(av[i]);
+		}
 		else
-			create_carriage(av[i], &corewar->carriages)
-					&& ++(corewar->players_count);
-	}
-	process_ids(corewar->carriages, corewar->players_count);
+			create_carriage(av[i], &corewar->carriages) && ++(corewar->players);
 }
