@@ -6,7 +6,7 @@
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/28 13:33:28 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/02/25 18:10:04 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/02/26 15:46:57 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,10 @@ class Window
 	std::string		name = "Window";
 	SDL_Window		*window = nullptr;
 	int				closed = false;
-	useconds_t		speed = 35000;
 public:
+	bool			preview;
 	SDL_Renderer	*renderer = nullptr;
 	Window(std::string name, int width, int height);
-	useconds_t GetSpeed();
 	bool isClosed();
 	void poolEvents();
 	void clear();

@@ -6,7 +6,7 @@
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 16:42:42 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/02/25 18:27:27 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/02/26 17:18:17 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ class Corewar
 	};
 	struct Byte
 	{
-		unsigned char	byteOrder[17] = "0123456789abcdef";
 		unsigned char	value;
 		int8_t			owner;
 		/*
@@ -45,8 +44,12 @@ class Corewar
 		string			hexText;
 		SDL_Color		*color;
 		SDL_Rect		position;
+		int8_t			changed;
 		Byte();
 		void valueToHex(unsigned char value);
+		SDL_Surface *byteSurface;
+		SDL_Texture *byteTexture;
+
 	};
 
 	/*
@@ -74,9 +77,11 @@ class Corewar
 public:
 	static constexpr int16_t	MAP_SIZE = 4096;
 
+	static constexpr unsigned char	byteOrder[17] = "0123456789abcdef";
+
 	void refreshData(unsigned char *buffer);
 	void draw(Window *window);
 
-	Corewar();
+	Corewar(Window *window);
 	~Corewar();
 };

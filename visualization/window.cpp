@@ -6,7 +6,7 @@
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/28 13:33:23 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/02/22 17:05:52 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/02/26 15:55:28 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ Window::Window(std::string name, int width, int height)
 	this->width = width;
 	this->height = height;
 	this->name = name;
+	this->preview = true;
 
 	if (SDL_Init(SDL_INIT_VIDEO) != 0)
 	{
@@ -79,8 +80,11 @@ void Window::poolEvents()
 				switch(event.key.keysym.sym)
 				{
 					case SDLK_ESCAPE: this->closed = true; break;
-					case SDLK_LEFT: (this->speed > 10000) ? this->speed -= 10000 : 0; break;
-					case SDLK_RIGHT: this->speed += 10000; break;
+					case SDLK_RETURN: 
+					{
+						this->preview = this->preview ? false : true;
+						break ;
+					}
 					default:
 						break;
 				}
@@ -93,10 +97,5 @@ void Window::clear()
 	SDL_RenderPresent(this->renderer);
 	SDL_SetRenderDrawColor(this->renderer, 0, 0, 0, 255);
 	SDL_RenderClear(this->renderer);
-}
-
-useconds_t Window::GetSpeed()
-{
-	return (this->speed);
 }
 

@@ -6,7 +6,7 @@
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 17:22:41 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/02/25 19:16:36 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/02/26 17:39:16 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,22 +66,23 @@ int		init_socket()
 }
 
 Corewar::Byte::Byte() : value(0), owner(NO_PLAYER), hexText("00"), color(&basicColors[NO_PLAYER]),
-						position(SDL_Rect{.x = 0, .y = 0, .w = 0, .h = 0})
+						position(SDL_Rect{.x = 0, .y = 0, .w = 0, .h = 0}), changed(1),
+						byteSurface(nullptr), byteTexture(nullptr)
 {
 
 }
 
 void Corewar::Byte::valueToHex(unsigned char value)
 {
-	hexText[0] = byteOrder[value / 16];
-	hexText[1] = byteOrder[value % 16];
+	hexText[0] = Corewar::byteOrder[value / 16];
+	hexText[1] = Corewar::byteOrder[value % 16];
 }
 
-Corewar::Corewar() :
+Corewar::Corewar(Window *window) :
 	_map(vector<Byte>(Corewar::MAP_SIZE, Byte{})), startX(10), startY(10),
-	byteWidth(10), byteHeight(10), blankWidth(2), blankHeight(2)
+	byteWidth(7), byteHeight(5), blankWidth(14), blankHeight(11)
 {
-	font = TTF_OpenFont("fonts/BebasNeue.ttf", 100);
+	font = TTF_OpenFont("fonts/BebasNeue.ttf", 18);
 	if (!font)
 	{
 		std::cerr << TTF_GetError() << std::endl;
@@ -97,6 +98,9 @@ Corewar::Corewar() :
 		byte.position.y = startY + i * byteHeight + i * blankHeight;
 		byte.position.h = byteHeight;
 		byte.position.w = byteWidth;
+		byte.byteSurface = TTF_RenderText_Solid(font, byte.hexText.c_str(), *(byte.color));
+		byte.byteTexture = SDL_CreateTextureFromSurface(window->renderer, byte.byteSurface);
+		SDL_QueryTexture(byte.byteTexture, NULL, NULL, &(byte.position.w), &(byte.position.h));
 		++j;
 		if (j == 64)
 		{
@@ -115,8 +119,16 @@ void Corewar::refreshData(unsigned char *buffer)
 {
 	for (int16_t i = 0; i < Corewar::MAP_SIZE; ++i)
 	{
-		_map.at(i).value = *(buffer + i);
-		_map.at(i).valueToHex(*(buffer + i));
+		if (*(buffer + i) != _map.at(i).value)
+		{
+			_map.at(i).value = *(buffer + i);
+			_map.at(i).valueToHex(*(buffer + i));
+			_map.at(i).changed = 1;
+		}
+		else
+			_map.at(i).changed = 0;
+		// else if (_map.at(i).byteSurface != nullptr && _map.at(i).byteTexture != nullptr)
+		// 	_map.at(i).changed = 0;
 	}
 }
 
@@ -124,41 +136,65 @@ void Corewar::draw(Window *window)
 {
 	for (auto& byte : _map)
 	{
-		SDL_Surface *byteSurface = TTF_RenderText_Solid(font, byte.hexText.c_str(), *(byte.color));
-		SDL_Texture *byteTexture = SDL_CreateTextureFromSurface(window->renderer, byteSurface);
-
-		SDL_RenderCopy(window->renderer, byteTexture, NULL, &(byte.position));
-
-		// SDL_FreeSurface(byteSurface);
-		// SDL_DestroyTexture(byteTexture);
+		if (byte.changed == 1)
+		{
+			SDL_DestroyTexture(byte.byteTexture);
+			SDL_FreeSurface(byte.byteSurface);
+			byte.byteSurface = TTF_RenderText_Solid(font, byte.hexText.c_str(), *(byte.color));
+			byte.byteTexture = SDL_CreateTextureFromSurface(window->renderer, byte.byteSurface);
+			SDL_QueryTexture(byte.byteTexture, NULL, NULL, &(byte.position.w), &(byte.position.h));
+		}
+		SDL_RenderCopy(window->renderer, byte.byteTexture, NULL, &(byte.position));
 	}
 }
 
 int		main(void)
 {
-	int				sock = init_socket();
-	int				client_socket = -1;
+	int				clientSocket = -1;
+	int				sock;
+	int32_t			drawCall;
 	unsigned char	data[Corewar::MAP_SIZE];
-	Corewar			corewar = Corewar::Corewar();
-	Window window("Corewar", WIDTH, HEIGHT);
+	Window window	("Corewar", WIDTH, HEIGHT);
+	Corewar			*corewar;
+	bool			corewarInitialiazed = false;
 
+	drawCall = 0;
 	while (!window.isClosed())
 	{
-		if (client_socket == -1)
-			client_socket = accept(sock, NULL, NULL);
-		if (client_socket != -1 && recv(client_socket, data, 4096, 0) == 0)
+		if (window.preview == false)
 		{
-			std::cout << "VM closed connection..." << std::endl;
-			client_socket = -1;
-		}
-		else
-		{
-			corewar.refreshData(data);
-			corewar.draw(&window);
+			if (corewarInitialiazed == false)
+			{
+				std::cout << "Initialiazing new corewar... ";
+				corewar = new Corewar(&window);
+				sock = init_socket();
+				corewarInitialiazed = true;
+				std::cout << "Done!" << std::endl;
+				std::cout << "Accepting new corewar throught socket... ";
+				clientSocket = accept(sock, NULL, NULL);
+				std::cout << "Done!" << std::endl;
+			}
+			if (clientSocket != -1 && recv(clientSocket, data, 4096, 0) == 0)
+			{
+				std::cout << "VM closing connection... ";
+				clientSocket = -1;
+				window.preview = true;
+				corewarInitialiazed = false;
+				std::cout << "Done!" << std::endl;
+				close(sock);
+				sock = 0;
+				delete corewar;
+			}
+			else
+			{
+				corewar->refreshData(data);
+				corewar->draw(&window);
+				std::cout << "Draw call: " << drawCall << std::endl;
+				drawCall++;
+			}
 		}
 		window.poolEvents();
 		window.clear();
 	}
-	close(sock);
 	return (0);
 }
