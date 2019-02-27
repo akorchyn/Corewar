@@ -6,7 +6,7 @@
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 17:22:41 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/02/26 17:39:16 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/02/27 13:54:09 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,8 +127,6 @@ void Corewar::refreshData(unsigned char *buffer)
 		}
 		else
 			_map.at(i).changed = 0;
-		// else if (_map.at(i).byteSurface != nullptr && _map.at(i).byteTexture != nullptr)
-		// 	_map.at(i).changed = 0;
 	}
 }
 
