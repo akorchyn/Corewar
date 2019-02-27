@@ -6,7 +6,7 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/23 16:40:09 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/27 16:33:15 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/27 17:28:14 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void		st(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 	{
 		carriage->reg[vars->vars[1] - 1] = carriage->reg[vars->vars[0] - 1];
 		if (corewar->verbose & 4)
-			ft_printf("P% 5d | st r%d r%d\n", carriage->p_number,
+			ft_printf("P% 5d | st r%d %d\n", carriage->p_number,
 					vars->vars[0], vars->vars[1]);
 		return ;
 	}

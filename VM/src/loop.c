@@ -6,7 +6,7 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/25 22:59:19 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/27 17:13:44 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/27 17:20:38 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,8 +86,6 @@ void			cycle(t_corewar *corewar, t_dispatcher *dispatcher)
 		corewar->iteration++;
 		(corewar->verbose & 2) && ft_printf("It is now cycle %d\n",
 											corewar->iteration);
-		if (corewar->iteration == 19096)
-			printf("ok");
 		operation(corewar->carriages, corewar, dispatcher);
 		if (--corewar->to_check < 1)
 			cycle_to_die(corewar, corewar->carriages);

@@ -93,7 +93,8 @@ int8_t			check_valid(t_carriage *pc, t_corewar *corewar, t_vars *vars)
 		value = (int8_t)((vars->codage >> shift) & 0b11);
 		get_info_from_cadage(vars, value, i, pc->op_id);
 		if (!(vars->parsed_codage[i] & g_op_tab[pc->op_id].vars[i]
-			|| vars->parsed_codage[i] == g_op_tab[pc->op_id].vars[i]))
+			|| vars->parsed_codage[i] == g_op_tab[pc->op_id].vars[i])
+			&& g_op_tab[pc->op_id].vars[i])
 			answer = 0;
 		if (g_op_tab[pc->op_id].vars[i])
 			vars->skip += vars->bytes[i];
