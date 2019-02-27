@@ -6,13 +6,11 @@
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/23 16:45:32 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/27 15:43:59 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/02/27 17:17:22 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vm.h"
-
-int32_t			g_id;
 
 void		sti(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 {
@@ -35,10 +33,10 @@ void		sti(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 	set_player(corewar->player_affected, shift(carriage, vars->vars[1]), 4,
 									carriage->id);
 	if (corewar->verbose & 4)
-		ft_printf("P% 5d | sti r%hd %hd %hd\n       | -> store to %hd + %hd = "
-			"%hd (with pc and mod %hd)\n", carriage->p_number, vars->vars[0],
+		ft_printf("P% 5d | sti r%d %d %d\n       | -> store to %d + %d = "
+			"%d (with pc and mod %d)\n", carriage->p_number, vars->vars[0],
 			values[0], values[1], values[0], values[1], values[0] + values[1],
-			carriage->counter + (int16_t )(values[0] + values[1]));
+				  carriage->counter + (values[0] + values[1]) % IDX_MOD);
 }
 
 void		forks(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
@@ -56,8 +54,8 @@ void		forks(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 	nw->prev = NULL;
 	corewar->carriages = nw;
 	if (corewar->verbose & 4)
-		ft_printf("P% 5d | fork %hd (%hd)\n", carriage->p_number, vars->vars[0],
-				  (carriage->counter + vars->vars[0]) % MEM_SIZE);
+		ft_printf("P% 5d | fork %d (%d)\n", carriage->p_number, vars->vars[0],
+				  (carriage->counter + vars->vars[0] % IDX_MOD) % MEM_SIZE);
 }
 
 void		lld(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
@@ -71,7 +69,7 @@ void		lld(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 		carriage->reg[vars->vars[1] - 1] = vars->vars[0];
 		carriage->carry = (vars->vars[0]) ? 0 : 1;
 		if (corewar->verbose & 4)
-			ft_printf("P% 5d | lld %hd r%hd", carriage->p_number, vars->vars[0],
+			ft_printf("P% 5d | lld %d r%d\n", carriage->p_number, vars->vars[0],
 					vars->vars[1]);
 		return ;
 	}
@@ -80,7 +78,7 @@ void		lld(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 			REG_SIZE);
 	carriage->carry = carriage->reg[vars->vars[1] - 1] ? 0 : 1;
 	if (corewar->verbose & 4)
-		ft_printf("P% 5d | lld %hd r%hd", carriage->p_number, vars->vars[0],
+		ft_printf("P% 5d | lld %d r%d\n", carriage->p_number, vars->vars[0],
 				vars->vars[1]);
 }
 
@@ -104,7 +102,7 @@ void		lldi(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 													REG_SIZE);
 	carriage->carry = carriage->reg[vars->vars[2] - 1] ? 0 : 1;
 	if (corewar->verbose & 4)
-		ft_printf("P% 5d | lldi %hd %hd r%hd", carriage->p_number, values[0],
+		ft_printf("P% 5d | lldi %d %d r%d\n", carriage->p_number, values[0],
 				values[1], vars->vars[2]);
 }
 
@@ -123,6 +121,6 @@ void		lfork(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 	nw->prev = NULL;
 	corewar->carriages = nw;
 	if (corewar->verbose & 4)
-		ft_printf("P% 5d | lfork %hd (%hd)\n", carriage->p_number,
+		ft_printf("P% 5d | lfork %d (%d)\n", carriage->p_number,
 				vars->vars[0], carriage->counter + vars->vars[0]);
 }

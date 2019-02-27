@@ -60,8 +60,8 @@ int8_t			bad_register_id(t_vars *vars, t_carriage *carriage)
 	return (0);
 }
 
-int16_t			shift(t_carriage *carriage, int16_t movement)
+int32_t			shift(t_carriage *carriage, int32_t movement)
 {
-	return ((carriage->counter + (int16_t)movement % IDX_MOD + MEM_SIZE)
+	return ((carriage->counter + movement % IDX_MOD + MEM_SIZE)
 											% MEM_SIZE);
 }

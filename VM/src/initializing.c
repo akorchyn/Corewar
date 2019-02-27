@@ -6,7 +6,7 @@
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/19 09:40:23 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/27 15:42:36 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/02/27 17:17:26 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static void		introduction(t_carriage *tmp)
 			tmp->header->comment);
 }
 
-void			initializing(t_corewar *corewar, t_header **header)
+void			initializing(t_corewar *corewar)
 {
 	t_carriage		*tmp;
 	int32_t			distance;
@@ -43,7 +43,7 @@ void			initializing(t_corewar *corewar, t_header **header)
 	while (tmp)
 	{
 		tmp->reg[0] = -tmp->id;
-		header[tmp->id - 1] = tmp->header;
+		g_header[tmp->id - 1] = tmp->header;
 		tmp->counter = distance * (tmp->id - 1);
 		ft_memcpy(corewar->map + tmp->counter, tmp->code,
 				tmp->header->prog_size);

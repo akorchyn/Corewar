@@ -6,7 +6,7 @@
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/25 22:59:19 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/27 15:53:01 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/02/27 17:17:31 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,7 @@ static void		cycle_to_die(t_corewar *corewar, t_carriage *pc)
 	corewar->count_live_for_cycle = 0;
 }
 
-void			cycle(t_corewar *corewar, t_dispatcher *dispatcher,
-							t_header **head)
+void			cycle(t_corewar *corewar, t_dispatcher *dispatcher)
 {
 	unsigned char	*package;
 
@@ -89,6 +88,8 @@ void			cycle(t_corewar *corewar, t_dispatcher *dispatcher,
 		corewar->iteration++;
 		(corewar->verbose & 2) && ft_printf("It is now cycle %d\n",
 											corewar->iteration);
+		if (corewar->iteration == 19096)
+			printf("ok");
 		operation(corewar->carriages, corewar, dispatcher);
 		if (--corewar->to_check < 1)
 			cycle_to_die(corewar, corewar->carriages);
@@ -100,7 +101,7 @@ void			cycle(t_corewar *corewar, t_dispatcher *dispatcher,
 		}
 	}
 	ft_printf("Contestant %d, \"%s\", has won !\n", corewar->player_last_live,
-			head[corewar->player_last_live - 1]->prog_name);
+			g_header[corewar->player_last_live - 1]->prog_name);
 }
 
 void			dump_cycle(t_corewar *corewar, t_dispatcher *dispatcher)
