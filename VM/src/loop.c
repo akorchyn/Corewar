@@ -6,7 +6,7 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/25 22:59:19 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/27 17:20:38 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/27 17:29:24 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ static void		kill_carriages(t_carriage *pc, t_corewar *corewar)
 			(pc->prev) ? pc->prev->next = pc->next : 0;
 			(pc->next) ? pc->next->prev = pc->prev : 0;
 			(corewar->carriages == pc) ? corewar->carriages = pc->next : 0;
+			g_car_count--;
 			free(pc);
 		}
 		else

@@ -6,7 +6,7 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 16:38:06 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/02/27 16:30:50 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/27 16:33:15 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include "../libft/includes/libft.h"
 
 extern int32_t			g_id;
+extern int32_t			g_car_count;
 extern char				*g_usage;
 extern t_header			*g_header[MAX_PLAYERS];
 
