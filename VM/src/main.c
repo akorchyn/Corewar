@@ -6,7 +6,7 @@
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 23:43:59 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/22 18:32:53 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/02/26 14:22:31 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -495,6 +495,7 @@ void		cycle(t_corewar *corewar, t_dispatcher *dispatcher, int sock)
 		decrement_pause(corewar->carriages);
 		operation(corewar, dispatcher, corewar->carriages);
 		cycle_to_die(corewar, corewar->carriages);
+		ft_printf("Iteration: %d\n", corewar->iteration);
 	}
 	ft_printf("%d\n", corewar->iteration);
 	ft_printf("ctd: %d\n", corewar->cycles_to_die);
@@ -526,10 +527,7 @@ int32_t		main(int ac, char **av)
 	t_dispatcher	dispatcher[16];
 	int				sock;
 
-	if (ac > 1 && !ft_strcmp(av[1], "-n"))
-		sock = set_connection_to_visualization();
-	else
-		sock = 0;
+	sock = set_connection_to_visualization();
 	ft_bzero(&corewar, sizeof(corewar));
 	parse_arguments(ac, av, &corewar);
 	!(corewar.players_count) ? error(200, "No players.", NULL) : 0;
