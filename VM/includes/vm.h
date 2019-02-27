@@ -6,7 +6,7 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 16:38:06 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/02/25 23:05:24 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/26 17:32:21 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,10 @@
 
 # include "op.h"
 # include <errno.h>
+# include <sys/types.h>
+# include <sys/socket.h>
+# include <netinet/in.h>
+# include <arpa/inet.h>
 # include "../libft/includes/libft.h"
 
 extern int32_t			g_id;
@@ -24,7 +28,7 @@ typedef struct			s_carriage
 {
 	struct s_carriage	*next;
 	struct s_carriage	*prev;
-	uint32_t			reg[16];
+	uint32_t			reg[REG_NUMBER];
 	t_header			*header;
 	int32_t				counter;
 	int32_t				last_live;
@@ -50,6 +54,7 @@ typedef struct			s_corewar
 	int8_t				count_checks;
 	uint8_t				is_dump : 1;
 	uint8_t				players;
+	int					sock;
 }						t_corewar;
 
 typedef struct			s_variables
@@ -136,6 +141,7 @@ void					aff(t_carriage *carriage, t_corewar *corewar,
 ** USEFUL FUNCTION SECTION
 */
 
+int32_t					set_connection_to_visualization(char *ip, int8_t *i);
 int32_t					error(int code, char *msg, char *argument);
 void					print_usage(char **av);
 void					print_dump(uint8_t *map, int16_t bytes_in_line,

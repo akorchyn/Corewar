@@ -120,7 +120,7 @@ void		ldi(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 	values[1] = (vars->parsed_codage[1] == T_REG) ?
 				carriage->reg[vars->vars[1] - 1] : vars->vars[1];
 	carriage->reg[vars->vars[2] - 1] = bytes_to_dec(corewar->map,
-		shift(carriage, (int16_t)values[0] + (int16_t)values[1]), REG_SIZE);
+		shift(carriage, values[0] + values[1]), REG_SIZE);
 	if (corewar->verbose & 4)
 		ft_printf("P% 5d | ldi %hd %hd r%hd\n"
 			"       | -> load from %hd + %hd = %hd (with pc and mod %hd)\n",

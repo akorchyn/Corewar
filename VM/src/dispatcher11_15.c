@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   command11_15.c                                     :+:      :+:    :+:   */
+/*   dispatcher11_15.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/23 16:45:32 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/25 21:10:37 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/26 17:44:39 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,14 +29,18 @@ void		sti(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 		values[0] = vars->vars[1];
 	values[1] = (vars->parsed_codage[2] == T_REG)
 				? carriage->reg[vars->vars[2] - 1] : vars->vars[2];
+	if (values[1] == 33554431)
+	{
+		printf("ok");
+	}
 	put_bytes(carriage->reg[vars->vars[0] - 1], corewar->map,
-							shift(carriage, ((int16_t)values[0] +
-								(int16_t)values[1])), REG_SIZE);
+							shift(carriage, (values[0] +
+								values[1])), REG_SIZE);
 	if (corewar->verbose & 4)
 		ft_printf("P% 5d | sti r%hd %hd %hd\n       | -> store to %hd + %hd = "
 			"%hd (with pc and mod %hd)\n", carriage->p_number, vars->vars[0],
 			values[0], values[1], values[0], values[1], values[0] + values[1],
-			carriage->counter + values[0] + values[1]);
+			carriage->counter + (int16_t )(values[0] + values[1]));
 }
 
 void		forks(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
@@ -55,7 +59,7 @@ void		forks(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 	corewar->carriages = nw;
 	if (corewar->verbose & 4)
 		ft_printf("P% 5d | fork %hd (%hd)\n", carriage->p_number, vars->vars[0],
-				carriage->counter + vars->vars[0]);
+				  (carriage->counter + vars->vars[0]) % MEM_SIZE);
 }
 
 void		lld(t_carriage *carriage, t_corewar *corewar, t_vars *vars)

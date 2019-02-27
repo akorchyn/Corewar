@@ -6,7 +6,7 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/19 09:51:52 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/25 21:18:00 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/26 16:19:15 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ int8_t				process_ids(t_carriage *carriages, int8_t players)
 
 void				parse_arguments(int ac, char **av, t_corewar *corewar)
 {
-	register int8_t		i;
+	int8_t			i;
 
 	i = 0;
 	while (++i < ac)
@@ -116,7 +116,7 @@ void				parse_arguments(int ac, char **av, t_corewar *corewar)
 		{
 			!ft_isnumeric(av[++i], '\0') && error(2, "Number error", av[i]);
 			create_carriage(av[i + 1], &corewar->carriages)
-					&& (corewar->players)++;
+					&& ++corewar->players;
 			if (!(corewar->carriages->id = ft_atoi(av[i++])))
 				error(14, "Uniq id can't be null", av[i - 1]);
 		}
@@ -125,6 +125,8 @@ void				parse_arguments(int ac, char **av, t_corewar *corewar)
 			!ft_isnumeric(av[++i], '\0') && error(2, "Verbose error", av[i]);
 			corewar->verbose = ft_atoi(av[i]);
 		}
+		else if (!ft_strcmp("-visual", av[i]))
+			corewar->sock = set_connection_to_visualization(av[i + 1], &i);
 		else
 			create_carriage(av[i], &corewar->carriages) && ++(corewar->players);
 }

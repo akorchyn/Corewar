@@ -90,6 +90,8 @@ void			cycle(t_corewar *corewar, t_dispatcher *dispatcher,
 		operation(corewar->carriages, corewar, dispatcher);
 		if (--corewar->to_check < 1)
 			cycle_to_die(corewar, corewar->carriages);
+		if (corewar->sock)
+			send(corewar->sock, corewar->map, 4096, 0);
 	}
 	ft_printf("Contestant %d, \"%s\", has won !\n", corewar->player_last_live,
 			head[corewar->player_last_live - 1]->prog_name);
@@ -104,6 +106,8 @@ void			dump_cycle(t_corewar *corewar, t_dispatcher *dispatcher)
 											corewar->iteration);
 		if (--corewar->to_check < 1)
 			cycle_to_die(corewar, corewar->carriages);
+		if (corewar->sock)
+			send(corewar->sock, corewar->map, 4096, 0);
 	}
 	print_dump(corewar->map, 64, MEM_SIZE);
 }

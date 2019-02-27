@@ -6,12 +6,11 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/19 09:40:23 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/25 22:52:22 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/26 16:51:30 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vm.h"
-#include "op.h"
 
 static void		introduction(t_carriage *tmp)
 {
@@ -109,4 +108,6 @@ char			*g_usage =
 "                         - 1 : Show lives\n"
 "                         - 2 : Show cycles\n"
 "                         - 4 : Show operations (Params are"
-" NOT litteral ...)\n";
+" NOT litteral ...)\n"
+"    -visual [ip]       : Visualization corewar, socket connection\n"
+"    -n N               : Set player number\n";

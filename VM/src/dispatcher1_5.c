@@ -43,7 +43,7 @@ void		ld(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 	else
 	{
 		carriage->reg[vars->vars[1] - 1] = bytes_to_dec(corewar->map,
-				shift(carriage, (int16_t)vars->vars[0]), REG_SIZE);
+				shift(carriage, vars->vars[0]), REG_SIZE);
 		if (corewar->verbose & 4)
 			ft_printf("P% 5d | ld %hd r%hd\n", carriage->p_number,
 					carriage->reg[vars->vars[1] - 1], vars->vars[1]);

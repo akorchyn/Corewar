@@ -6,7 +6,7 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/23 16:49:28 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/25 23:05:24 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/26 17:44:07 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 void			print_usage(char **av)
 {
-	ft_printf("Usage: %s [-dump N -v N] <champion1.cor> <...>\n%s", av[0],
-			g_usage);
+	ft_printf("Usage: %s [-dump N -v N -n N -visual [ip]] <champion1.cor> "
+		   "<...>\n%s", av[0], g_usage);
 	exit(0);
 }
 
@@ -53,5 +53,6 @@ int8_t			bad_register_id(t_vars *vars, t_carriage *carriage)
 
 int16_t			shift(t_carriage *carriage, int16_t movement)
 {
-	return ((carriage->counter + movement % IDX_MOD + MEM_SIZE) % MEM_SIZE);
+	return ((carriage->counter + (int16_t)movement % IDX_MOD + MEM_SIZE)
+											% MEM_SIZE);
 }
