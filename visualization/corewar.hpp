@@ -6,7 +6,7 @@
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 16:42:42 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/02/27 15:20:10 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/02/27 19:31:48 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ class Corewar
 	/*
 		Info that gets from buffer, and applies by Corewar::refreshData method;
 	*/
+	unsigned char					_initPackage[]
 	vector<Byte>					_map;			// perfectly buffer of 4096 Byte's samples
 	int32_t							_iteration;
 	int16_t							_processess;

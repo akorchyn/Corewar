@@ -6,7 +6,7 @@
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/23 16:45:32 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/27 17:17:22 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/02/27 18:01:49 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ void		forks(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 	nw->next = corewar->carriages;
 	nw->op_id = 0;
 	nw->p_number = ++g_id;
+	g_car_count++;
 	corewar->carriages->prev = nw;
 	nw->prev = NULL;
 	corewar->carriages = nw;
@@ -119,6 +120,7 @@ void		lfork(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 	nw->p_number = ++g_id;
 	corewar->carriages->prev = nw;
 	nw->prev = NULL;
+	g_car_count++;
 	corewar->carriages = nw;
 	if (corewar->verbose & 4)
 		ft_printf("P% 5d | lfork %d (%d)\n", carriage->p_number,

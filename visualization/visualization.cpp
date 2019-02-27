@@ -6,7 +6,7 @@
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 17:22:41 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/02/27 15:17:35 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/02/27 18:26:11 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ int		main(void)
 	int				clientSocket = -1;
 	int				sock;
 	int32_t			drawCall;
-	unsigned char	data[Corewar::MAP_SIZE];
 	Window			window("Corewar", WIDTH, HEIGHT);
 	Corewar			*corewar;
 	bool			corewarInitialiazed = false;
@@ -73,6 +72,9 @@ int		main(void)
 				std::cout << "Done!" << std::endl;
 				std::cout << "Accepting new corewar throught socket... ";
 				clientSocket = accept(sock, NULL, NULL);
+				std::cout << "Done!" << std::endl;
+				std::cout << "Getting initialization package... ";
+				recv(clientSocket, )
 				std::cout << "Done!" << std::endl;
 			}
 			if (clientSocket != -1 && recv(clientSocket, data, 4096, 0) == 0)

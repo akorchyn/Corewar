@@ -6,13 +6,14 @@
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 23:43:59 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/27 17:17:36 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/02/27 18:02:02 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vm.h"
 
 t_header		*g_header[MAX_PLAYERS];
+int32_t			g_car_count;
 
 int8_t		check_ip(char *ip)
 {
@@ -63,6 +64,7 @@ int32_t		main(int ac, char **av)
 		error(17, "Too many players.", NULL);
 	!(corewar.players) ? print_usage(av) : 0;
 	g_id = corewar.players;
+	g_car_count = corewar.players;
 	initializing(&corewar);
 	initializing_dispatcher(dispatcher);
 	if (!corewar.is_dump)

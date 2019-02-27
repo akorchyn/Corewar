@@ -6,7 +6,7 @@
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 16:38:06 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/02/27 17:19:52 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/02/27 18:06:51 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include "../libft/includes/libft.h"
 
 extern int32_t			g_id;
+extern int32_t			g_car_count;
 extern char				*g_usage;
 extern t_header			*g_header[MAX_PLAYERS];
 
@@ -141,7 +142,7 @@ void					aff(t_carriage *carriage, t_corewar *corewar,
 ** USEFUL FUNCTION SECTION
 */
 
-unsigned char			*create_package(t_corewar *corewar);
+void					send_package(t_corewar *corewar);
 int32_t					set_connection_to_visualization(char *ip, int8_t *i);
 void					set_player(int8_t *map, int32_t counter, int32_t bytes, int8_t id);
 int32_t					error(int code, char *msg, char *argument);
