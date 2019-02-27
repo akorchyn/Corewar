@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   useful_function.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/19 09:49:17 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/21 22:16:20 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/27 15:41:39 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,11 @@ int32_t					error(int code, char *msg, char *argument)
 }
 
 void					put_bytes(uint32_t value, unsigned char *placement,
-									int8_t bytes)
+									int16_t position, int8_t bytes)
 {
 	while (bytes--)
 	{
-		placement[bytes] = value & 255;
+		placement[(position + bytes + MEM_SIZE) % MEM_SIZE] = value & 255;
 		value >>= 8;
 	}
 }
@@ -42,7 +42,7 @@ void					put_bytes(uint32_t value, unsigned char *placement,
 ** 			Result of work 65535 (0xffff)
 */
 
-int32_t					bytes_to_dec(unsigned char const *str,
+int32_t					bytes_to_dec(unsigned char const *str, int16_t position,
 									int32_t bytes)
 {
 	uint32_t		res;
@@ -53,7 +53,7 @@ int32_t					bytes_to_dec(unsigned char const *str,
 	i = -1;
 	while (++i < bytes)
 	{
-		number = str[i];
+		number = str[(position + i + MEM_SIZE) % MEM_SIZE];
 		res <<= 8;
 		res |= number;
 	}
@@ -65,8 +65,8 @@ t_carriage				*extract_list(t_carriage **head, t_carriage *target)
 	t_carriage		*prev;
 	t_carriage		*tmp;
 
-	tmp = *head;
-	prev = NULL;
+	tmp = (*head)->next;
+	prev = *head;
 	if (*head == target)
 	{
 		*head = (*head)->next;
@@ -76,8 +76,7 @@ t_carriage				*extract_list(t_carriage **head, t_carriage *target)
 	{
 		if (tmp == target)
 		{
-			if (prev)
-				prev->next = tmp->next;
+			prev->next = tmp->next;
 			return (*head);
 		}
 		prev = tmp;
@@ -86,13 +85,13 @@ t_carriage				*extract_list(t_carriage **head, t_carriage *target)
 	return (*head);
 }
 
-void					sort_list(t_carriage **head, t_corewar *corewar)
+void					sort_list(t_carriage **head)
 {
 	t_carriage	*new_list;
 	t_carriage	*tmp;
 	int8_t		id;
 
-	id = corewar->players_count;
+	id = 1;
 	tmp = *head;
 	new_list = NULL;
 	while (tmp)
@@ -101,8 +100,10 @@ void					sort_list(t_carriage **head, t_corewar *corewar)
 		{
 			*head = extract_list(head, tmp);
 			tmp->next = new_list;
+			(new_list) ? new_list->prev = tmp : 0;
+			tmp->prev = NULL;
 			new_list = tmp;
-			id--;
+			id++;
 			tmp = *head;
 		}
 		else

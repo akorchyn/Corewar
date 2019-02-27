@@ -2,3 +2,4 @@
 .idea
 *.cor
 cmake-build-debug
+VM/CMakeLists.txt

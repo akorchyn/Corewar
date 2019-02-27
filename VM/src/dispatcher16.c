@@ -1,22 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pow.c                                           :+:      :+:    :+:   */
+/*   command16.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/02/14 19:19:27 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/14 19:22:25 by akorchyn         ###   ########.fr       */
+/*   Created: 2019/02/23 16:46:39 by akorchyn          #+#    #+#             */
+/*   Updated: 2019/02/25 21:55:06 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "vm.h"
 
-int32_t		ft_pow(int32_t number, int32_t power)
+int32_t			g_id;
+
+void		aff(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 {
-	if (power == 0)
-		return (1);
-	if (power == 1)
-		return (number);
-	return (number * ft_pow(number, power - 1));
+	if (bad_register_id(vars, carriage))
+		return ;
+	ft_printf("%c", (char)carriage->reg[vars->vars[0] - 1]);
+	if (corewar->verbose & 4)
+		ft_printf("P% 5d | aff r%hd", carriage->p_number,
+									carriage->reg[vars->vars[0] - 1]);
 }
