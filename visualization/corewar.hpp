@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   visualization.hpp                                  :+:      :+:    :+:   */
+/*   corewar.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 16:42:42 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/02/26 17:18:17 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/02/27 15:20:10 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,38 +22,44 @@
 # include "window.hpp"
 # include <vector>
 
-using std::vector;
-using std::string;
+enum								Players
+{
+	NO_PLAYER, FIRST, SECOND, THIRD, FOURTH
+};
+
+using	std::vector;
+using	std::string;
 
 class Corewar
 {
+
 	struct Player
 	{
-		int8_t		id;
-		string		name;
-		int32_t		lastLive;
-		int32_t		livesCurrentPeriod;
+		int8_t						id;
+		string						name;
+		int32_t						lastLive;
+		int32_t						livesCurrentPeriod;
 	};
 	struct Byte
 	{
-		unsigned char	value;
-		int8_t			owner;
+		unsigned char				value;
+		int8_t						owner;
+		int8_t						changed;
+		void						valueToHex(unsigned char value);
+		Byte();
+
 		/*
 			Graphics information
 		*/
-		string			hexText;
-		SDL_Color		*color;
-		SDL_Rect		position;
-		int8_t			changed;
-		Byte();
-		void valueToHex(unsigned char value);
-		SDL_Surface *byteSurface;
-		SDL_Texture *byteTexture;
-
+		string						hexText;
+		SDL_Color					*color;
+		SDL_Rect					position;
+		SDL_Surface					*byteSurface;
+		SDL_Texture					*byteTexture;
 	};
 
 	/*
-		Info that gets from buffer, and applies by Corewar::refreshData(data);
+		Info that gets from buffer, and applies by Corewar::refreshData method;
 	*/
 	vector<Byte>					_map;			// perfectly buffer of 4096 Byte's samples
 	int32_t							_iteration;
@@ -74,14 +80,14 @@ class Corewar
 	int32_t							byteHeight;
 	int32_t							blankWidth;
 	int32_t							blankHeight;
-public:
-	static constexpr int16_t	MAP_SIZE = 4096;
 
+	public:
+	static constexpr int16_t		MAP_SIZE = 4096;
 	static constexpr unsigned char	byteOrder[17] = "0123456789abcdef";
-
-	void refreshData(unsigned char *buffer);
-	void draw(Window *window);
 
 	Corewar(Window *window);
 	~Corewar();
+
+	void							draw(Window *window);
+	void							refreshData(unsigned char *buffer);
 };
