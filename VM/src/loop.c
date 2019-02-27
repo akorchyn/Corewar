@@ -6,7 +6,7 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/25 22:59:19 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/25 23:01:46 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/27 17:13:44 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,14 +79,15 @@ static void		cycle_to_die(t_corewar *corewar, t_carriage *pc)
 	corewar->count_live_for_cycle = 0;
 }
 
-void			cycle(t_corewar *corewar, t_dispatcher *dispatcher,
-							t_header **head)
+void			cycle(t_corewar *corewar, t_dispatcher *dispatcher)
 {
 	while (corewar->carriages)
 	{
 		corewar->iteration++;
 		(corewar->verbose & 2) && ft_printf("It is now cycle %d\n",
 											corewar->iteration);
+		if (corewar->iteration == 19096)
+			printf("ok");
 		operation(corewar->carriages, corewar, dispatcher);
 		if (--corewar->to_check < 1)
 			cycle_to_die(corewar, corewar->carriages);
@@ -94,7 +95,7 @@ void			cycle(t_corewar *corewar, t_dispatcher *dispatcher,
 			send(corewar->sock, corewar->map, 4096, 0);
 	}
 	ft_printf("Contestant %d, \"%s\", has won !\n", corewar->player_last_live,
-			head[corewar->player_last_live - 1]->prog_name);
+			g_header[corewar->player_last_live - 1]->prog_name);
 }
 
 void			dump_cycle(t_corewar *corewar, t_dispatcher *dispatcher)

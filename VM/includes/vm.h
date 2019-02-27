@@ -6,7 +6,7 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 16:38:06 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/02/26 17:32:21 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/27 16:30:50 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 
 extern int32_t			g_id;
 extern char				*g_usage;
+extern t_header			*g_header[MAX_PLAYERS];
 
 typedef struct			s_carriage
 {
@@ -81,16 +82,14 @@ int8_t					process_ids(t_carriage *carriages, int8_t players);
 */
 
 void					initializing_dispatcher(t_dispatcher *dispatcher);
-void					initializing(t_corewar *corewar, t_header **header);
+void					initializing(t_corewar *corewar);
 
 /*
 ** LOOP SECTION
 */
 
-void					cycle(t_corewar *corewar, t_dispatcher *dispatcher,
-									t_header **head);
-void					dump_cycle(t_corewar *corewar,
-									t_dispatcher *dispatcher);
+void					cycle(t_corewar *corewar, t_dispatcher *disp);
+void					dump_cycle(t_corewar *corewar, t_dispatcher *disp);
 
 /*
 ** CODAGE SECTION (COLLECTING VARIABLES AND CHECKING THEM)
@@ -151,7 +150,7 @@ void					sort_list(t_carriage **head);
 int32_t					bytes_to_dec(unsigned char const *str, int16_t position,
 									int32_t bytes);
 int8_t					bad_register_id(t_vars *vars, t_carriage *carriage);
-int16_t					shift(t_carriage *carriage, int16_t movement);
+int32_t					shift(t_carriage *carriage, int32_t movement);
 void					put_bytes(uint32_t value, unsigned char *placement,
 									int16_t position, int8_t bytes);
 

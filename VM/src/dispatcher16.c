@@ -20,6 +20,6 @@ void		aff(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 		return ;
 	ft_printf("%c", (char)carriage->reg[vars->vars[0] - 1]);
 	if (corewar->verbose & 4)
-		ft_printf("P% 5d | aff r%hd", carriage->p_number,
+		ft_printf("P% 5d | aff r%d", carriage->p_number,
 									carriage->reg[vars->vars[0] - 1]);
 }

@@ -6,11 +6,13 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 23:43:59 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/26 16:36:43 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/27 16:33:15 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vm.h"
+
+t_header		*g_header[MAX_PLAYERS];
 
 int8_t		check_ip(char *ip)
 {
@@ -53,17 +55,16 @@ int32_t		main(int ac, char **av)
 {
 	t_corewar		corewar;
 	t_dispatcher	dispatcher[16];
-	t_header		*header[4];
 
 	ft_bzero(&corewar, sizeof(corewar));
 	parse_arguments(ac, av, &corewar);
 	process_ids(corewar.carriages, corewar.players);
 	!(corewar.players) ? print_usage(av) : 0;
 	g_id = corewar.players;
-	initializing(&corewar, header);
+	initializing(&corewar);
 	initializing_dispatcher(dispatcher);
 	if (!corewar.is_dump)
-		cycle(&corewar, dispatcher, header);
+		cycle(&corewar, dispatcher);
 	else
 		dump_cycle(&corewar, dispatcher);
 	return (0);

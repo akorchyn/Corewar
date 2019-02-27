@@ -1,18 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   command6_10.c                                      :+:      :+:    :+:   */
+/*   dispatcher6_10.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/23 16:42:15 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/25 22:40:17 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/27 16:15:25 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vm.h"
-
-int32_t			g_id;
 
 void		and(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 {
@@ -35,7 +33,7 @@ void		and(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 	carriage->reg[vars->vars[2] - 1] = values[0] & values[1];
 	carriage->carry = carriage->reg[vars->vars[2] - 1] == 0 ? 1 : 0;
 	if (corewar->verbose & 4)
-		ft_printf("P% 5d | and %d %d r%hd\n", carriage->p_number, values[0],
+		ft_printf("P% 5d | and %d %d r%d\n", carriage->p_number, values[0],
 				values[1], vars->vars[2]);
 }
 
@@ -60,7 +58,7 @@ void		or(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 	carriage->reg[vars->vars[2] - 1] = values[0] | values[1];
 	carriage->carry = carriage->reg[vars->vars[2] - 1] == 0 ? 1 : 0;
 	if (corewar->verbose & 4)
-		ft_printf("P% 5d | or %d %d r%hd\n", carriage->p_number, values[0],
+		ft_printf("P% 5d | or %d %d r%d\n", carriage->p_number, values[0],
 				values[1], vars->vars[2]);
 }
 
@@ -85,7 +83,7 @@ void		xor(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 	carriage->reg[vars->vars[2] - 1] = values[0] ^ values[1];
 	carriage->carry = carriage->reg[vars->vars[2] - 1] == 0 ? 1 : 0;
 	if (corewar->verbose & 4)
-		ft_printf("P% 5d | xor %d %d r%hd\n", carriage->p_number, values[0],
+		ft_printf("P% 5d | xor %d %d r%d\n", carriage->p_number, values[0],
 				values[1], vars->vars[2]);
 }
 
@@ -94,13 +92,13 @@ void		zjmp(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 	if (carriage->carry)
 	{
 		if (corewar->verbose & 4)
-			ft_printf("P% 5d | zjmp %hd OK\n", carriage->p_number,
+			ft_printf("P% 5d | zjmp %d OK\n", carriage->p_number,
 					vars->vars[0]);
 		vars->skip = -1;
 		carriage->counter = shift(carriage, vars->vars[0]);
 	}
 	else if (corewar->verbose & 4)
-		ft_printf("P% 5d | zjmp %hd FAILED\n", carriage->p_number,
+		ft_printf("P% 5d | zjmp %d FAILED\n", carriage->p_number,
 					vars->vars[0]);
 }
 
@@ -122,9 +120,9 @@ void		ldi(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 	carriage->reg[vars->vars[2] - 1] = bytes_to_dec(corewar->map,
 		shift(carriage, values[0] + values[1]), REG_SIZE);
 	if (corewar->verbose & 4)
-		ft_printf("P% 5d | ldi %hd %hd r%hd\n"
-			"       | -> load from %hd + %hd = %hd (with pc and mod %hd)\n",
+		ft_printf("P% 5d | ldi %d %d r%d\n"
+			"       | -> load from %d + %d = %d (with pc and mod %d)\n",
 			carriage->p_number, values[0], values[1], vars->vars[2], values[0],
 			values[1], values[0] + values[1],
-			carriage->counter + values[0] + values[1]);
+				  carriage->counter + (values[0] + values[1]) % IDX_MOD);
 }

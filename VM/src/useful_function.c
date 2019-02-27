@@ -6,7 +6,7 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/19 09:49:17 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/25 21:18:00 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/27 16:05:42 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,18 +45,23 @@ void					put_bytes(uint32_t value, unsigned char *placement,
 int32_t					bytes_to_dec(unsigned char const *str, int16_t position,
 									int32_t bytes)
 {
-	uint32_t		res;
+	int32_t			res;
 	int32_t			i;
 	int32_t			number;
+	int8_t			sign;
 
 	res = 0;
+	sign = (str[position] & 0b10000000) ? 1 : 0;
 	i = -1;
 	while (++i < bytes)
 	{
 		number = str[(position + i + MEM_SIZE) % MEM_SIZE];
+		(sign) ? number ^= 255 : 0;
 		res <<= 8;
 		res |= number;
 	}
+	if (sign)
+		res = ~(res);
 	return (res);
 }
 
