@@ -12,7 +12,7 @@ libft.h
 fcntl.h
 -
 
-/Users/dmlitvin/corewarYE/asm/file_reading.c
+/Users/dmlitvin/corewarYE/asm/instruction.c
 asm.h
 /Users/dmlitvin/corewarYE/asm/asm.h
 op.h

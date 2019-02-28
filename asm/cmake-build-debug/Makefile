@@ -150,6 +150,60 @@ file_reading.c.s:
 	$(MAKE) -f CMakeFiles/asm.dir/build.make CMakeFiles/asm.dir/file_reading.c.s
 .PHONY : file_reading.c.s
 
+instruction.o: instruction.c.o
+
+.PHONY : instruction.o
+
+# target to build an object file
+instruction.c.o:
+	$(MAKE) -f CMakeFiles/asm.dir/build.make CMakeFiles/asm.dir/instruction.c.o
+.PHONY : instruction.c.o
+
+instruction.i: instruction.c.i
+
+.PHONY : instruction.i
+
+# target to preprocess a source file
+instruction.c.i:
+	$(MAKE) -f CMakeFiles/asm.dir/build.make CMakeFiles/asm.dir/instruction.c.i
+.PHONY : instruction.c.i
+
+instruction.s: instruction.c.s
+
+.PHONY : instruction.s
+
+# target to generate assembly for a file
+instruction.c.s:
+	$(MAKE) -f CMakeFiles/asm.dir/build.make CMakeFiles/asm.dir/instruction.c.s
+.PHONY : instruction.c.s
+
+label.o: label.c.o
+
+.PHONY : label.o
+
+# target to build an object file
+label.c.o:
+	$(MAKE) -f CMakeFiles/asm.dir/build.make CMakeFiles/asm.dir/label.c.o
+.PHONY : label.c.o
+
+label.i: label.c.i
+
+.PHONY : label.i
+
+# target to preprocess a source file
+label.c.i:
+	$(MAKE) -f CMakeFiles/asm.dir/build.make CMakeFiles/asm.dir/label.c.i
+.PHONY : label.c.i
+
+label.s: label.c.s
+
+.PHONY : label.s
+
+# target to generate assembly for a file
+label.c.s:
+	$(MAKE) -f CMakeFiles/asm.dir/build.make CMakeFiles/asm.dir/label.c.s
+.PHONY : label.c.s
+
 main.o: main.c.o
 
 .PHONY : main.o
@@ -216,6 +270,12 @@ help:
 	@echo "... file_reading.o"
 	@echo "... file_reading.i"
 	@echo "... file_reading.s"
+	@echo "... instruction.o"
+	@echo "... instruction.i"
+	@echo "... instruction.s"
+	@echo "... label.o"
+	@echo "... label.i"
+	@echo "... label.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

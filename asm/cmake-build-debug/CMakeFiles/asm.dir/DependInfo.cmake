@@ -5,6 +5,8 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
   "/Users/dmlitvin/corewarYE/asm/file_reading.c" "/Users/dmlitvin/corewarYE/asm/cmake-build-debug/CMakeFiles/asm.dir/file_reading.c.o"
+  "/Users/dmlitvin/corewarYE/asm/instruction.c" "/Users/dmlitvin/corewarYE/asm/cmake-build-debug/CMakeFiles/asm.dir/instruction.c.o"
+  "/Users/dmlitvin/corewarYE/asm/label.c" "/Users/dmlitvin/corewarYE/asm/cmake-build-debug/CMakeFiles/asm.dir/label.c.o"
   "/Users/dmlitvin/corewarYE/asm/main.c" "/Users/dmlitvin/corewarYE/asm/cmake-build-debug/CMakeFiles/asm.dir/main.c.o"
   "/Users/dmlitvin/corewarYE/asm/op.c" "/Users/dmlitvin/corewarYE/asm/cmake-build-debug/CMakeFiles/asm.dir/op.c.o"
   )

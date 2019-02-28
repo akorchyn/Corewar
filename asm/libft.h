@@ -153,6 +153,7 @@ void					ft_lstdel(t_list **alst, void (*del)(void *, size_t));
 void					ft_lstadd(t_list **alst, t_list *new);
 void					ft_lstadd_sorted(t_list **alst, t_list *new,
 	int (*cmp)(t_list *lst, t_list *new));
+void					ft_lstadd_end(t_list **head, t_list *new);
 void					ft_lstiter(t_list *lst, void (*f)(t_list *elem));
 t_list					*ft_lstmap(t_list *lst, t_list *(*f)(t_list *elem));
 void					*ft_memset(void *b, int c, size_t len);
@@ -246,7 +247,6 @@ int						print_char(t_printf *info, void *data);
 int						print_percent(t_printf *info);
 int						print_pointer(t_printf *info, void *data);
 int						print_string(t_printf *info, void *data);
-int						print_pointer(t_printf *info, void *data);
 int						print_decimal(t_printf *info, void *data);
 int						print_numeric(t_printf *info, void *data);
 int						print_float(t_printf *info, float data);

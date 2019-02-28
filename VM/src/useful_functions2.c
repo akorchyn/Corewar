@@ -3,14 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   useful_functions2.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/23 16:49:28 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/26 17:44:07 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/27 15:42:35 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vm.h"
+
+void			set_player(int8_t *map, int32_t counter, int32_t bytes, int8_t id)
+{
+	int32_t		i;
+
+	i = -1;
+	while (++i < bytes)
+		map[(i + counter + MEM_SIZE) % MEM_SIZE] = id;
+}
 
 void			print_usage(char **av)
 {

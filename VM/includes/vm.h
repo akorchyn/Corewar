@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vm.h                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 16:38:06 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/02/27 16:33:15 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/28 13:27:57 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ typedef struct			s_carriage
 
 typedef struct			s_corewar
 {
+	int8_t				*player_affected;
 	unsigned char		*map;
 	t_carriage			*carriages;
 	int32_t				dump_drop;
@@ -142,7 +143,10 @@ void					aff(t_carriage *carriage, t_corewar *corewar,
 ** USEFUL FUNCTION SECTION
 */
 
+void					send_init_package(t_corewar *corewar);
+void					send_package(t_corewar *corewar);
 int32_t					set_connection_to_visualization(char *ip, int8_t *i);
+void					set_player(int8_t *map, int32_t counter, int32_t bytes, int8_t id);
 int32_t					error(int code, char *msg, char *argument);
 void					print_usage(char **av);
 void					print_dump(uint8_t *map, int16_t bytes_in_line,

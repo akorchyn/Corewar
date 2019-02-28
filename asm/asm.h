@@ -13,21 +13,41 @@
 #ifndef ASM_H
 # define ASM_H
 
-# include "libft.h"
 # include <fcntl.h>
+# include "libft.h"
+# include "op.h"
 
-extern t_list	*g_instructions;
+# define GET_INSTRUCTION(lst) ((t_instruction*)lst->content)
 
-void			throw_error(int error_id, char *str);
-void			parse_file(char *file_name);
-
-typedef struct	s_instruction
+typedef struct		s_lexem
 {
-	char		*instruction;
-	t_list		*label;
-	char		*instruction_code;
-	size_t		instruction_size;
-	size_t		global_size;
-}				t_instruction;
+	char			*command;
+	t_list			*argument;
+	char			*code;
+	size_t			size;
+}					t_lexem;
+
+typedef struct		s_instruction
+{
+	char			*instruction;
+	size_t			line;
+	t_list			*label;
+	t_lexem			lexem;
+	size_t			global_size;
+}					t_instruction;
+
+//typedef void 		(*t_size_count)(t_lexem *lexem, size_t line);
+
+extern t_list		*g_instructions;
+//extern t_size_count	g_size_count_array[16];
+
+void				throw_error(int error_id, char *str, size_t line);
+void				parse_file(char *file_name);
+void				set_inst_sizes(t_list *inst);
+void				read_labels(t_list *inst);
+void				count_live(t_lexem *lexem, size_t line);
+void				count_ld(t_lexem *lexem, size_t line);
+void				count_st(t_lexem *lexem, size_t line);
+void				count_add(t_lexem *lexem, size_t line);
 
 #endif

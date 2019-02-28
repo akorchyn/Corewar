@@ -10,7 +10,7 @@ LIBFT = libft/libft.a
 
 INCLUDES = -I includes
 
-FILE = initializing main parse useful_function dispatcher1_5 dispatcher16 dispatcher6_10 dispatcher11_15 loop useful_functions2 codage
+FILE = initializing main parse useful_function dispatcher1_5 dispatcher16 dispatcher6_10 dispatcher11_15 loop useful_functions2 codage send_package
 
 OBJ_LIST = $(addprefix obj/, $(addsuffix .o, $(FILE)))
 

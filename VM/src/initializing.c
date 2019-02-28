@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   initializing.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/19 09:40:23 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/26 16:51:30 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/27 17:17:26 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,10 @@ void			initializing(t_corewar *corewar)
 	t_carriage		*tmp;
 	int32_t			distance;
 
-	if (ft_list_counter((void **)corewar->carriages) > MAX_PLAYERS)
-		error(17, "Too many players.", NULL);
 	if (!(corewar->map = (unsigned char *)ft_memalloc(sizeof(char) * MEM_SIZE)))
 		error(18, "Allocation battle arena failed.", NULL);
+	if (!(corewar->player_affected = (int8_t *)ft_memalloc(sizeof(int8_t) * MEM_SIZE)))
+		error(22, "Allocation memory failed", NULL);
 	sort_list(&corewar->carriages);
 	corewar->player_last_live = corewar->players;
 	corewar->to_check = CYCLE_TO_DIE;
@@ -47,6 +47,8 @@ void			initializing(t_corewar *corewar)
 		tmp->counter = distance * (tmp->id - 1);
 		ft_memcpy(corewar->map + tmp->counter, tmp->code,
 				tmp->header->prog_size);
+		set_player(corewar->player_affected, tmp->counter,
+			tmp->header->prog_size, tmp->id);
 		free(tmp->code);
 		tmp = tmp->next;
 	}

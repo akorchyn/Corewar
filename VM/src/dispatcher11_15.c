@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dispatcher11_15.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/23 16:45:32 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/27 17:09:23 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/27 18:01:49 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,10 @@ void		sti(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 	values[1] = (vars->parsed_codage[2] == T_REG)
 				? carriage->reg[vars->vars[2] - 1] : vars->vars[2];
 	put_bytes(carriage->reg[vars->vars[0] - 1], corewar->map,
-							shift(carriage, values[0] +
-								values[1]), REG_SIZE);
+							shift(carriage, (values[0] +
+								values[1])), REG_SIZE);
+	set_player(corewar->player_affected, shift(carriage, vars->vars[1]), 4,
+									carriage->id);
 	if (corewar->verbose & 4)
 		ft_printf("P% 5d | sti r%d %d %d\n       | -> store to %d + %d = "
 			"%d (with pc and mod %d)\n", carriage->p_number, vars->vars[0],
