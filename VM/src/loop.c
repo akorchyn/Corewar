@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   loop.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/25 22:59:19 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/28 16:30:37 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/02/28 18:07:16 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,8 @@ void			cycle(t_corewar *corewar, t_dispatcher *dispatcher)
 		operation(corewar->carriages, corewar, dispatcher);
 		if (--corewar->to_check < 1)
 			cycle_to_die(corewar, corewar->carriages);
+		if (corewar->verbose & 8 && !(corewar->iteration % 500))
+			system("leaks -q corewar");
 		// if (corewar->sock)
 		// 	send_package(corewar);
 	}
@@ -110,6 +112,8 @@ void			dump_cycle(t_corewar *corewar, t_dispatcher *dispatcher)
 											corewar->iteration);
 		if (--corewar->to_check < 1)
 			cycle_to_die(corewar, corewar->carriages);
+		if (corewar->verbose & 8 && !(corewar->iteration % 500))
+			system("leaks -q corewar");
 		// if (corewar->sock)
 		// 	send_package(corewar);
 	}

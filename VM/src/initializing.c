@@ -6,7 +6,7 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/19 09:40:23 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/28 17:45:40 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/28 17:46:27 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,5 +118,6 @@ char			*g_usage =
 "                         - 2 : Show cycles\n"
 "                         - 4 : Show operations (Params are"
 " NOT litteral ...)\n"
+"                         - 8 : Leaks checking every 500 iterations\n"
 "    -visual [ip]       : Visualization corewar, socket connection\n"
 "    -n N               : Set player number\n";

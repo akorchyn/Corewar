@@ -6,7 +6,7 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 23:43:59 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/28 17:48:39 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/28 18:03:41 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int32_t		set_connection_to_visualization(char *address, int16_t *i)
 	struct hostent			*he;
 	struct in_addr			**addr;
 
-	he = gethostbyname(address);
+	he = (address) ? gethostbyname(address) : NULL;
 	addr = (he) ? (struct in_addr**)he->h_addr_list : NULL;
 	(addr) ? (*i)++ : 0;
 	sock = socket(AF_INET, SOCK_STREAM, 0);
@@ -35,6 +35,18 @@ int32_t		set_connection_to_visualization(char *address, int16_t *i)
 	return (sock);
 }
 
+void		ending(t_corewar *corewar)
+{
+	int8_t		i;
+
+	i = -1;
+	free(corewar->map);
+	if (corewar->sock)
+		free(corewar->player_affected);
+	while (++i < corewar->players)
+		free(g_header[i]);
+}
+
 int32_t		main(int ac, char **av)
 {
 	t_corewar		corewar;
@@ -42,8 +54,8 @@ int32_t		main(int ac, char **av)
 
 	ft_bzero(&corewar, sizeof(corewar));
 	parse_arguments(ac, av, &corewar, 0);
-	process_ids(corewar.carriages, corewar.players);
 	!(corewar.players) ? print_usage(av) : 0;
+	process_ids(corewar.carriages, corewar.players);
 	g_id = corewar.players;
 	g_car_count = corewar.players;
 	initializing(&corewar);
@@ -52,5 +64,7 @@ int32_t		main(int ac, char **av)
 		cycle(&corewar, dispatcher);
 	else
 		dump_cycle(&corewar, dispatcher);
+	ending(&corewar);
+	(corewar.verbose & 8) ? system("leaks -q corewar") : 0;
 	return (0);
 }
