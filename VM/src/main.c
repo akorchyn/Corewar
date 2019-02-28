@@ -6,7 +6,7 @@
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 23:43:59 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/27 18:02:02 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/02/28 16:30:23 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,10 @@ int32_t		set_connection_to_visualization(char *ip, int8_t *i)
 {
 	int32_t					sock;
 	struct sockaddr_in		server_address;
-	char					*msg;
 	int32_t					is_ip;
 
 	is_ip = check_ip(ip);
 	(is_ip) ? (*i)++ : 0;
-	msg = "Connection is set!\n";
 	sock = socket(AF_INET, SOCK_STREAM, 0);
 	server_address.sin_family = AF_INET;
 	server_address.sin_port = htons(4242);
@@ -48,7 +46,6 @@ int32_t		set_connection_to_visualization(char *ip, int8_t *i)
 		ft_printf("Shit happened. You cannot connect to the server...\n");
 		exit(EXIT_FAILURE);
 	}
-	send(sock, msg, sizeof(msg), 0);
 	return (sock);
 }
 
@@ -71,5 +68,6 @@ int32_t		main(int ac, char **av)
 		cycle(&corewar, dispatcher);
 	else
 		dump_cycle(&corewar, dispatcher);
+	close(corewar.sock);
 	return (0);
 }

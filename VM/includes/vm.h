@@ -6,7 +6,7 @@
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 16:38:06 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/02/27 18:06:51 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/02/28 13:27:57 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,6 +142,7 @@ void					aff(t_carriage *carriage, t_corewar *corewar,
 ** USEFUL FUNCTION SECTION
 */
 
+void					send_init_package(t_corewar *corewar);
 void					send_package(t_corewar *corewar);
 int32_t					set_connection_to_visualization(char *ip, int8_t *i);
 void					set_player(int8_t *map, int32_t counter, int32_t bytes, int8_t id);

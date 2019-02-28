@@ -14,5 +14,7 @@
 
 int			ft_list_counter(void **list)
 {
+	if (!list)
+		return (0);
 	return ((*list) ? 1 + ft_list_counter(list[0]) : 1);
 }

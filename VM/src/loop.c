@@ -6,7 +6,7 @@
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/25 22:59:19 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/27 18:06:07 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/02/28 16:30:37 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,8 @@ static void		cycle_to_die(t_corewar *corewar, t_carriage *pc)
 
 void			cycle(t_corewar *corewar, t_dispatcher *dispatcher)
 {
+	if (corewar->sock)
+		send_init_package(corewar);
 	while (corewar->carriages)
 	{
 		corewar->iteration++;
@@ -90,8 +92,8 @@ void			cycle(t_corewar *corewar, t_dispatcher *dispatcher)
 		operation(corewar->carriages, corewar, dispatcher);
 		if (--corewar->to_check < 1)
 			cycle_to_die(corewar, corewar->carriages);
-		if (corewar->sock)
-			send_package(corewar);
+		// if (corewar->sock)
+		// 	send_package(corewar);
 	}
 	ft_printf("Contestant %d, \"%s\", has won !\n", corewar->player_last_live,
 			g_header[corewar->player_last_live - 1]->prog_name);
@@ -99,6 +101,8 @@ void			cycle(t_corewar *corewar, t_dispatcher *dispatcher)
 
 void			dump_cycle(t_corewar *corewar, t_dispatcher *dispatcher)
 {
+	if (corewar->sock)
+		send_init_package(corewar);
 	while (corewar->carriages && ++corewar->iteration <= corewar->dump_drop)
 	{
 		operation(corewar->carriages, corewar, dispatcher);
@@ -106,8 +110,8 @@ void			dump_cycle(t_corewar *corewar, t_dispatcher *dispatcher)
 											corewar->iteration);
 		if (--corewar->to_check < 1)
 			cycle_to_die(corewar, corewar->carriages);
-		if (corewar->sock)
-			send_package(corewar);
+		// if (corewar->sock)
+		// 	send_package(corewar);
 	}
 	print_dump(corewar->map, 64, MEM_SIZE);
 }
