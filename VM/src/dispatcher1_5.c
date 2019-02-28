@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dispatcher1_5.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/23 16:40:09 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/27 18:02:50 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/02/28 17:37:12 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,9 @@ void		st(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 	}
 	put_bytes(carriage->reg[vars->vars[0] - 1], corewar->map,
 						shift(carriage, vars->vars[1]), REG_SIZE);
-	set_player(corewar->player_affected, shift(carriage, vars->vars[1]), 4, carriage->id);
+	if (corewar->sock)
+		set_player(corewar->player_affected, shift(carriage, vars->vars[1]), 4,
+										carriage->id);
 	if (corewar->verbose & 4)
 		ft_printf("P% 5d | st r%d %d\n", carriage->p_number, vars->vars[0],
 				vars->vars[1]);

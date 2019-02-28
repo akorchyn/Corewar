@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   useful_functions2.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/23 16:49:28 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/27 15:42:35 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/02/28 17:40:50 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vm.h"
 
-void			set_player(int8_t *map, int32_t counter, int32_t bytes, int8_t id)
+void			set_player(int8_t *map, int32_t counter, int32_t bytes,
+		int8_t id)
 {
 	int32_t		i;
 
@@ -24,7 +25,7 @@ void			set_player(int8_t *map, int32_t counter, int32_t bytes, int8_t id)
 void			print_usage(char **av)
 {
 	ft_printf("Usage: %s [-dump N -v N -n N -visual [ip]] <champion1.cor> "
-		   "<...>\n%s", av[0], g_usage);
+		"<...>\n%s", av[0], g_usage);
 	exit(0);
 }
 

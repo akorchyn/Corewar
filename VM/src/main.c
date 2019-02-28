@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 23:43:59 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/28 17:24:48 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/28 17:48:39 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,15 @@
 t_header		*g_header[MAX_PLAYERS];
 int32_t			g_car_count;
 
-
-int32_t		set_connection_to_visualization(char *address, int8_t *i)
+int32_t		set_connection_to_visualization(char *address, int16_t *i)
 {
 	int32_t					sock;
 	struct sockaddr_in		server_address;
 	struct hostent			*he;
 	struct in_addr			**addr;
 
-	addr = ((he = gethostbyname(address))) ? (struct in_addr**)he->h_addr_list
-											: NULL;
+	he = gethostbyname(address);
+	addr = (he) ? (struct in_addr**)he->h_addr_list : NULL;
 	(addr) ? (*i)++ : 0;
 	sock = socket(AF_INET, SOCK_STREAM, 0);
 	server_address.sin_family = AF_INET;
@@ -42,7 +41,7 @@ int32_t		main(int ac, char **av)
 	t_dispatcher	dispatcher[16];
 
 	ft_bzero(&corewar, sizeof(corewar));
-	parse_arguments(ac, av, &corewar);
+	parse_arguments(ac, av, &corewar, 0);
 	process_ids(corewar.carriages, corewar.players);
 	!(corewar.players) ? print_usage(av) : 0;
 	g_id = corewar.players;

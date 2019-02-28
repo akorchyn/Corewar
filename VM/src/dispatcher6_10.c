@@ -124,5 +124,5 @@ void		ldi(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 			"       | -> load from %d + %d = %d (with pc and mod %d)\n",
 			carriage->p_number, values[0], values[1], vars->vars[2], values[0],
 			values[1], values[0] + values[1],
-				  carriage->counter + (values[0] + values[1]) % IDX_MOD);
+				carriage->counter + (values[0] + values[1]) % IDX_MOD);
 }

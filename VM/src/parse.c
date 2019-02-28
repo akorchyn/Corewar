@@ -100,11 +100,9 @@ int8_t				process_ids(t_carriage *carriages, int8_t players)
 	return (1);
 }
 
-void				parse_arguments(int ac, char **av, t_corewar *corewar)
+void				parse_arguments(int ac, char **av, t_corewar *corewar,
+			int16_t i)
 {
-	int8_t			i;
-
-	i = 0;
 	while (++i < ac)
 		if (!ft_strcmp("-dump", av[i]) || !ft_strcmp("-d", av[i]))
 		{
