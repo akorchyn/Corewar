@@ -19,6 +19,7 @@
 # include <sys/socket.h>
 # include <netinet/in.h>
 # include <arpa/inet.h>
+# include <netdb.h>
 # include "../libft/includes/libft.h"
 
 extern int32_t			g_id;
