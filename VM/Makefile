@@ -29,7 +29,7 @@ $(LIBFT):
 	@make -C libft
 
 obj/%.o: src/%.c
-	$(CC) $(FLAGS) $(INCLUDES) -o $@ $<
+	@$(CC) $(FLAGS) $(INCLUDES) -o $@ $<
 
 clean:
 	@make clean -C libft
