@@ -6,7 +6,7 @@
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 16:42:42 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/02/27 19:31:48 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/02/28 18:11:20 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <iostream>
 # include "window.hpp"
 # include <vector>
+# include <string.h>
 
 enum								Players
 {
@@ -32,14 +33,24 @@ using	std::string;
 
 class Corewar
 {
-
 	struct Player
 	{
 		int8_t						id;
 		string						name;
-		int32_t						lastLive;
-		int32_t						livesCurrentPeriod;
+
+		SDL_Surface					*idSurface;
+		SDL_Texture					*idTexture;
+		SDL_Rect					idRect;
+
+		SDL_Surface					*nameSurface;
+		SDL_Texture					*nameTexture;
+		SDL_Rect					nameRect;
 	};
+
+	/*
+		There are field of 4096 bytes.
+		Each cell is represented by Byte structure
+	*/
 	struct Byte
 	{
 		unsigned char				value;
@@ -58,10 +69,12 @@ class Corewar
 		SDL_Texture					*byteTexture;
 	};
 
+	void							_parseInitPackage(uint8_t *initPackage, Window *window);
+	void							_initField(Window *window);
+	
 	/*
 		Info that gets from buffer, and applies by Corewar::refreshData method;
 	*/
-	unsigned char					_initPackage[]
 	vector<Byte>					_map;			// perfectly buffer of 4096 Byte's samples
 	int32_t							_iteration;
 	int16_t							_processess;
@@ -74,21 +87,24 @@ class Corewar
 	/*
 		Info about graphic components, render, etc.
 	*/
-	TTF_Font						*font;
-	int32_t							startX;
-	int32_t							startY;
-	int32_t							byteWidth;
-	int32_t							byteHeight;
-	int32_t							blankWidth;
-	int32_t							blankHeight;
+	TTF_Font						*_font;
+	int32_t							_startX;
+	int32_t							_startY;
+	int32_t							_byteWidth;
+	int32_t							_byteHeight;
+	int32_t							_blankWidth;
+	int32_t							_blankHeight;
 
 	public:
-	static constexpr int16_t		MAP_SIZE = 4096;
-	static constexpr unsigned char	byteOrder[17] = "0123456789abcdef";
-
-	Corewar(Window *window);
+	Corewar(Window *window, uint8_t *initPackage);
 	~Corewar();
 
 	void							draw(Window *window);
-	void							refreshData(unsigned char *buffer);
+	void							drawInitData(Window *window);
+	void							refreshData(uint8_t *package);
+
+	static constexpr int16_t		mapSize = 4096;
+	static constexpr int16_t		initPackageSize = 529;
+	static constexpr int16_t		maxNameLength = 128;
+	static constexpr unsigned char	byteOrder[17] = "0123456789abcdef";
 };
