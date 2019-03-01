@@ -6,7 +6,7 @@
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/01 12:35:54 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/03/01 15:32:42 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/03/01 16:46:14 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,26 @@ Text::Text(string text, TTF_Font *font,
 
 //-----------------------------------------------------------------------------
 
-Text::Text(Text &&right)
+Text::Text(const Text &right) noexcept
+{
+	_renderer = right._renderer;
+	_textSurface = right._textSurface;
+	_textTexture = right._textTexture;
+	_textRect = right._textRect;
+	_color = right._color;
+	_text = right._text;
+	_fontSize = right._fontSize;
+	_font = right._font;
+	_commonFont = right._font;
+	_charHeight = right._charHeight;
+	_charWidth = right._charWidth;
+	_xPos = right._xPos;
+	_yPos = right._yPos;
+}
+
+//-----------------------------------------------------------------------------
+
+Text::Text(Text &&right) noexcept
 {
 	_renderer = right._renderer;
 	right._renderer = nullptr;
@@ -134,7 +153,28 @@ Text::~Text()
 
 //-----------------------------------------------------------------------------
 
-Text&			Text::operator=(Text &&right)
+Text&			Text::operator=(const Text &right) noexcept
+{
+	_renderer = right._renderer;
+	_textSurface = right._textSurface;
+	_textTexture = right._textTexture;
+	_textRect = right._textRect;
+	_color = right._color;
+	_text = right._text;
+	_fontSize = right._fontSize;
+	_font = right._font;
+	_commonFont = right._font;
+	_charHeight = right._charHeight;
+	_charWidth = right._charWidth;
+	_xPos = right._xPos;
+	_yPos = right._yPos;
+	std::cout << "wtf2" << std::endl;
+	return *this;
+}
+
+//-----------------------------------------------------------------------------
+
+Text&			Text::operator=(Text &&right) noexcept
 {
 	_renderer = right._renderer;
 	right._renderer = nullptr;

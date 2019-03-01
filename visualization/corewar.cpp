@@ -6,7 +6,7 @@
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/27 14:56:24 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/03/01 15:25:02 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/03/01 16:43:19 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,24 @@ SDL_Color	basicColors[5] = {
 		SDL_Color{51, 51, 255},
 		SDL_Color{255, 255, 51}
 };
+
+//-----------------------------------------------------------------------------
+
+Corewar::Player::Player(Player &&right) noexcept
+{
+	idText = std::move(right.idText);
+	nameText = std::move(right.nameText);
+}
+
+//-----------------------------------------------------------------------------
+
+Corewar::Player::Player(const Player &right) noexcept
+{
+	std::cout << "wtf1" << std::endl;
+	idText = right.idText;
+	nameText = right.nameText;
+}
+
 //-----------------------------------------------------------------------------
 
 Corewar::Player::Player()
@@ -56,27 +74,29 @@ void	Corewar::_parseInitPackage(uint8_t *initPackage, Window *window)
 	int16_t		paddingLeft = (64 * (_byteWidth + _blankWidth)) + 50;
 	int16_t		paddingTop = 50;
 	int8_t		playersAmount = initPackage[packageIter++];
+	Player		tmpPlayer;
+
 
 	for (int16_t i = 0; i < 4; ++i)
 	{
 		if (i < playersAmount)
 		{
-			Corewar::Player		tmpPlayer;
 			memcpy(nameBuff, initPackage + packageIter + 1, Corewar::maxNameLength);
 
 			tmpPlayer.idText = Text("Player " + std::to_string(initPackage[packageIter]) + ":",
-									_font,
-									paddingLeft, paddingTop,
-									10, 7 ,
-									&basicColors[NO_PLAYER], window->renderer);
+					_font,
+					paddingLeft, paddingTop,
+					10, 7,
+					&basicColors[NO_PLAYER],
+					window->renderer);
 
 			tmpPlayer.nameText = Text((char *)nameBuff,
-									_font,
-									paddingLeft + tmpPlayer.idText.getLength(), paddingTop,
-									10, 7,
-									&basicColors[i + 1],
-									window->renderer);
-			_players.push_back(tmpPlayer);
+					_font,
+					paddingLeft + tmpPlayer.idText.getLength(), paddingTop,
+					10, 7,
+					&basicColors[i + 1],
+					window->renderer);
+			_players.push_back(std::move(tmpPlayer));
 			paddingTop += 35;
 		}
 		packageIter += Corewar::maxNameLength + 1;

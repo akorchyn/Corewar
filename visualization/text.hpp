@@ -6,7 +6,7 @@
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/01 12:35:47 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/03/01 15:31:40 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/03/01 16:42:51 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,12 @@ class Text
 		int16_t xPos, int16_t yPos, int16_t charWidth, int16_t charHeight,
 		SDL_Color *color, SDL_Renderer *renderer);
 	~Text();
-	Text(Text &&right);
-
+	Text(const Text &right) noexcept;
+	Text(Text &&right) noexcept;
 	void			draw();
 	void			dynamicDraw(int16_t x, int16_t y);
 	int16_t			getLength();
 
-	Text&			operator=(Text &&right);
+	Text&			operator=(const Text &right) noexcept;
+	Text&			operator=(Text &&right) noexcept;
 };

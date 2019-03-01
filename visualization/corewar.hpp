@@ -6,7 +6,7 @@
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 16:42:42 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/03/01 15:04:25 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/03/01 16:46:30 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ class Corewar
 		Text						idText;
 		Text						nameText;
 
+		Player(const Player &right) noexcept;
+		Player(Player &&right) noexcept;
 		Player();
 		~Player();
 	};
@@ -67,9 +69,7 @@ class Corewar
 	int32_t							_cycleToDie;
 
 	Text							_cycleDelta;
-
 	Text							_nbrLive;
-
 	Text							_maxChecks;
 
 	/*
