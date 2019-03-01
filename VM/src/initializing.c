@@ -110,14 +110,14 @@ t_op			g_op_tab[17] =
 };
 
 char			*g_usage =
-"    (-dump | -d) N     : Dumps memory after N cycles then exits\n"
-"    -v N               : Verbosity levels, can be added "
+"    (-dump | -d) N      : Dumps memory after N cycles then exits\n"
+"    -v N                : Verbosity levels, can be added "
 "together to enable several\n"
-"                         - 0 : Show only essentials\n"
-"                         - 1 : Show lives\n"
-"                         - 2 : Show cycles\n"
-"                         - 4 : Show operations (Params are"
+"                          - 0 : Show only essentials\n"
+"                          - 1 : Show lives\n"
+"                          - 2 : Show cycles\n"
+"                          - 4 : Show operations (Params are"
 " NOT litteral ...)\n"
-"                         - 8 : Leaks checking every 500 iterations\n"
-"    -visual [ip]       : Visualization corewar, socket connection\n"
-"    -n N               : Set player number\n";
+"                          - 8 : Leaks checking every 500 iterations\n"
+"    -visual [ip | link] : Visualization corewar, socket connection\n"
+"    -n N                : Set player number\n";

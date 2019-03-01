@@ -50,7 +50,7 @@ static void		kill_carriages(t_carriage *pc, t_corewar *corewar)
 	{
 		tmp = pc->next;
 		if (corewar->iteration - pc->last_live >= corewar->cycles_to_die
-			|| corewar->cycles_to_die < 0)
+			|| corewar->cycles_to_die <= 0)
 		{
 			(pc->prev) ? pc->prev->next = pc->next : 0;
 			(pc->next) ? pc->next->prev = pc->prev : 0;
