@@ -6,7 +6,7 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/23 16:49:28 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/03/01 03:14:36 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/03/01 03:16:53 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void			set_player(int8_t *map, int32_t counter, int32_t bytes,
 void			print_usage(char **av)
 {
 	ft_printf("Usage: %s [-dump N -v N -visual [ip]] "
-		   "<[-n number] champion1.cor> <...>\n%s", av[0], g_usage);
+		"<[-n number] champion1.cor> <...>\n%s", av[0], g_usage);
 	exit(0);
 }
 
