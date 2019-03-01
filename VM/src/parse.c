@@ -6,7 +6,7 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/19 09:51:52 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/26 16:19:15 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/03/01 21:53:27 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ static int8_t		create_carriage(char *file, t_carriage **head)
 	return (1);
 }
 
-static int8_t		id_exists(t_carriage *carriages, int8_t id)
+inline static int8_t		id_exists(t_carriage *carriages, int8_t id)
 {
 	while (carriages)
 	{
