@@ -6,45 +6,30 @@
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 16:42:42 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/02/28 18:11:20 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/03/01 15:04:25 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-# include <sys/types.h>
-# include <sys/socket.h>
-# include <netinet/in.h>
-# include <unistd.h>
-# include <stdlib.h>
-# include <stdio.h>
-# include <iostream>
+# include "visualization.hpp"
 # include "window.hpp"
-# include <vector>
-# include <string.h>
+# include "text.hpp"
 
 enum								Players
 {
 	NO_PLAYER, FIRST, SECOND, THIRD, FOURTH
 };
 
-using	std::vector;
-using	std::string;
-
 class Corewar
 {
 	struct Player
 	{
-		int8_t						id;
-		string						name;
+		Text						idText;
+		Text						nameText;
 
-		SDL_Surface					*idSurface;
-		SDL_Texture					*idTexture;
-		SDL_Rect					idRect;
-
-		SDL_Surface					*nameSurface;
-		SDL_Texture					*nameTexture;
-		SDL_Rect					nameRect;
+		Player();
+		~Player();
 	};
 
 	/*
@@ -80,9 +65,12 @@ class Corewar
 	int16_t							_processess;
 	vector<Player>					_players;		// max - 4
 	int32_t							_cycleToDie;
-	int32_t							_cycleDelta;
-	int32_t							_nbrLive;
-	int32_t							_maxChecks;
+
+	Text							_cycleDelta;
+
+	Text							_nbrLive;
+
+	Text							_maxChecks;
 
 	/*
 		Info about graphic components, render, etc.

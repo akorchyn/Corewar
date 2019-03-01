@@ -6,7 +6,7 @@
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/27 14:56:24 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/02/28 18:15:36 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/03/01 15:25:02 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,17 @@ SDL_Color	basicColors[5] = {
 		SDL_Color{51, 51, 255},
 		SDL_Color{255, 255, 51}
 };
+//-----------------------------------------------------------------------------
+
+Corewar::Player::Player()
+{
+}
+
+//-----------------------------------------------------------------------------
+
+Corewar::Player::~Player()
+{
+}
 
 //-----------------------------------------------------------------------------
 
@@ -42,45 +53,54 @@ void	Corewar::_parseInitPackage(uint8_t *initPackage, Window *window)
 {
 	int16_t		packageIter = 0;
 	uint8_t		nameBuff[Corewar::maxNameLength];
-	string		tmp;
+	int16_t		paddingLeft = (64 * (_byteWidth + _blankWidth)) + 50;
+	int16_t		paddingTop = 50;
+	int8_t		playersAmount = initPackage[packageIter++];
 
-	int32_t		paddingLeft = (64 * (_byteWidth + _blankWidth)) + 50;
-	int32_t		paddingTop = 50;
-
-	_players = vector<Player>(initPackage[packageIter++]);
 	for (int16_t i = 0; i < 4; ++i)
 	{
-		if (i < _players.size())
+		if (i < playersAmount)
 		{
-			_players[i].id = initPackage[packageIter];
+			Corewar::Player		tmpPlayer;
 			memcpy(nameBuff, initPackage + packageIter + 1, Corewar::maxNameLength);
-			_players[i].name = (char *)nameBuff;
 
-			tmp = "Player " + std::to_string(_players[i].id) + ":";
-			_players[i].idRect.h = _byteHeight;
-			_players[i].idRect.w = tmp.length() * 10;
-			_players[i].idRect.x = paddingLeft;
-			_players[i].idRect.y = paddingTop;
-			_players[i].idSurface = TTF_RenderText_Solid(_font, tmp.c_str(), basicColors[0]);
-			_players[i].idTexture = SDL_CreateTextureFromSurface(window->renderer, _players[i].idSurface);
-			SDL_QueryTexture(_players[i].idTexture, NULL, NULL, &(_players[i].idRect.w), &(_players[i].idRect.h));
+			tmpPlayer.idText = Text("Player " + std::to_string(initPackage[packageIter]) + ":",
+									_font,
+									paddingLeft, paddingTop,
+									10, 7 ,
+									&basicColors[NO_PLAYER], window->renderer);
 
-
-			tmp = _players[i].name;
-			_players[i].nameRect.h = _byteHeight;
-			_players[i].nameRect.w = tmp.length() * 10;
-			_players[i].nameRect.x = paddingLeft + 65;
-			_players[i].nameRect.y = paddingTop;
-			_players[i].nameSurface = TTF_RenderText_Solid(_font, tmp.c_str(), basicColors[i + 1]);
-			_players[i].nameTexture = SDL_CreateTextureFromSurface(window->renderer, _players[i].nameSurface);
-			SDL_QueryTexture(_players[i].nameTexture, NULL, NULL, &(_players[i].nameRect.w), &(_players[i].nameRect.h));
+			tmpPlayer.nameText = Text((char *)nameBuff,
+									_font,
+									paddingLeft + tmpPlayer.idText.getLength(), paddingTop,
+									10, 7,
+									&basicColors[i + 1],
+									window->renderer);
+			_players.push_back(tmpPlayer);
 			paddingTop += 35;
 		}
 		packageIter += Corewar::maxNameLength + 1;
 	}
-	_cycleDelta = *(initPackage + packageIter);
-	_nbrLive = *(initPackage + (packageIter += 4));
-	_maxChecks = *(initPackage + (packageIter += 4));
+
+	_cycleDelta = Text("CYCLE_DELTA: " + std::to_string(*(initPackage + packageIter)),
+									_font,
+									paddingLeft, paddingTop,
+									10, 7 ,
+									&basicColors[NO_PLAYER], window->renderer);
+	
+	paddingTop += 35;
+	_nbrLive = Text("NBR_LIVE: " + std::to_string(*(initPackage + (packageIter += 4))),
+									_font,
+									paddingLeft, paddingTop,
+									10, 7 ,
+									&basicColors[NO_PLAYER], window->renderer);
+
+	paddingTop += 35;
+	_maxChecks = Text("MAX_CHECKS: " + std::to_string(*(initPackage + (packageIter += 4))),
+								_font,
+								paddingLeft, paddingTop,
+								10, 7 ,
+								&basicColors[NO_PLAYER], window->renderer);
 }
 
 //-----------------------------------------------------------------------------
@@ -111,13 +131,13 @@ void							Corewar::_initField(Window *window)
 
 Corewar::Corewar(Window *window, uint8_t *initPackage) :
 	_map(vector<Byte>(Corewar::mapSize, Byte{})), _startX(10), _startY(10),
-	_byteWidth(7), _byteHeight(5), _blankWidth(14), _blankHeight(11)
+	_byteWidth(7), _byteHeight(10), _blankWidth(14), _blankHeight(11)
 {
-	_font = TTF_OpenFont("../fonts/BebasNeue.ttf", 18);
+	_font = TTF_OpenFont("../fonts/BebasNeue.ttf", 22);
 	if (!_font)
 	{
 		std::cerr << TTF_GetError() << std::endl;
-		std::cerr << "Font isn't opened.." << std::endl;
+		std::cerr << "Font isn't opened in corewar object" << std::endl;
 		exit(EXIT_FAILURE);
 	}
 	_initField(window);
@@ -154,9 +174,12 @@ void			Corewar::drawInitData(Window *window)
 {
 	for (int8_t i = 0; i < _players.size(); ++i)
 	{
-		SDL_RenderCopy(window->renderer, _players[i].idTexture, NULL, &(_players[i].idRect));
-		SDL_RenderCopy(window->renderer, _players[i].nameTexture, NULL, &(_players[i].nameRect));
+		_players[i].idText.draw();
+		_players[i].nameText.draw();
 	}
+	_cycleDelta.draw();
+	_nbrLive.draw();
+	_maxChecks.draw();
 }
 
 //-----------------------------------------------------------------------------

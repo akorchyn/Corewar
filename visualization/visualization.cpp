@@ -6,7 +6,7 @@
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 17:22:41 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/02/28 18:00:06 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/03/01 12:47:44 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,26 +14,6 @@
 
 constexpr int16_t	WIDTH = 1920;
 constexpr int16_t	HEIGHT = 1080;
-
-void		draw_map(unsigned char *buff)
-{
-	int i = 0;
-
-	unsigned char hex[] = "0123456789abcdef";
-	while (i < 4096)
-	{
-		int j = -1;
-		while (++j < 64)
-		{
-			write(1, &hex[*(buff + i + j) / 16], 1);
-			write(1, &hex[*(buff + i + j) % 16], 1);
-			write(1, " ", 1);
-		}
-		write(1, "\n", 1);
-		i += 64;
-	}
-	system("clear");
-}
 
 int		init_socket()
 {
@@ -87,8 +67,8 @@ int		main(void)
 			corewar->drawInitData(&window);
 			// if (clientSocket != -1 && recv(clientSocket, initPackage, 4096, 0) == 0)
 			// {
-			// 	std::cout << "VM closing connection... ";
-			// 	clientSocket = -1;
+			//	std::cout << "VM closing connection... ";
+			//	clientSocket = -1;
 			// 	window.preview = true;
 			// 	corewarInitialiazed = false;
 			// 	std::cout << "Done!" << std::endl;

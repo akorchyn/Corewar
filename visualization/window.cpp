@@ -6,7 +6,7 @@
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/28 13:33:23 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/02/26 15:55:28 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/02/28 19:43:08 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ Window::Window(std::string name, int width, int height)
 			SDL_WINDOWPOS_CENTERED,
 			this->width,
 			this->height,
-			SDL_WINDOW_SHOWN);
+			SDL_WINDOW_BORDERLESS);
 
 	if (this->window == nullptr)
 	{
