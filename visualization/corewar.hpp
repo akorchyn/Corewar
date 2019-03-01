@@ -6,89 +6,90 @@
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 16:42:42 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/02/27 19:31:48 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/03/01 18:44:15 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-# include <sys/types.h>
-# include <sys/socket.h>
-# include <netinet/in.h>
-# include <unistd.h>
-# include <stdlib.h>
-# include <stdio.h>
-# include <iostream>
+# include "visualization.hpp"
 # include "window.hpp"
-# include <vector>
+# include "text.hpp"
 
 enum								Players
 {
 	NO_PLAYER, FIRST, SECOND, THIRD, FOURTH
 };
 
-using	std::vector;
-using	std::string;
-
 class Corewar
 {
-
 	struct Player
 	{
-		int8_t						id;
-		string						name;
-		int32_t						lastLive;
-		int32_t						livesCurrentPeriod;
-	};
-	struct Byte
-	{
-		unsigned char				value;
-		int8_t						owner;
-		int8_t						changed;
-		void						valueToHex(unsigned char value);
-		Byte();
+		Text						idText;
+		Text						nameText;
 
-		/*
-			Graphics information
-		*/
-		string						hexText;
-		SDL_Color					*color;
-		SDL_Rect					position;
-		SDL_Surface					*byteSurface;
-		SDL_Texture					*byteTexture;
+		Player(const Player &right) noexcept;
+		Player(Player &&right) noexcept;
+		Player();
+		~Player();
 	};
 
 	/*
+		There are field of 4096 bytes.
+		Each cell is represented by Byte structure
+	*/
+	struct Byte
+	{
+		uint8_t						value;
+		int8_t						affectedBy;
+		bool						changed;
+		Byte();
+
+		static string valueToHex(uint8_t value);
+		/*
+			Graphics information
+		*/
+		Text						byteText;
+	};
+
+	void							_parseInitPackage(uint8_t *initPackage, Window *window);
+	void							_initField(Window *window);
+	
+	/*
 		Info that gets from buffer, and applies by Corewar::refreshData method;
 	*/
-	unsigned char					_initPackage[]
 	vector<Byte>					_map;			// perfectly buffer of 4096 Byte's samples
 	int32_t							_iteration;
 	int16_t							_processess;
 	vector<Player>					_players;		// max - 4
 	int32_t							_cycleToDie;
-	int32_t							_cycleDelta;
-	int32_t							_nbrLive;
-	int32_t							_maxChecks;
+
+	Text							_cycleDelta;
+	Text							_nbrLive;
+	Text							_maxChecks;
 
 	/*
 		Info about graphic components, render, etc.
 	*/
-	TTF_Font						*font;
-	int32_t							startX;
-	int32_t							startY;
-	int32_t							byteWidth;
-	int32_t							byteHeight;
-	int32_t							blankWidth;
-	int32_t							blankHeight;
+	TTF_Font						*_font;
+	int32_t							_startX;
+	int32_t							_startY;
+	int32_t							_byteWidth;
+	int32_t							_byteHeight;
+	int32_t							_blankWidth;
+	int32_t							_blankHeight;
 
 	public:
-	static constexpr int16_t		MAP_SIZE = 4096;
-	static constexpr unsigned char	byteOrder[17] = "0123456789abcdef";
-
-	Corewar(Window *window);
+	Corewar(Window *window, uint8_t *initPackage);
 	~Corewar();
 
 	void							draw(Window *window);
-	void							refreshData(unsigned char *buffer);
+	void							drawInitData(Window *window);
+	void							refreshData(uint8_t *fieldPackage, uint8_t *carriagesPackage, uint32_t carriagePackagesSize);
+
+	static constexpr int16_t		mapSize = 4096;
+	static constexpr int16_t		initPackageSize = 529;
+	static constexpr int16_t		fieldPackageSize = 8204;
+	static constexpr int16_t		maxNameLength = 128;
+	static constexpr uint8_t		byteOrder[17] = "0123456789abcdef";
 };

@@ -50,7 +50,7 @@ static void		kill_carriages(t_carriage *pc, t_corewar *corewar)
 	{
 		tmp = pc->next;
 		if (corewar->iteration - pc->last_live >= corewar->cycles_to_die
-			|| corewar->cycles_to_die <= 0)
+			|| corewar->cycles_to_die < 0)
 		{
 			(pc->prev) ? pc->prev->next = pc->next : 0;
 			(pc->next) ? pc->next->prev = pc->prev : 0;
@@ -94,8 +94,8 @@ void			cycle(t_corewar *corewar, t_dispatcher *dispatcher)
 			cycle_to_die(corewar, corewar->carriages);
 		if (corewar->verbose & 8 && !(corewar->iteration % 500))
 			system("leaks -q corewar");
-		// if (corewar->sock)
-		// 	send_package(corewar);
+		if (corewar->sock)
+			send_package(corewar);
 	}
 	ft_printf("Contestant %d, \"%s\", has won !\n", corewar->player_last_live,
 			g_header[corewar->player_last_live - 1]->prog_name);
@@ -112,10 +112,10 @@ void			dump_cycle(t_corewar *corewar, t_dispatcher *dispatcher)
 											corewar->iteration);
 		if (--corewar->to_check < 1)
 			cycle_to_die(corewar, corewar->carriages);
+		if (corewar->sock)
+			send_package(corewar);
 		if (corewar->verbose & 8 && !(corewar->iteration % 500))
 			system("leaks -q corewar");
-		// if (corewar->sock)
-		// 	send_package(corewar);
 	}
 	print_dump(corewar->map, 64, MEM_SIZE);
 }
