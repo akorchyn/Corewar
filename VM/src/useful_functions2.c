@@ -6,14 +6,14 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/23 16:49:28 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/03/01 03:16:53 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/03/01 22:19:48 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vm.h"
 
 void			set_player(int8_t *map, int32_t counter, int32_t bytes,
-		int8_t id)
+						int8_t id)
 {
 	int32_t		i;
 
@@ -61,7 +61,7 @@ int8_t			bad_register_id(t_vars *vars, t_carriage *carriage)
 	return (0);
 }
 
-int32_t			shift(t_carriage *carriage, int32_t movement)
+inline int32_t	shift(t_carriage *carriage, int32_t movement)
 {
 	return ((carriage->counter + movement % IDX_MOD + MEM_SIZE)
 											% MEM_SIZE);

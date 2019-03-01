@@ -6,7 +6,7 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 23:43:59 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/28 18:03:41 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/03/01 22:18:42 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 t_header		*g_header[MAX_PLAYERS];
 int32_t			g_car_count;
 
-int32_t		set_connection_to_visualization(char *address, int16_t *i)
+int32_t			set_connection_to_visualization(char *address, int16_t *i)
 {
 	int32_t					sock;
 	struct sockaddr_in		server_address;
@@ -35,7 +35,7 @@ int32_t		set_connection_to_visualization(char *address, int16_t *i)
 	return (sock);
 }
 
-void		ending(t_corewar *corewar)
+static void		ending(t_corewar *corewar)
 {
 	int8_t		i;
 
@@ -47,7 +47,7 @@ void		ending(t_corewar *corewar)
 		free(g_header[i]);
 }
 
-int32_t		main(int ac, char **av)
+int32_t			main(int ac, char **av)
 {
 	t_corewar		corewar;
 	t_dispatcher	dispatcher[16];
