@@ -6,7 +6,7 @@
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/01 12:35:47 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/03/01 16:42:51 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/03/01 18:27:27 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,9 @@ class Text
 	~Text();
 	Text(const Text &right) noexcept;
 	Text(Text &&right) noexcept;
+
+	void			changeColor(SDL_Color *newColor);
+	void			changeText(string newText);
 	void			draw();
 	void			dynamicDraw(int16_t x, int16_t y);
 	int16_t			getLength();

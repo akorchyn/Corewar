@@ -6,7 +6,7 @@
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 17:22:41 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/03/01 12:47:44 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/03/01 18:07:28 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ int		main(void)
 	Corewar			*corewar;
 
 	uint8_t			initPackage[Corewar::initPackageSize];
+	uint8_t			fieldPackage[Corewar::fieldPackageSize];
+	uint8_t			*carriagesPackage;
 	uint8_t			*drawPackage;
 	bool			corewarInitialiazed = false;
 
@@ -64,24 +66,27 @@ int		main(void)
 				std::cout << "Done!" << std::endl;
 
 			}
-			corewar->drawInitData(&window);
-			// if (clientSocket != -1 && recv(clientSocket, initPackage, 4096, 0) == 0)
-			// {
-			//	std::cout << "VM closing connection... ";
-			//	clientSocket = -1;
-			// 	window.preview = true;
-			// 	corewarInitialiazed = false;
-			// 	std::cout << "Done!" << std::endl;
-			// 	close(sock);
-			// 	sock = 0;
-			// 	delete corewar;
-			// }
-			// else
-			// {
-			// 	corewar->refreshData(initPackage);
-			// 	corewar->draw(&window);
-			// 	std::cout << "Draw call: " << drawCall++ << std::endl;
-			// }
+			if (clientSocket != -1 && recv(clientSocket, fieldPackage, Corewar::fieldPackageSize, 0) == 0)
+			{
+				std::cout << "VM closing connection... ";
+				clientSocket = -1;
+				window.preview = true;
+				corewarInitialiazed = false;
+				std::cout << "Done!" << std::endl;
+				close(sock);
+				sock = 0;
+				delete corewar;
+			}
+			else
+			{
+				corewar->drawInitData(&window);
+				carriagesPackage = new uint8_t[*((uint32_t *)fieldPackage)];
+				recv(clientSocket, carriagesPackage, *((uint32_t *)fieldPackage), 0);
+				corewar->refreshData(fieldPackage + 4, carriagesPackage, *((uint32_t*)fieldPackage));
+				corewar->draw(&window);
+				std::cout << "Draw call: " << drawCall++ << std::endl;
+				delete[] carriagesPackage;
+			}
 		}
 		window.poolEvents();
 		window.clear();

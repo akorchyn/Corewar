@@ -6,7 +6,7 @@
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 16:42:42 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/03/01 16:46:30 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/03/01 18:44:15 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,20 +40,16 @@ class Corewar
 	*/
 	struct Byte
 	{
-		unsigned char				value;
-		int8_t						owner;
-		int8_t						changed;
-		void						valueToHex(unsigned char value);
+		uint8_t						value;
+		int8_t						affectedBy;
+		bool						changed;
 		Byte();
 
+		static string valueToHex(uint8_t value);
 		/*
 			Graphics information
 		*/
-		string						hexText;
-		SDL_Color					*color;
-		SDL_Rect					position;
-		SDL_Surface					*byteSurface;
-		SDL_Texture					*byteTexture;
+		Text						byteText;
 	};
 
 	void							_parseInitPackage(uint8_t *initPackage, Window *window);
@@ -89,10 +85,11 @@ class Corewar
 
 	void							draw(Window *window);
 	void							drawInitData(Window *window);
-	void							refreshData(uint8_t *package);
+	void							refreshData(uint8_t *fieldPackage, uint8_t *carriagesPackage, uint32_t carriagePackagesSize);
 
 	static constexpr int16_t		mapSize = 4096;
 	static constexpr int16_t		initPackageSize = 529;
+	static constexpr int16_t		fieldPackageSize = 8204;
 	static constexpr int16_t		maxNameLength = 128;
-	static constexpr unsigned char	byteOrder[17] = "0123456789abcdef";
+	static constexpr uint8_t		byteOrder[17] = "0123456789abcdef";
 };

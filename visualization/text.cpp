@@ -6,11 +6,39 @@
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/01 12:35:54 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/03/01 16:46:14 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/03/01 18:28:07 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "text.hpp"
+
+//-----------------------------------------------------------------------------
+
+void			Text::changeColor(SDL_Color *newColor)
+{
+	_color = newColor;
+	if (_textSurface != nullptr)
+		SDL_FreeSurface(_textSurface);
+	if (_textTexture != nullptr)
+		SDL_DestroyTexture(_textTexture);
+	_textSurface = TTF_RenderText_Solid(_font, _text.c_str(), *(_color));
+	_textTexture = SDL_CreateTextureFromSurface(_renderer, _textSurface);
+	SDL_QueryTexture(_textTexture, nullptr, nullptr, &(_textRect.w), &(_textRect.h));
+}
+
+//-----------------------------------------------------------------------------
+
+void			Text::changeText(string newText)
+{
+	_text = newText;
+	if (_textSurface != nullptr)
+		SDL_FreeSurface(_textSurface);
+	if (_textTexture != nullptr)
+		SDL_DestroyTexture(_textTexture);
+	_textSurface = TTF_RenderText_Solid(_font, _text.c_str(), *(_color));
+	_textTexture = SDL_CreateTextureFromSurface(_renderer, _textSurface);
+	SDL_QueryTexture(_textTexture, nullptr, nullptr, &(_textRect.w), &(_textRect.h));
+}
 
 //-----------------------------------------------------------------------------
 

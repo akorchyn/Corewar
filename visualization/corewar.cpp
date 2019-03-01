@@ -6,7 +6,7 @@
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/27 14:56:24 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/03/01 16:43:19 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/03/01 18:47:08 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,18 +51,18 @@ Corewar::Player::~Player()
 
 //-----------------------------------------------------------------------------
 
-Corewar::Byte::Byte() : value(0), owner(NO_PLAYER), hexText("00"), color(&(basicColors[NO_PLAYER])),
-						position(SDL_Rect{.x = 0, .y = 0, .w = 0, .h = 0}), changed(1),
-						byteSurface(nullptr), byteTexture(nullptr)
+Corewar::Byte::Byte() : value(0), affectedBy(NO_PLAYER), changed(false)
 {
 }
 
 //-----------------------------------------------------------------------------
 
-void Corewar::Byte::valueToHex(unsigned char value)
+string Corewar::Byte::valueToHex(uint8_t value)
 {
-	hexText[0] = Corewar::byteOrder[value / 16];
-	hexText[1] = Corewar::byteOrder[value % 16];
+	string res;
+	res += byteOrder[value / 16];
+	res += byteOrder[value % 16];
+	return res;
 }
 
 //-----------------------------------------------------------------------------
@@ -75,7 +75,6 @@ void	Corewar::_parseInitPackage(uint8_t *initPackage, Window *window)
 	int16_t		paddingTop = 50;
 	int8_t		playersAmount = initPackage[packageIter++];
 	Player		tmpPlayer;
-
 
 	for (int16_t i = 0; i < 4; ++i)
 	{
@@ -104,21 +103,19 @@ void	Corewar::_parseInitPackage(uint8_t *initPackage, Window *window)
 
 	_cycleDelta = Text("CYCLE_DELTA: " + std::to_string(*(initPackage + packageIter)),
 									_font,
-									paddingLeft, paddingTop,
+									paddingLeft, paddingTop += 35,
 									10, 7 ,
 									&basicColors[NO_PLAYER], window->renderer);
 	
-	paddingTop += 35;
 	_nbrLive = Text("NBR_LIVE: " + std::to_string(*(initPackage + (packageIter += 4))),
 									_font,
-									paddingLeft, paddingTop,
+									paddingLeft, paddingTop += 35,
 									10, 7 ,
 									&basicColors[NO_PLAYER], window->renderer);
 
-	paddingTop += 35;
 	_maxChecks = Text("MAX_CHECKS: " + std::to_string(*(initPackage + (packageIter += 4))),
 								_font,
-								paddingLeft, paddingTop,
+								paddingLeft, paddingTop += 35,
 								10, 7 ,
 								&basicColors[NO_PLAYER], window->renderer);
 }
@@ -131,13 +128,11 @@ void							Corewar::_initField(Window *window)
 	int16_t		j = 0;
 	for (auto& byte : _map)
 	{
-		byte.position.x = _startX + j * _byteWidth + j * _blankWidth;
-		byte.position.y = _startY + i * _byteHeight + i * _blankHeight;
-		byte.position.h = _byteHeight;
-		byte.position.w = _byteWidth;
-		byte.byteSurface = TTF_RenderText_Solid(_font, byte.hexText.c_str(), *(byte.color));
-		byte.byteTexture = SDL_CreateTextureFromSurface(window->renderer, byte.byteSurface);
-		SDL_QueryTexture(byte.byteTexture, NULL, NULL, &(byte.position.w), &(byte.position.h));
+		byte.byteText = Text((string("00")).c_str(),
+							_font,
+							_startX + j * _byteWidth + j * _blankWidth, _startY + i * _byteHeight + i * _blankHeight,
+							_byteWidth, _byteHeight,
+							&basicColors[NO_PLAYER], window->renderer);
 		++j;
 		if (j == 64)
 		{
@@ -173,18 +168,22 @@ Corewar::~Corewar()
 
 //-----------------------------------------------------------------------------
 
-void Corewar::refreshData(uint8_t *package)
+void		Corewar::refreshData(uint8_t *fieldPackage, uint8_t *carriagesPackage, uint32_t carriagePackagesSize)
 {
 	for (int16_t i = 0; i < Corewar::mapSize; ++i)
 	{
-		if (*(package + i) != _map.at(i).value)
+		if (*(fieldPackage + i) != _map.at(i).value)
 		{
-			_map.at(i).value = *(package + i);
-			_map.at(i).valueToHex(*(package + i));
-			_map.at(i).changed = 1;
+			_map.at(i).value = *(fieldPackage + i * 2);
+			_map.at(i).byteText.changeText(Byte::valueToHex(*(fieldPackage + i * 2)));
+			_map.at(i).changed = true;
 		}
-		else
-			_map.at(i).changed = 0;
+		if (*(fieldPackage + i * 2 + 1) != _map.at(i).affectedBy)
+		{
+			_map.at(i).affectedBy = *(fieldPackage + i * 2 + 1);
+			_map.at(i).byteText.changeColor(&basicColors[*(fieldPackage + i * 2 + 1) + 1]);
+			_map.at(i).changed = true;
+		}
 	}
 }
 
@@ -208,15 +207,7 @@ void Corewar::draw(Window *window)
 {
 	for (auto& byte : _map)
 	{
-		if (byte.changed == 1)
-		{
-			SDL_DestroyTexture(byte.byteTexture);
-			SDL_FreeSurface(byte.byteSurface);
-			byte.byteSurface = TTF_RenderText_Solid(_font, byte.hexText.c_str(), *(byte.color));
-			byte.byteTexture = SDL_CreateTextureFromSurface(window->renderer, byte.byteSurface);
-			SDL_QueryTexture(byte.byteTexture, NULL, NULL, &(byte.position.w), &(byte.position.h));
-		}
-		SDL_RenderCopy(window->renderer, byte.byteTexture, NULL, &(byte.position));
+		byte.byteText.draw();
 	}
 }
 
