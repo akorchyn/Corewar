@@ -6,7 +6,7 @@
 /*   By: dmlitvin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/26 16:51:43 by dmlitvin          #+#    #+#             */
-/*   Updated: 2019/02/26 16:51:50 by dmlitvin         ###   ########.fr       */
+/*   Updated: 2019/03/02 17:19:19 by dmlitvin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,6 @@ int		main(int ac, char **av)
 				"\nExample: ./asm \"source_file.cor\"\n", 0);
 	}
 	else
-		throw_error(EXIT_FAILURE, "usage: [-n] source_file(.s | .cor)\n", 0);
+		throw_error(EXIT_FAILURE, "usage: [-d] source_file(.s | .cor)\n", 0);
 	return (0);
 }
