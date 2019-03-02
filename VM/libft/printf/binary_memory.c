@@ -6,7 +6,7 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/09 16:12:34 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/09 16:12:34 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/25 15:46:53 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ static int		content(unsigned char *bytes, int counter, int width)
 
 	n = 0;
 	j = counter - 1;
+	ft_printf("%x");
 	while (++j < width)
 		n += (j % 2) ? write(1, "   ", 3) : write(1, "  ", 2);
 	i = -1;

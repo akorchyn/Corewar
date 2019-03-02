@@ -6,14 +6,83 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/19 09:40:23 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/21 23:59:26 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/02/28 17:46:27 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vm.h"
-#include "op.h"
 
-t_op	g_op_tab[17] =
+static void		introduction(t_carriage *tmp)
+{
+	if (!tmp)
+	{
+		ft_printf("Introducing contestants...\n");
+		return ;
+	}
+	introduction(tmp->next);
+	ft_printf("* Player %d, weighing %d bytes, \"%s\" (\"%s\") !\n",
+			tmp->id, tmp->header->prog_size, tmp->header->prog_name,
+			tmp->header->comment);
+}
+
+static void		memory_allocation(t_corewar *corewar)
+{
+	if (!(corewar->map = (unsigned char *)ft_memalloc(sizeof(char) * MEM_SIZE)))
+		error(18, "Allocation battle arena failed.", NULL);
+	if (corewar->sock && !(corewar->player_affected =
+				(int8_t *)ft_memalloc(sizeof(int8_t) * MEM_SIZE)))
+		error(22, "Allocation memory failed", NULL);
+}
+
+void			initializing(t_corewar *corewar)
+{
+	t_carriage		*tmp;
+	int32_t			distance;
+
+	sort_list(&corewar->carriages);
+	memory_allocation(corewar);
+	corewar->player_last_live = corewar->players;
+	corewar->to_check = CYCLE_TO_DIE;
+	corewar->cycles_to_die = CYCLE_TO_DIE;
+	distance = MEM_SIZE / corewar->players;
+	tmp = corewar->carriages;
+	while (tmp)
+	{
+		tmp->reg[0] = -tmp->id;
+		g_header[tmp->id - 1] = tmp->header;
+		tmp->counter = distance * (tmp->id - 1);
+		ft_memcpy(corewar->map + tmp->counter, tmp->code,
+				tmp->header->prog_size);
+		if (corewar->sock)
+			set_player(corewar->player_affected, tmp->counter,
+					tmp->header->prog_size, tmp->id);
+		free(tmp->code);
+		tmp = tmp->next;
+	}
+	introduction(corewar->carriages);
+}
+
+void			initializing_dispatcher(t_dispatcher *dispatcher)
+{
+	dispatcher[0] = live;
+	dispatcher[1] = ld;
+	dispatcher[2] = st;
+	dispatcher[3] = add;
+	dispatcher[4] = sub;
+	dispatcher[5] = and;
+	dispatcher[6] = or;
+	dispatcher[7] = xor;
+	dispatcher[8] = zjmp;
+	dispatcher[9] = ldi;
+	dispatcher[10] = sti;
+	dispatcher[11] = forks;
+	dispatcher[12] = lld;
+	dispatcher[13] = lldi;
+	dispatcher[14] = lfork;
+	dispatcher[15] = aff;
+}
+
+t_op			g_op_tab[17] =
 {
 	{"live", 1, {T_DIR}, 1, 10, "alive", 0, 0},
 	{"ld", 2, {T_DIR | T_IND, T_REG}, 2, 5, "load", 1, 0},
@@ -40,64 +109,15 @@ t_op	g_op_tab[17] =
 	{0, 0, {0}, 0, 0, 0, 0, 0}
 };
 
-static void		introduction(t_carriage *tmp)
-{
-	if (!tmp)
-	{
-		ft_printf("Introducing contestants...\n");
-		return ;
-	}
-	introduction(tmp->next);
-	ft_printf("* Player %d, weighing %d bytes, \"%s\" (\"%s\") !\n",
-			tmp->id, tmp->header.prog_size, tmp->header.prog_name,
-			tmp->header.comment);
-}
-
-void			initializing(t_corewar *corewar)
-{
-	t_carriage		*tmp;
-	int32_t			distance;
-
-	if (ft_list_counter((void **)corewar->carriages) > MAX_PLAYERS)
-		error(17, "Too many players.", NULL);
-	if (!(corewar->map = (unsigned char *)ft_memalloc(sizeof(char) * MEM_SIZE)))
-		error(18, "Allocation battle arena failed.", NULL);
-	sort_list(&corewar->carriages, corewar);
-	corewar->player_last_live = corewar->players_count;
-	corewar->to_check = CYCLE_TO_DIE;
-	corewar->cycles_to_die = CYCLE_TO_DIE;
-	distance = MEM_SIZE / corewar->players_count;
-	tmp = corewar->carriages;
-	while (tmp)
-	{
-		tmp->reg[0] = -tmp->id;
-		tmp->counter = distance * (tmp->id - 1);
-		ft_memcpy(corewar->map + tmp->counter, tmp->code,
-				tmp->header.prog_size);
-		free(tmp->code);
-		(DEBUG) && ft_printf("%d id Counter : %d\n", tmp->id, tmp->counter);
-		tmp = tmp->next;
-	}
-	introduction(corewar->carriages);
-	(DEBUG) && ft_printf("%100.*m", MEM_SIZE, corewar->map);
-}
-
-void			initializing_dispatcher(t_dispatcher *dispatcher)
-{
-	dispatcher[0] = live;
-	dispatcher[1] = ld;
-	dispatcher[2] = st;
-	dispatcher[3] = add;
-	dispatcher[4] = sub;
-	dispatcher[5] = and;
-	dispatcher[6] = or;
-	dispatcher[7] = xor;
-	dispatcher[8] = zjmp;
-	dispatcher[9] = ldi;
-	dispatcher[10] = sti;
-	dispatcher[11] = forks;
-	dispatcher[12] = lld;
-	dispatcher[13] = lldi;
-	dispatcher[14] = lfork;
-	dispatcher[15] = aff;
-}
+char			*g_usage =
+"    (-dump | -d) N      : Dumps memory after N cycles then exits\n"
+"    -v N                : Verbosity levels, can be added "
+"together to enable several\n"
+"                          - 0 : Show only essentials\n"
+"                          - 1 : Show lives\n"
+"                          - 2 : Show cycles\n"
+"                          - 4 : Show operations (Params are"
+" NOT litteral ...)\n"
+"                          - 8 : Leaks checking every 500 iterations\n"
+"    -visual [ip | link] : Visualization corewar, socket connection\n"
+"    -n N                : Set player number\n";

@@ -36,18 +36,17 @@
 # define COMMENT_CHAR			'#'
 # define ALT_COMMENT_CHAR        ';'
 # define LABEL_CHAR				':'
-# define DIRECT_CHAR				'%'
+# define DIRECT_CHAR			'%'
 # define SEPARATOR_CHAR			','
 
-# define LABEL_CHARS				"abcdefghijklmnopqrstuvwxyz_0123456789"
+# define LABEL_CHARS			"abcdefghijklmnopqrstuvwxyz_0123456789"
 
-# define NAME_CMD_STRING			".name"
+# define NAME_CMD_STRING		".name"
 # define COMMENT_CMD_STRING		".comment"
 
 # define REG_NUMBER				16
-
 # define CYCLE_TO_DIE			1536
-# define CYCLE_DELTA				50
+# define CYCLE_DELTA			50
 # define NBR_LIVE				21
 # define MAX_CHECKS				10
 
@@ -71,13 +70,13 @@ typedef char	t_arg_type;
 
 # define HEADER_SIZE 			2192
 # define COREWAR_EXEC_MAGIC		0xea83f3
-# define OPERATIONS				16
+# define COMANDS				16
 
 typedef struct		s_header
 {
-	unsigned		magic;
+	uint32_t		magic;
 	char			prog_name[PROG_NAME_LENGTH + 1];
-	unsigned		prog_size;
+	uint32_t		prog_size;
 	char			comment[COMMENT_LENGTH + 1];
 }					t_header;
 
@@ -85,7 +84,7 @@ typedef struct		s_op
 {
 	char			*name;
 	uint8_t			variables;
-	int32_t			vars[3];
+	int32_t			vars[MAX_ARGS_NUMBER];
 	uint8_t			op_index;
 	uint16_t		pause;
 	char			*description;

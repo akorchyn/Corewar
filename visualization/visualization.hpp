@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/02/22 16:42:42 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/02/22 16:46:18 by kpshenyc         ###   ########.fr       */
+/*   Created: 2019/03/01 12:37:29 by kpshenyc          #+#    #+#             */
+/*   Updated: 2019/03/01 14:08:06 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,4 +19,12 @@
 # include <stdlib.h>
 # include <stdio.h>
 # include <iostream>
-# include "window.hpp"
+# include <vector>
+# include <string.h>
+# include <utility>
+
+# include "/Users/kpshenyc/.brew/include/SDL2/SDL.h"
+# include "/Users/kpshenyc/.brew/include/SDL2/SDL_ttf.h"
+
+using std::string;
+using std::vector;

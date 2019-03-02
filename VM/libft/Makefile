@@ -15,7 +15,7 @@ SRC_STANDART = ft_memset.c ft_bzero.c ft_memcpy.c ft_memccpy.c ft_memmove.c ft_m
 	  ft_putchar_fd.c ft_putstr_fd.c ft_putendl_fd.c ft_putnbr_fd.c ft_strrev.c ft_strlcat.c ft_strclr.c\
 
 SRC_PRINTF = itoa_base.c mask.c unsigned.c for_all.c printunicode.c binary_memory.c \
-	float.c itoa_base.c decimal_int.c ft_printf.c csp.c unicode.c badtype_perc.c 
+	float.c itoa_base.c decimal_int.c ft_printf.c csp.c unicode.c badtype_perc.c
 
 SRC_LST = ft_lstmap.c ft_lstiter.c ft_lstadd.c ft_lstdel.c ft_lstdelone.c ft_lstnew.c ft_list_counter.c
 
@@ -29,7 +29,6 @@ SRO = $(SRC:.c=.o)
 all: $(SRC) $(NAME)
 
 $(NAME): $(SRO)
-	@echo "\x1b[34m ▄█        ▄█  ▀█████████▄     ▄████████     ███     \n███       ███    ███    ███   ███    ███ ▀█████████▄ \n███       ███▌   ███    ███   ███    █▀     ▀███▀▀██ \n███       ███▌  ▄███▄▄▄██▀   ▄███▄▄▄         ███   ▀ \n███       ███▌ ▀▀███▀▀▀██▄  ▀▀███▀▀▀         ███     \n███       ███    ███    ██▄   ███            ███     \n███▌    ▄ ███    ███    ███   ███            ███     \n█████▄▄██ █▀   ▄█████████▀    ███           ▄████▀   \n▀                                                    "
 	@echo "\x1b[33mCompilation Library\x1b[0m"
 	@ar rc $(NAME) $(SRO)
 	@ranlib $(NAME) && echo "\x1b[32mSuccessful Library Compilation\x1b[0m"

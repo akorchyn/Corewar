@@ -6,33 +6,14 @@
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 17:22:41 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/02/22 17:22:43 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/03/01 18:07:28 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "visualization.hpp"
+#include "corewar.hpp"
 
 constexpr int16_t	WIDTH = 1920;
 constexpr int16_t	HEIGHT = 1080;
-
-void		draw_map(unsigned char *buff)
-{
-	int i = 0;
-	unsigned char hex[] = "0123456789abcdef";
-	while (i < 4096)
-	{
-		int j = -1;
-		while (++j < 64)
-		{
-			write(1, &hex[*(buff + i + j) / 16], 1);
-			write(1, &hex[*(buff + i + j) % 16], 1);
-			write(1, " ", 1);
-		}
-		write(1, "\n", 1);
-		i += 64;
-	}
-	system("clear");
-}
 
 int		init_socket()
 {
@@ -44,31 +25,71 @@ int		init_socket()
 	server_address.sin_port = htons(4242);
 	server_address.sin_addr.s_addr = INADDR_ANY;
 	bind(sock, (struct sockaddr *)&server_address, sizeof(server_address));
-	listen(sock, 1);
+	listen(sock, 2);
 	return sock;
 }
 
 int		main(void)
 {
-	int				sock = init_socket();
-	int				client_socket = -1;
-	unsigned char	data[4096];
-	Window window("Corewar", WIDTH, HEIGHT);
+	int32_t			clientSocket = -1;
+	int32_t			sock;
+	int32_t			drawCall;
 
+	Window			window("Corewar", WIDTH, HEIGHT);
+	Corewar			*corewar;
+
+	uint8_t			initPackage[Corewar::initPackageSize];
+	uint8_t			fieldPackage[Corewar::fieldPackageSize];
+	uint8_t			*carriagesPackage;
+	uint8_t			*drawPackage;
+	bool			corewarInitialiazed = false;
+
+	drawCall = 0;
 	while (!window.isClosed())
 	{
-		if (client_socket == -1)
-			client_socket = accept(sock, NULL, NULL);
-		if (client_socket != -1 && recv(client_socket, data, 4096, 0) == 0)
+		if (window.preview == false)
 		{
-			std::cout << "VM closed connection..." << std::endl;
-			client_socket = -1;
+			if (corewarInitialiazed == false)
+			{
+				sock = init_socket();
+				std::cout << "Accepting new corewar throught socket... ";
+				clientSocket = accept(sock, NULL, NULL);
+				std::cout << "Done!" << std::endl;
+
+				std::cout << "Getting initialization package of size " <<  Corewar::initPackageSize << "... ";
+				recv(clientSocket, initPackage, Corewar::initPackageSize, 0);
+				std::cout << "Done!" << std::endl;
+
+				std::cout << "Initialiazing new corewar... ";
+				corewar = new Corewar(&window, initPackage);
+				corewarInitialiazed = true;
+				std::cout << "Done!" << std::endl;
+
+			}
+			if (clientSocket != -1 && recv(clientSocket, fieldPackage, Corewar::fieldPackageSize, 0) == 0)
+			{
+				std::cout << "VM closing connection... ";
+				clientSocket = -1;
+				window.preview = true;
+				corewarInitialiazed = false;
+				std::cout << "Done!" << std::endl;
+				close(sock);
+				sock = 0;
+				delete corewar;
+			}
+			else
+			{
+				corewar->drawInitData(&window);
+				carriagesPackage = new uint8_t[*((uint32_t *)fieldPackage)];
+				recv(clientSocket, carriagesPackage, *((uint32_t *)fieldPackage), 0);
+				corewar->refreshData(fieldPackage + 4, carriagesPackage, *((uint32_t*)fieldPackage));
+				corewar->draw(&window);
+				std::cout << "Draw call: " << drawCall++ << std::endl;
+				delete[] carriagesPackage;
+			}
 		}
-		else
-			draw_map(data);
 		window.poolEvents();
 		window.clear();
 	}
-	close(sock);
 	return (0);
 }
