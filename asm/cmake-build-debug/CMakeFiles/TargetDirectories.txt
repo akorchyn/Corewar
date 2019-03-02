@@ -1,3 +1,0 @@
-/Users/dmlitvin/corewarYE/asm/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/Users/dmlitvin/corewarYE/asm/cmake-build-debug/CMakeFiles/edit_cache.dir
-/Users/dmlitvin/corewarYE/asm/cmake-build-debug/CMakeFiles/asm.dir
