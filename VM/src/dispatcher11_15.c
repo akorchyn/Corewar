@@ -6,7 +6,7 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/23 16:45:32 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/28 17:37:12 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/03/03 16:57:21 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,8 @@ void		sti(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 							shift(carriage, (values[0] +
 								values[1])), REG_SIZE);
 	if (corewar->sock)
-		set_player(corewar->player_affected, shift(carriage, vars->vars[1]), 4,
-									carriage->id);
+		set_player(corewar->player_affected, shift(carriage,
+				values[0] + values[1]), 4, carriage->id);
 	if (corewar->verbose & 4)
 		ft_printf("P% 5d | sti r%d %d %d\n       | -> store to %d + %d = "
 			"%d (with pc and mod %d)\n", carriage->p_number, vars->vars[0],
