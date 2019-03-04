@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dispatcher11_15.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/23 16:45:32 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/27 18:01:49 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/03/03 16:57:21 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,14 @@ void		sti(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 	put_bytes(carriage->reg[vars->vars[0] - 1], corewar->map,
 							shift(carriage, (values[0] +
 								values[1])), REG_SIZE);
-	set_player(corewar->player_affected, shift(carriage, vars->vars[1]), 4,
-									carriage->id);
+	if (corewar->sock)
+		set_player(corewar->player_affected, shift(carriage,
+				values[0] + values[1]), 4, carriage->id);
 	if (corewar->verbose & 4)
 		ft_printf("P% 5d | sti r%d %d %d\n       | -> store to %d + %d = "
 			"%d (with pc and mod %d)\n", carriage->p_number, vars->vars[0],
 			values[0], values[1], values[0], values[1], values[0] + values[1],
-				  carriage->counter + (values[0] + values[1]) % IDX_MOD);
+				carriage->counter + (values[0] + values[1]) % IDX_MOD);
 }
 
 void		forks(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
@@ -56,7 +57,7 @@ void		forks(t_carriage *carriage, t_corewar *corewar, t_vars *vars)
 	corewar->carriages = nw;
 	if (corewar->verbose & 4)
 		ft_printf("P% 5d | fork %d (%d)\n", carriage->p_number, vars->vars[0],
-				  (carriage->counter + vars->vars[0] % IDX_MOD) % MEM_SIZE);
+				(carriage->counter + vars->vars[0] % IDX_MOD) % MEM_SIZE);
 }
 
 void		lld(t_carriage *carriage, t_corewar *corewar, t_vars *vars)

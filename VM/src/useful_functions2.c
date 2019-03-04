@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   useful_functions2.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/23 16:49:28 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/27 15:42:35 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/03/01 22:19:48 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vm.h"
 
-void			set_player(int8_t *map, int32_t counter, int32_t bytes, int8_t id)
+void			set_player(int8_t *map, int32_t counter, int32_t bytes,
+						int8_t id)
 {
 	int32_t		i;
 
@@ -23,8 +24,8 @@ void			set_player(int8_t *map, int32_t counter, int32_t bytes, int8_t id)
 
 void			print_usage(char **av)
 {
-	ft_printf("Usage: %s [-dump N -v N -n N -visual [ip]] <champion1.cor> "
-		   "<...>\n%s", av[0], g_usage);
+	ft_printf("Usage: %s [-dump N -v N -visual [ip]] "
+		"<[-n number] champion1.cor> <...>\n%s", av[0], g_usage);
 	exit(0);
 }
 
@@ -60,7 +61,7 @@ int8_t			bad_register_id(t_vars *vars, t_carriage *carriage)
 	return (0);
 }
 
-int32_t			shift(t_carriage *carriage, int32_t movement)
+inline int32_t	shift(t_carriage *carriage, int32_t movement)
 {
 	return ((carriage->counter + movement % IDX_MOD + MEM_SIZE)
 											% MEM_SIZE);

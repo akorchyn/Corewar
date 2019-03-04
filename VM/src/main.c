@@ -6,7 +6,7 @@
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 23:43:59 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/28 16:30:23 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/03/04 14:30:30 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,52 +14,60 @@
 
 t_header		*g_header[MAX_PLAYERS];
 int32_t			g_car_count;
+t_corewar		corewar;
 
-int8_t		check_ip(char *ip)
-{
-	int32_t		i;
-
-	i = -1;
-	if (!ip)
-		return (0);
-	while (ip[++i])
-		if (!ft_isdigit(ip[i]) && ip[i] != '.')
-			return (0);
-	return (1);
-}
-
-int32_t		set_connection_to_visualization(char *ip, int8_t *i)
+int32_t			set_connection_to_visualization(char *address, int16_t *i)
 {
 	int32_t					sock;
 	struct sockaddr_in		server_address;
-	int32_t					is_ip;
+	struct hostent			*he;
+	struct in_addr			**addr;
 
-	is_ip = check_ip(ip);
-	(is_ip) ? (*i)++ : 0;
+	he = (address) ? gethostbyname(address) : NULL;
+	addr = (he) ? (struct in_addr**)he->h_addr_list : NULL;
+	(addr) ? (*i)++ : 0;
 	sock = socket(AF_INET, SOCK_STREAM, 0);
 	server_address.sin_family = AF_INET;
 	server_address.sin_port = htons(4242);
-	server_address.sin_addr.s_addr = (is_ip) ? inet_addr(ip) : INADDR_ANY;
+	server_address.sin_addr.s_addr = (addr) ? (*addr)->s_addr : INADDR_ANY;
 	if (connect(sock, (struct sockaddr *)&server_address,
 			sizeof(server_address)) == -1)
-	{
-		ft_printf("Shit happened. You cannot connect to the server...\n");
-		exit(EXIT_FAILURE);
-	}
+			{
+				error(17, "Can not connect to the server...", NULL);
+				close(sock);
+			}
 	return (sock);
 }
 
-int32_t		main(int ac, char **av)
+static void		ending(t_corewar *corewar)
 {
-	t_corewar		corewar;
+	int8_t		i;
+
+	i = -1;
+	free(corewar->map);
+	if (corewar->sock)
+		free(corewar->player_affected);
+	while (++i < corewar->players)
+		free(g_header[i]);
+}
+
+
+void			handler(int signal)
+{
+	if (corewar.sock)
+		close(corewar.sock);
+	exit(EXIT_SUCCESS);
+}
+
+int32_t			main(int ac, char **av)
+{
 	t_dispatcher	dispatcher[16];
 
+	signal(SIGTERM, &handler);
 	ft_bzero(&corewar, sizeof(corewar));
-	parse_arguments(ac, av, &corewar);
-	process_ids(corewar.carriages, corewar.players);
-	if (ft_list_counter((void **)corewar.carriages) > MAX_PLAYERS)
-		error(17, "Too many players.", NULL);
+	parse_arguments(ac, av, &corewar, 0);
 	!(corewar.players) ? print_usage(av) : 0;
+	process_ids(corewar.carriages, corewar.players);
 	g_id = corewar.players;
 	g_car_count = corewar.players;
 	initializing(&corewar);
@@ -68,6 +76,9 @@ int32_t		main(int ac, char **av)
 		cycle(&corewar, dispatcher);
 	else
 		dump_cycle(&corewar, dispatcher);
-	close(corewar.sock);
+	ending(&corewar);
+	(corewar.verbose & 8) ? system("leaks -q corewar") : 0;
+	if (corewar.sock)
+		close(corewar.sock);
 	return (0);
 }

@@ -24,26 +24,36 @@ uint8_t				*alloc_package(int32_t *size)
 {
 	*size = sizeof(uint32_t) +
 			sizeof(uint8_t) * (MEM_SIZE * 2) +
-			sizeof(uint32_t) +
-			sizeof(uint16_t) * g_car_count;
+			sizeof(uint32_t);
 	return ((uint8_t *)malloc(sizeof(uint8_t) * (*size)));
 }
 
-void				fill_package(t_corewar *corewar, uint8_t *package)
+void				fill_map_package(t_corewar *corewar, uint8_t *package)
 {
 	int32_t			i;
 	int32_t			step;
-	t_carriage		*tmp;
 
 	step = 0;
-	ft_memcpy(package, &g_car_count, (step += sizeof(uint32_t)));
+	ft_memcpy(package, &g_car_count, sizeof(uint32_t));
+	step += sizeof(uint32_t);
 	i = -1;
 	while (++i < MEM_SIZE)
 	{
 		package[step++] = corewar->map[i];
 		package[step++] = corewar->player_affected[i];
 	}
-	ft_memcpy(package, &(corewar->cycles_to_die), sizeof(uint32_t));
+	ft_memcpy(package + step, &(corewar->cycles_to_die), sizeof(uint32_t));
+}
+
+uint8_t		*fill_carriages_package(t_corewar *corewar, int32_t *size)
+{
+	t_carriage		*tmp;
+	int32_t			step;
+	uint8_t			*package;
+
+	*size = sizeof(uint16_t) * g_car_count;
+	package = (uint8_t *)malloc(sizeof(uint8_t) * (*size));
+	step = 0;
 	tmp = corewar->carriages;
 	while (tmp)
 	{
@@ -51,15 +61,48 @@ void				fill_package(t_corewar *corewar, uint8_t *package)
 		step += sizeof(uint16_t);
 		tmp = tmp->next;
 	}
+	return (package);
+}
+
+void 	drawMap(uint8_t	*map)
+{
+	char arr[17] = "0123456789abcdef";
+	for (int16_t i = 0; i < 4096; ++i)
+	{
+		ft_printf("%c", arr[*(map + i * 2) / 16]);
+		ft_printf("%c", arr[*(map + i * 2) % 16]);
+		if (i % 63 == 0 && i != 0)
+			ft_printf("\n");
+		else
+			ft_printf(" ");
+	}
+}
+
+void	drawCarriages(uint16_t *carriages, uint32_t size)
+{
+	for (uint32_t i = 0; i < size; ++i)
+	{
+		ft_printf("%hd ", carriages[i]);
+		if (i % 30 == 0)
+			ft_printf("\n");
+	}
 }
 
 void				send_package(t_corewar *corewar)
 {
 	uint8_t			*package;
 	int32_t			size;
+	int8_t			answer;
 
 	package = alloc_package(&size);
-	fill_package(corewar, package);
+ 	fill_map_package(corewar, package);
+//	drawMap(package + 4);
+	send(corewar->sock, package, size, 0);
+	free(package);
+	package = fill_carriages_package(corewar, &size);
+	while (recv(corewar->sock, &answer, 1, 0) == 0)
+		;
+//	drawCarriages(package, size / sizeof(uint16_t));
 	send(corewar->sock, package, size, 0);
 	free(package);
 }

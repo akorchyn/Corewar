@@ -6,25 +6,25 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/19 09:51:52 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/26 16:19:15 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/03/01 22:27:38 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vm.h"
 
-static void			parse_file(int32_t fd, t_carriage *new)
+static void				parse_file(int32_t fd, t_carriage *new)
 {
 	unsigned char		buff[HEADER_SIZE + 1];
-	uint32_t			ret;
+	ssize_t				ret;
 
 	ret = read(fd, buff, HEADER_SIZE);
 	(ret != HEADER_SIZE) && error(7, "Bad file", NULL);
-	new->header->magic = bytes_to_dec(buff, 0, 4);
+	new->header->magic = (uint32_t)bytes_to_dec(buff, 0, 4);
 	if (new->header->magic != COREWAR_EXEC_MAGIC)
 		error(8, "Bad magic number", NULL);
 	ft_strncpy(new->header->prog_name, (char *)buff + MAGIC_LENGTH,
 			PROG_NAME_LENGTH);
-	new->header->prog_size = bytes_to_dec(buff, MAGIC_LENGTH
+	new->header->prog_size = (uint32_t)bytes_to_dec(buff, MAGIC_LENGTH
 							+ PROG_NAME_LENGTH + NULL_SIZE, PROG_SIZE_LENGTH);
 	if (new->header->prog_size > CHAMP_MAX_SIZE)
 		error(9, "Exec code too big.", NULL);
@@ -38,7 +38,7 @@ static void			parse_file(int32_t fd, t_carriage *new)
 	new->code[ret] = '\0';
 }
 
-static int8_t		create_carriage(char *file, t_carriage **head)
+static int8_t			create_carriage(char *file, t_carriage **head)
 {
 	int32_t		fd;
 	size_t		len;
@@ -62,7 +62,7 @@ static int8_t		create_carriage(char *file, t_carriage **head)
 	return (1);
 }
 
-static int8_t		id_exists(t_carriage *carriages, int8_t id)
+inline static int8_t	id_exists(t_carriage *carriages, int8_t id)
 {
 	while (carriages)
 	{
@@ -73,7 +73,7 @@ static int8_t		id_exists(t_carriage *carriages, int8_t id)
 	return (0);
 }
 
-int8_t				process_ids(t_carriage *carriages, int8_t players)
+int8_t					process_ids(t_carriage *carriages, int8_t players)
 {
 	t_carriage	*prev_carriages;
 	t_carriage	*head;
@@ -100,11 +100,9 @@ int8_t				process_ids(t_carriage *carriages, int8_t players)
 	return (1);
 }
 
-void				parse_arguments(int ac, char **av, t_corewar *corewar)
+void					parse_arguments(int ac, char **av, t_corewar *corewar,
+			int16_t i)
 {
-	int8_t			i;
-
-	i = 0;
 	while (++i < ac)
 		if (!ft_strcmp("-dump", av[i]) || !ft_strcmp("-d", av[i]))
 		{
@@ -117,13 +115,13 @@ void				parse_arguments(int ac, char **av, t_corewar *corewar)
 			!ft_isnumeric(av[++i], '\0') && error(2, "Number error", av[i]);
 			create_carriage(av[i + 1], &corewar->carriages)
 					&& ++corewar->players;
-			if (!(corewar->carriages->id = ft_atoi(av[i++])))
+			if (!(corewar->carriages->id = (int8_t)ft_atoi(av[i++])))
 				error(14, "Uniq id can't be null", av[i - 1]);
 		}
 		else if (!ft_strcmp("-v", av[i]))
 		{
 			!ft_isnumeric(av[++i], '\0') && error(2, "Verbose error", av[i]);
-			corewar->verbose = ft_atoi(av[i]);
+			corewar->verbose = (int8_t)ft_atoi(av[i]);
 		}
 		else if (!ft_strcmp("-visual", av[i]))
 			corewar->sock = set_connection_to_visualization(av[i + 1], &i);

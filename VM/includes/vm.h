@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vm.h                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 16:38:06 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/02/28 13:27:57 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/02/28 17:49:22 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,9 @@
 # include <sys/socket.h>
 # include <netinet/in.h>
 # include <arpa/inet.h>
+# include <netdb.h>
 # include "../libft/includes/libft.h"
-
+# include <signal.h>
 extern int32_t			g_id;
 extern int32_t			g_car_count;
 extern char				*g_usage;
@@ -76,7 +77,8 @@ typedef	void			(*t_dispatcher)(t_carriage *carriage,
 ** PARSE SECTION
 */
 
-void					parse_arguments(int ac, char **av, t_corewar *corewar);
+void					parse_arguments(int ac, char **av, t_corewar *corewar,
+									int16_t i);
 int8_t					process_ids(t_carriage *carriages, int8_t players);
 
 /*
@@ -144,8 +146,9 @@ void					aff(t_carriage *carriage, t_corewar *corewar,
 
 void					send_init_package(t_corewar *corewar);
 void					send_package(t_corewar *corewar);
-int32_t					set_connection_to_visualization(char *ip, int8_t *i);
-void					set_player(int8_t *map, int32_t counter, int32_t bytes, int8_t id);
+int32_t					set_connection_to_visualization(char *ip, int16_t *i);
+void					set_player(int8_t *map, int32_t counter,
+									int32_t bytes, int8_t id);
 int32_t					error(int code, char *msg, char *argument);
 void					print_usage(char **av);
 void					print_dump(uint8_t *map, int16_t bytes_in_line,

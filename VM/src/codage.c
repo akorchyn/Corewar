@@ -81,9 +81,8 @@ int8_t			check_valid(t_carriage *pc, t_corewar *corewar, t_vars *vars)
 	int8_t	i;
 	int8_t	answer;
 
-	vars->codage = (g_op_tab[pc->op_id].is_codage)
-				? bytes_to_dec(corewar->map, pc->counter + 1, 1)
-				: generate_cadage(pc->op_id);
+	vars->codage = (!g_op_tab[pc->op_id].is_codage) ? generate_cadage(pc->op_id)
+			: bytes_to_dec(corewar->map, pc->counter + 1, 1);
 	(g_op_tab[pc->op_id].is_codage) ? vars->skip++ : 0;
 	shift = 6;
 	i = 0;
