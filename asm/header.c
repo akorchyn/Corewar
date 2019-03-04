@@ -24,7 +24,7 @@ void		write_champion(char *file_name)
 	len = ft_strlen(file_name) - 1;
 	binary_name = ft_memcpy(malloc(len + 4), file_name, len);
 	ft_memcpy(binary_name + len, "cor", 4);
-	if ((fd = open(binary_name, O_WRONLY | O_CREAT)) == -1)
+	if ((fd = open(binary_name, O_WRONLY | O_CREAT, 0600)) == -1)
 		throw_error(14, "Couldn't create file.\n", 0);
 	ft_printf(GREEN"Writing champion code into %s\n"EOM, binary_name);
 	free(binary_name);
