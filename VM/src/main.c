@@ -54,6 +54,7 @@ static void		ending(t_corewar *corewar)
 
 void			handler(int signal)
 {
+	(void)signal;
 	if (corewar.sock)
 		close(corewar.sock);
 	exit(EXIT_SUCCESS);

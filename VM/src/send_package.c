@@ -64,30 +64,6 @@ uint8_t		*fill_carriages_package(t_corewar *corewar, int32_t *size)
 	return (package);
 }
 
-void 	drawMap(uint8_t	*map)
-{
-	char arr[17] = "0123456789abcdef";
-	for (int16_t i = 0; i < 4096; ++i)
-	{
-		ft_printf("%c", arr[*(map + i * 2) / 16]);
-		ft_printf("%c", arr[*(map + i * 2) % 16]);
-		if (i % 63 == 0 && i != 0)
-			ft_printf("\n");
-		else
-			ft_printf(" ");
-	}
-}
-
-void	drawCarriages(uint16_t *carriages, uint32_t size)
-{
-	for (uint32_t i = 0; i < size; ++i)
-	{
-		ft_printf("%hd ", carriages[i]);
-		if (i % 30 == 0)
-			ft_printf("\n");
-	}
-}
-
 void				send_package(t_corewar *corewar)
 {
 	uint8_t			*package;
@@ -96,13 +72,11 @@ void				send_package(t_corewar *corewar)
 
 	package = alloc_package(&size);
  	fill_map_package(corewar, package);
-//	drawMap(package + 4);
 	send(corewar->sock, package, size, 0);
 	free(package);
 	package = fill_carriages_package(corewar, &size);
 	while (recv(corewar->sock, &answer, 1, 0) == 0)
 		;
-//	drawCarriages(package, size / sizeof(uint16_t));
 	send(corewar->sock, package, size, 0);
 	free(package);
 }

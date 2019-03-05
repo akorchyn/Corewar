@@ -54,6 +54,7 @@ class Corewar
 		/*
 			Graphics information
 		*/
+		bool						carriageOn;
 		Text						byteText;
 	};
 

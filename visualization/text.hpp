@@ -47,6 +47,7 @@ class Text
 	Text(const Text &right) noexcept;
 	Text(Text &&right) noexcept;
 
+	void			drawBackground(bool fill);
 	void			changeColor(SDL_Color *newColor);
 	void			changeText(string newText, SDL_Color *color);
 	void			draw();

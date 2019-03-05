@@ -50,7 +50,7 @@ Corewar::Player::~Player()
 
 //-----------------------------------------------------------------------------
 
-Corewar::Byte::Byte() : value(0), affectedBy(NO_PLAYER), changed(false)
+Corewar::Byte::Byte() : value(0), affectedBy(NO_PLAYER), changed(false), carriageOn(false)
 {
 }
 
@@ -181,10 +181,10 @@ void							Corewar::_initField(Window *window)
 
 Corewar::Corewar(Window *window, uint8_t *initPackage) :
 	_map(vector<Byte>(Corewar::mapSize, Byte{})), _startX(10), _startY(10),
-	_byteWidth(6), _byteHeight(2), _blankWidth(18), _blankHeight(18),
+	_byteWidth(10), _byteHeight(2), _blankWidth(18), _blankHeight(18),
 	_iterationValue(0)
 {
-	_font = TTF_OpenFont("../fonts/BebasNeue.ttf", 20);
+	_font = TTF_OpenFont("fonts/BebasNeue.ttf", 22);
 	if (!_font)
 	{
 		std::cerr << TTF_GetError() << std::endl;
@@ -209,15 +209,15 @@ void					Corewar::_processField(uint8_t *fieldPackage, uint16_t cells)
 {
 	for (uint16_t i = 0; i < cells; ++i)
 	{
-		if (*(fieldPackage + i * 2) != _map.at(i).value || *(fieldPackage + i * 2 + 1) != _map.at(i).affectedBy)
+		if (*(fieldPackage + i * 2) != _map[i].value || *(fieldPackage + i * 2 + 1) != _map[i].affectedBy)
 		{
-			_map.at(i).value = *(fieldPackage + i * 2);
-			_map.at(i).affectedBy = *(fieldPackage + i * 2 + 1);
-			_map.at(i).byteText.changeText(Byte::valueToHex(*(fieldPackage + i * 2)),
+			_map[i].value = *(fieldPackage + i * 2);
+			_map[i].affectedBy = *(fieldPackage + i * 2 + 1);
+			_map[i].byteText.changeText(Byte::valueToHex(*(fieldPackage + i * 2)),
 							&basicColors[*(fieldPackage + i * 2 + 1)]);
 		}
+		_map[i].carriageOn = false;
 	}
-
 }
 
 //-----------------------------------------------------------------------------
@@ -231,6 +231,10 @@ void		Corewar::refreshData(uint8_t *fieldPackage, uint16_t *carriagesPackage, ui
 	fieldPackage += 4;
 
 	_processField(fieldPackage, Corewar::mapSize);
+
+
+	for (uint16_t j = 0; j < carriagePackagesSize; ++j)
+		_map[carriagesPackage[j]].carriageOn = true;
 
 	i = Corewar::mapSize;
 	if (_cycleToDieValue.getText() != std::to_string(*((uint32_t *)(fieldPackage + i * 2))))
@@ -269,7 +273,10 @@ void			Corewar::drawInitData(Window *window)
 void Corewar::draw(Window *window)
 {
 	for (auto& byte : _map)
+	{
+		byte.byteText.drawBackground(byte.carriageOn);
 		byte.byteText.draw();
+	}
 	_cycleToDie.draw();
 	_cycleToDieValue.draw();
 	_processess.draw();

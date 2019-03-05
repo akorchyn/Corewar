@@ -6,11 +6,22 @@
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/01 12:35:54 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/03/04 12:22:13 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/03/04 17:35:21 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "text.hpp"
+
+//-----------------------------------------------------------------------------
+
+void			Text::drawBackground(bool fill)
+{
+	if (fill)
+		SDL_SetRenderDrawColor(_renderer, 255, 255, 0, 255);
+	else
+		SDL_SetRenderDrawColor(_renderer, 0, 0, 0, 255);
+	SDL_RenderFillRect(_renderer, &_textRect);
+}
 
 //-----------------------------------------------------------------------------
 

@@ -6,13 +6,13 @@
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 17:22:41 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/03/04 12:22:40 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/03/04 18:03:10 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "corewar.hpp"
 
-constexpr int16_t	WIDTH = 2000;
+constexpr int16_t	WIDTH = 2200;
 constexpr int16_t	HEIGHT = 1300;
 
 extern SDL_Color	basicColors[5];
@@ -53,15 +53,15 @@ void				acceptClient(int32_t sock, int32_t &clientSocket, Corewar **corewar,
 
 void				drawPreview(Window *window, bool isWaiting)
 {
-	static Text preview = Text("COREWAR", "../fonts/joystix monospace.ttf",
+	static Text preview = Text("COREWAR", "fonts/joystix monospace.ttf",
 					100, WIDTH / 2 - (100 * 7) / 2,
 					HEIGHT / 2 - 100 / 2, 100, 100,
 					&basicColors[FIRST], window->renderer);
-	static Text pressEnter = Text("Press enter to accept new bunch of fools", "../fonts/joystix monospace.ttf",
+	static Text pressEnter = Text("Press enter to accept new bunch of fools", "fonts/joystix monospace.ttf",
 					15, WIDTH / 2 - (15 * strlen("Press enter to accept new bunch of fools")) / 2,
 					HEIGHT / 2 - 15 / 2 + 75, 15, 20,
 					&basicColors[SECOND], window->renderer);
-	static Text waiting = Text("Waiting...", "../fonts/joystix monospace.ttf",
+	static Text waiting = Text("Waiting...", "fonts/joystix monospace.ttf",
 					13, WIDTH / 2 - (10 * strlen("Waiting...")) / 2,
 					HEIGHT / 2 - 14 / 2 + 100, 14, 14,
 					&basicColors[THIRD], window->renderer);
@@ -86,6 +86,7 @@ int					main(void)
 
 	bool			corewarInitialiazed = false;
 	bool			waitingClient = false;
+
 
 	std::thread th;
 
@@ -120,7 +121,11 @@ int					main(void)
 				}
 				carriagesPackage = new uint16_t[*((uint32_t *) fieldPackage)];
 				send(clientSocket, &answerToVisualization, 1, 0);
-				recv(clientSocket, carriagesPackage, *((uint32_t *) fieldPackage) * sizeof(uint16_t), 0);
+//				while (
+						recv(clientSocket, carriagesPackage, *((uint32_t *) fieldPackage) * sizeof(uint16_t), 0);
+//						== 0) {
+//					std::cout << "loop here" << std::endl;
+//				}
 				corewar->refreshData(fieldPackage, carriagesPackage, *((uint32_t *)fieldPackage));
 				delete[] carriagesPackage;
 			}
