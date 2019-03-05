@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 23:43:59 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/03/01 22:18:42 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/03/04 14:30:30 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 t_header		*g_header[MAX_PLAYERS];
 int32_t			g_car_count;
+t_corewar		corewar;
 
 int32_t			set_connection_to_visualization(char *address, int16_t *i)
 {
@@ -31,7 +32,10 @@ int32_t			set_connection_to_visualization(char *address, int16_t *i)
 	server_address.sin_addr.s_addr = (addr) ? (*addr)->s_addr : INADDR_ANY;
 	if (connect(sock, (struct sockaddr *)&server_address,
 			sizeof(server_address)) == -1)
-		error(17, "Can not connect to the server...", NULL);
+			{
+				error(17, "Can not connect to the server...", NULL);
+				close(sock);
+			}
 	return (sock);
 }
 
@@ -47,11 +51,20 @@ static void		ending(t_corewar *corewar)
 		free(g_header[i]);
 }
 
+
+void			handler(int signal)
+{
+	(void)signal;
+	if (corewar.sock)
+		close(corewar.sock);
+	exit(EXIT_SUCCESS);
+}
+
 int32_t			main(int ac, char **av)
 {
-	t_corewar		corewar;
 	t_dispatcher	dispatcher[16];
 
+	signal(SIGTERM, &handler);
 	ft_bzero(&corewar, sizeof(corewar));
 	parse_arguments(ac, av, &corewar, 0);
 	!(corewar.players) ? print_usage(av) : 0;
@@ -66,5 +79,7 @@ int32_t			main(int ac, char **av)
 		dump_cycle(&corewar, dispatcher);
 	ending(&corewar);
 	(corewar.verbose & 8) ? system("leaks -q corewar") : 0;
+	if (corewar.sock)
+		close(corewar.sock);
 	return (0);
 }

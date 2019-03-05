@@ -23,6 +23,7 @@ class Window
 	int				closed = false;
 public:
 	bool			preview;
+	bool			isStoped;
 	SDL_Renderer	*renderer = nullptr;
 	Window(std::string name, int width, int height);
 	bool isClosed();

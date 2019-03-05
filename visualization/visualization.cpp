@@ -6,16 +6,18 @@
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 17:22:41 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/03/01 18:07:28 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/03/04 18:03:10 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "corewar.hpp"
 
-constexpr int16_t	WIDTH = 1920;
-constexpr int16_t	HEIGHT = 1080;
+constexpr int16_t	WIDTH = 2200;
+constexpr int16_t	HEIGHT = 1300;
 
-int		init_socket()
+extern SDL_Color	basicColors[5];
+
+int					initSocket()
 {
 	int		sock;
 
@@ -29,67 +31,121 @@ int		init_socket()
 	return sock;
 }
 
-int		main(void)
+void				acceptClient(int32_t sock, int32_t &clientSocket, Corewar **corewar,
+							 bool &corewarInitialiazed, Window &window)
 {
-	int32_t			clientSocket = -1;
-	int32_t			sock;
-	int32_t			drawCall;
+	uint8_t			initPackage[Corewar::initPackageSize];
+
+	sock = initSocket();
+	std::cout << "Accepting new corewar throught socket... ";
+	clientSocket = accept(sock, NULL, NULL);
+	std::cout << "Done!" << std::endl;
+
+	std::cout << "Getting initialization package of size " <<  Corewar::initPackageSize << "... ";
+	recv(clientSocket, initPackage, Corewar::initPackageSize, 0);
+	std::cout << "Done!" << std::endl;
+
+	std::cout << "Initialiazing new corewar... ";
+	*corewar = new Corewar(&window, initPackage);
+	corewarInitialiazed = true;
+	std::cout << "Done!" << std::endl;
+}
+
+void				drawPreview(Window *window, bool isWaiting)
+{
+	static Text preview = Text("COREWAR", "fonts/joystix monospace.ttf",
+					100, WIDTH / 2 - (100 * 7) / 2,
+					HEIGHT / 2 - 100 / 2, 100, 100,
+					&basicColors[FIRST], window->renderer);
+	static Text pressEnter = Text("Press enter to accept new bunch of fools", "fonts/joystix monospace.ttf",
+					15, WIDTH / 2 - (15 * strlen("Press enter to accept new bunch of fools")) / 2,
+					HEIGHT / 2 - 15 / 2 + 75, 15, 20,
+					&basicColors[SECOND], window->renderer);
+	static Text waiting = Text("Waiting...", "fonts/joystix monospace.ttf",
+					13, WIDTH / 2 - (10 * strlen("Waiting...")) / 2,
+					HEIGHT / 2 - 14 / 2 + 100, 14, 14,
+					&basicColors[THIRD], window->renderer);
+	preview.draw();
+	pressEnter.draw();
+	if (isWaiting)
+		waiting.draw();
+}
+
+int					main(void)
+{
+	int32_t			clientSocket = 0;
+	int32_t			sock = 0;
+	int32_t			drawCall = 0;
+	int8_t			answerToVisualization = 42;
 
 	Window			window("Corewar", WIDTH, HEIGHT);
 	Corewar			*corewar;
 
-	uint8_t			initPackage[Corewar::initPackageSize];
 	uint8_t			fieldPackage[Corewar::fieldPackageSize];
-	uint8_t			*carriagesPackage;
-	uint8_t			*drawPackage;
-	bool			corewarInitialiazed = false;
+	uint16_t		*carriagesPackage;
 
-	drawCall = 0;
+	bool			corewarInitialiazed = false;
+	bool			waitingClient = false;
+
+
+	std::thread th;
+
 	while (!window.isClosed())
 	{
-		if (window.preview == false)
+		if (!window.preview)
 		{
-			if (corewarInitialiazed == false)
+			if (!waitingClient && !corewarInitialiazed)
 			{
-				sock = init_socket();
-				std::cout << "Accepting new corewar throught socket... ";
-				clientSocket = accept(sock, NULL, NULL);
-				std::cout << "Done!" << std::endl;
-
-				std::cout << "Getting initialization package of size " <<  Corewar::initPackageSize << "... ";
-				recv(clientSocket, initPackage, Corewar::initPackageSize, 0);
-				std::cout << "Done!" << std::endl;
-
-				std::cout << "Initialiazing new corewar... ";
-				corewar = new Corewar(&window, initPackage);
-				corewarInitialiazed = true;
-				std::cout << "Done!" << std::endl;
-
+				waitingClient = true;
+				th = std::thread(acceptClient, sock, std::ref(clientSocket),
+						&corewar, std::ref(corewarInitialiazed), std::ref(window));
+				th.detach();
 			}
-			if (clientSocket != -1 && recv(clientSocket, fieldPackage, Corewar::fieldPackageSize, 0) == 0)
+			if (corewarInitialiazed && !window.isStoped)
 			{
-				std::cout << "VM closing connection... ";
-				clientSocket = -1;
-				window.preview = true;
-				corewarInitialiazed = false;
-				std::cout << "Done!" << std::endl;
-				close(sock);
-				sock = 0;
-				delete corewar;
-			}
-			else
-			{
-				corewar->drawInitData(&window);
-				carriagesPackage = new uint8_t[*((uint32_t *)fieldPackage)];
-				recv(clientSocket, carriagesPackage, *((uint32_t *)fieldPackage), 0);
-				corewar->refreshData(fieldPackage + 4, carriagesPackage, *((uint32_t*)fieldPackage));
-				corewar->draw(&window);
-				std::cout << "Draw call: " << drawCall++ << std::endl;
+				send(clientSocket, &answerToVisualization, 1, 0);
+				if (recv(clientSocket, fieldPackage, Corewar::fieldPackageSize, 0) <= 0)
+				{
+					std::cout << "VM closing connection... ";
+					window.preview = true;
+					window.isStoped = true;
+					corewarInitialiazed = false;
+					waitingClient = false;
+					close(sock);
+					close(clientSocket);
+					clientSocket = 0;
+					sock = 0;
+					std::cout << "Done!" << std::endl;
+					delete corewar;
+					continue ;
+				}
+				carriagesPackage = new uint16_t[*((uint32_t *) fieldPackage)];
+				send(clientSocket, &answerToVisualization, 1, 0);
+//				while (
+						recv(clientSocket, carriagesPackage, *((uint32_t *) fieldPackage) * sizeof(uint16_t), 0);
+//						== 0) {
+//					std::cout << "loop here" << std::endl;
+//				}
+				corewar->refreshData(fieldPackage, carriagesPackage, *((uint32_t *)fieldPackage));
 				delete[] carriagesPackage;
 			}
+			if (corewarInitialiazed)
+			{
+				std::cout << "Draw call: " << drawCall++ << std::endl;
+				corewar->drawInitData(&window);
+				corewar->draw(&window);
+			}
+			else
+				drawPreview(&window, waitStatus::WAITING);
 		}
+		else
+			drawPreview(&window, waitStatus::NOT_WAITING);
 		window.poolEvents();
 		window.clear();
 	}
+	if (sock)
+		close(sock);
+	if (clientSocket)
+		close(clientSocket);
 	return (0);
 }

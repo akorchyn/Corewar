@@ -82,6 +82,8 @@ static void		cycle_to_die(t_corewar *corewar, t_carriage *pc)
 
 void			cycle(t_corewar *corewar, t_dispatcher *dispatcher)
 {
+	int8_t				answer;
+
 	if (corewar->sock)
 		send_init_package(corewar);
 	while (corewar->carriages)
@@ -95,7 +97,11 @@ void			cycle(t_corewar *corewar, t_dispatcher *dispatcher)
 		if (corewar->verbose & 8 && !(corewar->iteration % 500))
 			system("leaks -q corewar");
 		if (corewar->sock)
+		{
+			while (recv(corewar->sock, &answer, 1, 0) == 0)
+				;
 			send_package(corewar);
+		}
 	}
 	ft_printf("Contestant %d, \"%s\", has won !\n", corewar->player_last_live,
 			g_header[corewar->player_last_live - 1]->prog_name);

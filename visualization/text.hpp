@@ -47,10 +47,12 @@ class Text
 	Text(const Text &right) noexcept;
 	Text(Text &&right) noexcept;
 
+	void			drawBackground(bool fill);
 	void			changeColor(SDL_Color *newColor);
-	void			changeText(string newText);
+	void			changeText(string newText, SDL_Color *color);
 	void			draw();
 	void			dynamicDraw(int16_t x, int16_t y);
+	string			getText();
 	int16_t			getLength();
 
 	Text&			operator=(const Text &right) noexcept;
