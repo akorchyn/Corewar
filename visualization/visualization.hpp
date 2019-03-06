@@ -28,6 +28,6 @@
 # include <future>
 # include "/Users/kpshenyc/.brew/include/SDL2/SDL.h"
 # include "/Users/kpshenyc/.brew/include/SDL2/SDL_ttf.h"
-
+# include "/Users/kpshenyc/.brew/include/SDL2/SDL_image.h"
 using std::string;
 using std::vector;

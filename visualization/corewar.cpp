@@ -232,7 +232,7 @@ void		Corewar::refreshData(uint8_t *fieldPackage, uint16_t *carriagesPackage, ui
 
 	_processField(fieldPackage, Corewar::mapSize);
 
-
+//
 	for (uint16_t j = 0; j < carriagePackagesSize; ++j)
 		_map[carriagesPackage[j]].carriageOn = true;
 

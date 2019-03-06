@@ -19,6 +19,7 @@ Window::Window(std::string name, int width, int height)
 	this->name = name;
 	this->preview = true;
 	this->isStoped = true;
+	creators = false;
 	if (SDL_Init(SDL_INIT_VIDEO) != 0)
 	{
 		std::cerr << "SDL_INIT_VIDEO::ERROR" << std::endl;
@@ -29,6 +30,13 @@ Window::Window(std::string name, int width, int height)
 	if (TTF_Init() != 0)
 	{
 		std::cerr << "TTF_INIT::ERROR" << std::endl;
+		closed = true;
+		return ;
+	}
+
+	if (!IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG))
+	{
+		std::cerr << "IMG_INIT::ERROR" << std::endl;
 		closed = true;
 		return ;
 	}
@@ -80,15 +88,25 @@ void Window::poolEvents()
 				switch(event.key.keysym.sym)
 				{
 					case SDLK_ESCAPE: this->closed = true; break;
-					case SDLK_RETURN: 
+					case SDLK_RETURN:
 					{
-						if (this->preview == true)
-							this->preview = false;
+						if (!creators) {
+							if (this->preview == true)
+								this->preview = false;
+						}
 						break ;
 					}
 					case SDLK_SPACE:
 					{
-						this->isStoped = this->isStoped ? false : true;
+						if (!creators && !preview)
+							this->isStoped = this->isStoped ? false : true;
+						break ;
+					}
+					case SDLK_f:
+					{
+						if (preview)
+							this->creators = this->creators ? false : true;
+						break ;
 					}
 					default:
 						break;
