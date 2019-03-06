@@ -37,18 +37,10 @@ void				acceptClient(int32_t sock, int32_t &clientSocket, Corewar **corewar,
 	uint8_t			initPackage[Corewar::initPackageSize];
 
 	sock = initSocket();
-	std::cout << "Accepting new corewar throught socket... ";
 	clientSocket = accept(sock, NULL, NULL);
-	std::cout << "Done!" << std::endl;
-
-	std::cout << "Getting initialization package of size " <<  Corewar::initPackageSize << "... ";
 	recv(clientSocket, initPackage, Corewar::initPackageSize, 0);
-	std::cout << "Done!" << std::endl;
-
-	std::cout << "Initialiazing new corewar... ";
 	*corewar = new Corewar(&window, initPackage);
 	corewarInitialiazed = true;
-	std::cout << "Done!" << std::endl;
 }
 
 void				drawPreview(Window *window, bool isWaiting)
@@ -68,6 +60,7 @@ void				drawPreview(Window *window, bool isWaiting)
 	static Text authors = Text("Press F to see the creators", "fonts/joystix monospace.ttf",
 					16, 20, HEIGHT - 35, 16, 16,
 					&basicColors[FOURTH], window->renderer);
+
 	preview.draw();
 	pressEnter.draw();
 	authors.draw();
@@ -80,48 +73,46 @@ void				drawCreators(Window *window)
 	static SDL_Surface *kpshenycSurf = IMG_Load("creators/kpshenyc.jpg");
 	static SDL_Texture *kpshenycText = SDL_CreateTextureFromSurface(window->renderer, kpshenycSurf);
 	static SDL_Rect		kpshenycRect = {.h = 300, .w = 250, .x = 0 + 500, .y = 0 + 250};
-	static Text			kpshenycTask = Text("VISUALIZATION", "fonts/joystix monospace.ttf",
-			23, 500,
-			250 + 300,
-			500, 250,
-			&basicColors[SECOND], window->renderer);
-
+	static Text			kpshenycTask = Text("kpshenyc", "fonts/joystix monospace.ttf",
+											38, 500,
+											250 + 300,
+											500, 250,
+											&basicColors[SECOND], window->renderer);
 	kpshenycTask.draw();
 	SDL_RenderCopy(window->renderer, kpshenycText, nullptr, &kpshenycRect);
 
 	static SDL_Surface *akorchynSurf = IMG_Load("creators/akorchyn.jpg");
 	static SDL_Texture *akorchynText = SDL_CreateTextureFromSurface(window->renderer, akorchynSurf);
 	static SDL_Rect		akorchynRect = {.h = 300, .w = 250, .x = WIDTH - 500 - 250, .y = 0 + 250};
-	static Text			akorchynTask = Text("VIRTUAL MACHINE", "fonts/joystix monospace.ttf",
-											   21, WIDTH - 500 - 250,
-											   250 + 300,
-											   500, 250,
-											   &basicColors[FIRST], window->renderer);
-											   SDL_RenderCopy(window->renderer, akorchynText, nullptr, &akorchynRect);
-											   akorchynTask.draw();
+	static Text			akorchynTask = Text("akorchyn", "fonts/joystix monospace.ttf",
+											38, WIDTH - 500 - 250,
+											250 + 300,
+											500, 250,
+											&basicColors[FIRST], window->renderer);
+											SDL_RenderCopy(window->renderer, akorchynText, nullptr, &akorchynRect);
+											akorchynTask.draw();
 	SDL_RenderCopy(window->renderer, kpshenycText, nullptr, &kpshenycRect);
+	akorchynTask.draw();
 
 	static SDL_Surface *dmlitvinSurf = IMG_Load("creators/dmlitvin.jpg");
 	static SDL_Texture *dmlitvinText = SDL_CreateTextureFromSurface(window->renderer, dmlitvinSurf);
 	static SDL_Rect		dmlitvinRect = {.h = 300, .w = 250, .x = 0 + 500, .y = HEIGHT - 250 - 300};
-	static Text			dmlitvinTask = Text("ASSEMBLER", "fonts/joystix monospace.ttf",
-											   35, 500,
-											   HEIGHT - 250,
-											   500, 250,
-											   &basicColors[THIRD], window->renderer);
-
+	static Text			dmlitvinTask = Text("dmlitvin", "fonts/joystix monospace.ttf",
+											38, 500,
+											HEIGHT - 250,
+											500, 250,
+											&basicColors[THIRD], window->renderer);
 	dmlitvinTask.draw();
 	SDL_RenderCopy(window->renderer, dmlitvinText, nullptr, &dmlitvinRect);
 
 	static SDL_Surface *opishcheSurf = IMG_Load("creators/opishche.jpg");
 	static SDL_Texture *opishcheText = SDL_CreateTextureFromSurface(window->renderer, opishcheSurf);
 	static SDL_Rect		opishcheRect = {.h = 300, .w = 250, .x = WIDTH - 500 - 250, .y = HEIGHT - 250 - 300};
-	static Text			opishcheTask = Text("BUG FIX", "fonts/joystix monospace.ttf",
-											   44, WIDTH - 500 - 250,
-											   HEIGHT - 250,
-											   500, 250,
-											   &basicColors[FOURTH], window->renderer);
-
+	static Text			opishcheTask = Text("opishche", "fonts/joystix monospace.ttf",
+											38, WIDTH - 500 - 250,
+											HEIGHT - 250,
+											500, 250,
+											&basicColors[FOURTH], window->renderer);
 	opishcheTask.draw();
 	SDL_RenderCopy(window->renderer, opishcheText, nullptr, &opishcheRect);
 
@@ -138,20 +129,37 @@ void				drawCreators(Window *window)
 											 600, 600,
 											 &basicColors[FIRST], window->renderer);
 	sponsoredBy.draw();
+
 	static Text			acceleratedBy = Text("Accelerated by Stura",
 											  "fonts/joystix monospace.ttf", 30,
 											  850, 700,
 											  600, 600,
 											  &basicColors[SECOND], window->renderer);
 	acceleratedBy.draw();
+
 }
+
+void				uninitializeCorewar(Corewar **corewar, Window *window, bool &corewarInitialized, bool &waitingClient,
+									int32_t &sock, int32_t &clientSock)
+{
+	window->preview = true;
+	window->isStoped = true;
+	corewarInitialized = false;
+	waitingClient = false;
+	close(sock);
+	close(clientSock);
+	clientSock = 0;
+	sock = 0;
+	delete *corewar;
+	*corewar = nullptr;
+}
+
 
 int					main(void)
 {
-	int32_t			clientSocket = 0;
+	int32_t			clientSock = 0;
 	int32_t			sock = 0;
-	int32_t			drawCall = 0;
-	int8_t			answerToVisualization = 42;
+	int8_t			answerToVisualization = 0;
 
 	Window			window("Corewar", WIDTH, HEIGHT);
 	Corewar			*corewar;
@@ -159,9 +167,8 @@ int					main(void)
 	uint8_t			fieldPackage[Corewar::fieldPackageSize];
 	uint16_t		*carriagesPackage;
 
-	bool			corewarInitialiazed = false;
+	bool			corewarInitialized = false;
 	bool			waitingClient = false;
-
 
 	std::thread th;
 
@@ -169,40 +176,29 @@ int					main(void)
 	{
 		if (!window.preview && !window.creators)
 		{
-			if (!waitingClient && !corewarInitialiazed)
+			if (!waitingClient && !corewarInitialized)
 			{
 				waitingClient = true;
-				th = std::thread(acceptClient, sock, std::ref(clientSocket),
-						&corewar, std::ref(corewarInitialiazed), std::ref(window));
+				th = std::thread(acceptClient, sock, std::ref(clientSock),
+						&corewar, std::ref(corewarInitialized), std::ref(window));
 				th.detach();
 			}
-			if (corewarInitialiazed && !window.isStoped)
+			if (corewarInitialized && !window.isStoped)
 			{
-				send(clientSocket, &answerToVisualization, 1, 0);
-				if (recv(clientSocket, fieldPackage, Corewar::fieldPackageSize, 0) <= 0)
+				send(clientSock, &answerToVisualization, 1, 0);
+				if (recv(clientSock, fieldPackage, Corewar::fieldPackageSize, 0) <= 0)
 				{
-					std::cout << "VM closing connection... ";
-					window.preview = true;
-					window.isStoped = true;
-					corewarInitialiazed = false;
-					waitingClient = false;
-					close(sock);
-					close(clientSocket);
-					clientSocket = 0;
-					sock = 0;
-					std::cout << "Done!" << std::endl;
-					delete corewar;
+					uninitializeCorewar(&corewar, &window, corewarInitialized, waitingClient, sock, clientSock);
 					continue ;
 				}
 				carriagesPackage = new uint16_t[*((uint32_t *) fieldPackage)];
-				send(clientSocket, &answerToVisualization, 1, 0);
-				recv(clientSocket, carriagesPackage, *((uint32_t *) fieldPackage) * sizeof(uint16_t), 0);
+				send(clientSock, &answerToVisualization, 1, 0);
+				recv(clientSock, carriagesPackage, *((uint32_t *) fieldPackage) * sizeof(uint16_t), 0);
 				corewar->refreshData(fieldPackage, carriagesPackage, *((uint32_t *)fieldPackage));
 				delete[] carriagesPackage;
 			}
-			if (corewarInitialiazed)
+			if (corewarInitialized)
 			{
-				std::cout << "Draw call: " << drawCall++ << std::endl;
 				corewar->drawInitData(&window);
 				corewar->draw(&window);
 			}
@@ -218,7 +214,7 @@ int					main(void)
 	}
 	if (sock)
 		close(sock);
-	if (clientSocket)
-		close(clientSocket);
+	if (clientSock)
+		close(clientSock);
 	return (0);
 }

@@ -204,9 +204,6 @@ Text::~Text()
 		SDL_FreeSurface(_textSurface);
 	if (_textTexture != nullptr)
 		SDL_DestroyTexture(_textTexture);
-	// TODO: remove segfault below
-//	if (!_commonFont)
-//		TTF_CloseFont(_font);
 }
 
 //-----------------------------------------------------------------------------
