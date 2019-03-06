@@ -195,8 +195,8 @@ int					main(void)
 				}
 				carriagesPackage = new uint16_t[*((uint32_t *) fieldPackage)];
 				send(clientSock, &answerToVisualization, 1, 0);
-				recv(clientSock, carriagesPackage, *((uint32_t *) fieldPackage) * sizeof(uint16_t), 0);
-				corewar->refreshData(fieldPackage, carriagesPackage, *((uint32_t *)fieldPackage));
+				if (recv(clientSock, carriagesPackage, *((uint32_t *) fieldPackage) * sizeof(uint16_t), 0) > 0)
+					corewar->refreshData(fieldPackage, carriagesPackage, *((uint32_t *)fieldPackage));
 				delete[] carriagesPackage;
 			}
 			if (corewarInitialized)
