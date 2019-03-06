@@ -3,51 +3,110 @@
 /*                                                        :::      ::::::::   */
 /*   asm.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmlitvin <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: zaz <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/02/14 18:19:37 by dmlitvin          #+#    #+#             */
-/*   Updated: 2019/02/14 18:26:00 by dmlitvin         ###   ########.fr       */
+/*   Created: 2013/10/04 11:33:27 by zaz               #+#    #+#             */
+/*   Updated: 2013/11/06 14:21:46 by zaz              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef ASM_H
 # define ASM_H
 
+# include "libft/include/libft.h"
+# include <stdint.h>
 # include <fcntl.h>
-# include "libft.h"
-# include "op.h"
 
-# define GET_INSTRUCTION(lst) ((t_instruction*)lst->content)
+# define REG_CODE				1
+# define DIR_CODE				2
+# define IND_CODE				3
 
-typedef struct		s_lexem
+# define IND_BYTE_SIZE			2
+# define REG_BYTE_SIZE			1
+# define DIR_BYTE_SIZE			4
+
+# define COMMENT_CHAR			'#'
+# define ALT_COMMENT_CHAR		';'
+# define LABEL_CHAR				':'
+# define DIRECT_CHAR			'%'
+# define SEPARATOR_CHAR			','
+
+# define LABEL_CHARS			"abcdefghijklmnopqrstuvwxyz_0123456789"
+
+# define NAME_CMD_STRING		".name"
+# define COMMENT_CMD_STRING		".comment"
+
+# define T_REG					1
+# define T_DIR					2
+# define T_IND					4
+
+# define PROG_NAME_LENGTH		(128)
+# define COMMENT_LENGTH			(2048)
+# define COREWAR_EXEC_MAGIC		0xea83f3
+# define EXEC_MAGIC_LENGTH		4
+
+# define GET_INSTRUCTION(instruction) ((t_instruction*)instruction->content)
+
+typedef struct					s_header
 {
-	char			*command;
-	t_list			*argument;
-	char			*code;
-	size_t			size;
-}					t_lexem;
+	unsigned int				magic;
+	char						prog_name[PROG_NAME_LENGTH + 1];
+	unsigned int				prog_size;
+	char						comment[COMMENT_LENGTH + 1];
+	uint8_t						*executable;
+}								t_header;
 
-typedef struct		s_instruction
+typedef struct					s_op
 {
-	char			*instruction;
-	size_t			line;
-	t_list			*label;
-	t_lexem			lexem;
-	size_t			global_size;
-}					t_instruction;
+	char						*op_name;
+	uint8_t						arg_count;
+	uint8_t						arg_code[3];
+	uint8_t						op_index;
+	uint16_t					pause_value;
+	uint8_t						has_arg_type : 1;
+	uint8_t						is_dir_2 : 1;
+}								t_op;
 
-//typedef void 		(*t_size_count)(t_lexem *lexem, size_t line);
+typedef	struct					s_lexem
+{
+	t_list						*argument;
+	uint8_t						op_index;
+	uint8_t						size;
+	uint8_t						*code;
+}								t_lexem;
 
-extern t_list		*g_instructions;
-//extern t_size_count	g_size_count_array[16];
+typedef struct					s_instruction
+{
+	char						*str;
+	size_t						size_from_start;
+	t_list						*label;
+	size_t						line_nb;
+	t_lexem						lexem;
+}								t_instruction;
 
-void				throw_error(int error_id, char *str, size_t line);
-void				parse_file(char *file_name);
-void				set_inst_sizes(t_list *inst);
-void				read_labels(t_list *inst);
-void				count_live(t_lexem *lexem, size_t line);
-void				count_ld(t_lexem *lexem, size_t line);
-void				count_st(t_lexem *lexem, size_t line);
-void				count_add(t_lexem *lexem, size_t line);
+extern const t_op				g_op_tab[17];
+extern t_header					g_header;
+
+void							throw_error(int error_id,
+		char *str, size_t line);
+uint8_t							check_extension(char *file_name,
+		char *extension, size_t extension_len);
+char							*read_file(char *file_name);
+void							assembly(t_list **instr_list,
+		char *file_content, char *file_name);
+t_list							*split_instr(char *file_content);
+void							read_labels(t_list *instr);
+void							disassembly(char *file_content);
+void							read_command_argument(t_list *instruction);
+void							calculate_sizes(t_list *instruction);
+void							put_global_sizes(t_list *instruction);
+void							parse_labels(t_list *instruction,
+		t_list *instr_list);
+void							parse_inst_code(t_list *lst);
+void							put_bites(uint8_t *memory,
+		uint32_t argument, uint8_t arg_len);
+void							check_name_comment(t_list *list,
+		t_list **instr_list);
+void							write_champion(char *file_name);
 
 #endif

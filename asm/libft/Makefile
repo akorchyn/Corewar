@@ -6,7 +6,7 @@
 #    By: dmlitvin <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/10/25 13:26:24 by dmlitvin          #+#    #+#              #
-#    Updated: 2019/02/19 15:10:30 by dmlitvin         ###   ########.fr        #
+#    Updated: 2019/02/23 17:36:23 by dmlitvin         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,7 +32,7 @@ SRC_STR=ft_strcat.c ft_strchr.c ft_strclr.c ft_strcmp.c ft_strcpy.c \
 ft_strdel.c ft_strdup.c ft_strequ.c ft_striter.c ft_striteri.c ft_strjoin.c \
 ft_strlcat.c ft_strlen.c ft_strmap.c ft_strmapi.c ft_strncat.c ft_strncmp.c \
 ft_strncpy.c ft_strnequ.c ft_strnew.c ft_strnstr.c ft_strrchr.c ft_strsplit.c \
-ft_strstr.c ft_strsub.c ft_strtrim.c ft_strnchr.c \
+ft_strstr.c ft_strsub.c ft_strtrim.c ft_strnchr.c ft_stralloc.c \
 
 SRC_PRINTF=ft_itoa.c ft_itoa10.c ft_itoa_for_printf.c ft_printf.c parsers.c \
 print_cs.c print_float.c print_numeric.c \
