@@ -24,6 +24,7 @@ class Window
 public:
 	bool			preview;
 	bool			isStoped;
+	bool			creators;
 	SDL_Renderer	*renderer = nullptr;
 	Window(std::string name, int width, int height);
 	bool isClosed();

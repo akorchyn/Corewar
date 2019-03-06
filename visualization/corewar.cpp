@@ -126,7 +126,7 @@ void	Corewar::_parseInitPackage(uint8_t *initPackage, Window *window)
 
 	_cycleToDieValue = Text("0",
 								_font,
-								paddingLeft + 150, paddingTop,
+								paddingLeft + 110, paddingTop,
 								10, 7,
 								&basicColors[NO_PLAYER], window->renderer);
 
@@ -138,7 +138,7 @@ void	Corewar::_parseInitPackage(uint8_t *initPackage, Window *window)
 
 	_processessValue = Text("0",
 							_font,
-							paddingLeft + 100, paddingTop,
+							paddingLeft + 150, paddingTop,
 							10, 7,
 							&basicColors[NO_PLAYER], window->renderer);
 
@@ -224,21 +224,17 @@ void					Corewar::_processField(uint8_t *fieldPackage, uint16_t cells)
 
 void		Corewar::refreshData(uint8_t *fieldPackage, uint16_t *carriagesPackage, uint32_t carriagePackagesSize)
 {
-	int16_t i;
-
 	if (_processessValue.getText() != std::to_string(*((uint32_t *)(fieldPackage))))
 		_processessValue.changeText(std::to_string(*((uint32_t *)(fieldPackage))), &basicColors[NO_PLAYER]);
 	fieldPackage += 4;
 
 	_processField(fieldPackage, Corewar::mapSize);
 
-
 	for (uint16_t j = 0; j < carriagePackagesSize; ++j)
 		_map[carriagesPackage[j]].carriageOn = true;
 
-	i = Corewar::mapSize;
-	if (_cycleToDieValue.getText() != std::to_string(*((uint32_t *)(fieldPackage + i * 2))))
-		_cycleToDieValue.changeText(std::to_string(*((uint32_t *)(fieldPackage + i * 2))), &basicColors[NO_PLAYER]);
+	if (_cycleToDieValue.getText() != std::to_string(*((uint32_t *)(fieldPackage + Corewar::mapSize * 2))))
+		_cycleToDieValue.changeText(std::to_string(*((uint32_t *)(fieldPackage + Corewar::mapSize * 2))), &basicColors[NO_PLAYER]);
 	_iterationValue++;
 	_iterationTextValue.changeText(std::to_string(_iterationValue), &basicColors[NO_PLAYER]);
 }
