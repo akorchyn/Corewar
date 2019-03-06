@@ -82,6 +82,8 @@ void		check_name_comment(t_list *list, t_list **instr_list)
 	uint8_t	counter;
 
 	counter = 2;
+	if (ft_list_size(*instr_list) < 3)
+		throw_error(EXIT_FAILURE, "Bad champion(not enough code)\n", 0);
 	while (counter-- && list)
 	{
 		if ((!ft_strncmp(GET_INSTRUCTION(list)->str, NAME_CMD_STRING,
