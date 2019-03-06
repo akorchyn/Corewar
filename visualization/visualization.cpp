@@ -41,6 +41,7 @@ void				acceptClient(int32_t sock, int32_t &clientSocket, Corewar **corewar,
 	recv(clientSocket, initPackage, Corewar::initPackageSize, 0);
 	*corewar = new Corewar(&window, initPackage);
 	corewarInitialiazed = true;
+	std::cout << "Connection is set!" << std::endl;
 }
 
 void				drawPreview(Window *window, bool isWaiting)
@@ -152,6 +153,7 @@ void				uninitializeCorewar(Corewar **corewar, Window *window, bool &corewarInit
 	sock = 0;
 	delete *corewar;
 	*corewar = nullptr;
+	std::cout << "Disconnecting is done!" << std::endl;
 }
 
 
