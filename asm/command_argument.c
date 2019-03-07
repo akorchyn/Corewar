@@ -25,7 +25,7 @@ static uint8_t	find_index(char *command)
 			return (index);
 		index++;
 	}
-	return ((uint8_t)-1);
+	return (index);
 }
 
 static void		read_command(t_instruction *instr, char *instruction)
