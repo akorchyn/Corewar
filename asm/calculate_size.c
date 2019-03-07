@@ -47,9 +47,10 @@ static void		set_size(t_lexem *lexem, size_t line, uint8_t index)
 		argument = argument->next;
 		arg_cont++;
 	}
-	g_header.prog_size += lexem->size;
-	lexem->code = malloc(lexem->size);
-	*lexem->code = ++index;
+	g_header.prog_size += (index != 16) ? lexem->size : 0;
+	lexem->code = (index != 16) ? malloc(lexem->size) : NULL;
+	(lexem->code) ? *lexem->code = ++index : 0;
+	(index == 16) ? lexem->size = 0 : 0;
 }
 
 void			put_global_sizes(t_list *instruction)

@@ -77,13 +77,17 @@ void		parse_inst_code(t_list *lst)
 	while (lst)
 	{
 		counter = 1;
-		op_index = *GET_INSTRUCTION(lst)->lexem.code - (int8_t)1;
-		if (g_op_tab[op_index].has_arg_type)
-			put_codage(&GET_INSTRUCTION(lst)->lexem.code[counter++],
-					GET_INSTRUCTION(lst)->lexem.argument);
-		put_arguments(&GET_INSTRUCTION(lst)->lexem.code[counter],
-					GET_INSTRUCTION(lst)->lexem.argument,
-					g_op_tab[op_index].is_dir_2);
+		op_index = (GET_INSTRUCTION(lst)->lexem.code)
+				? (*GET_INSTRUCTION(lst)->lexem.code - (int8_t)1) : 16;
+		if (op_index != 16)
+		{
+			if (g_op_tab[op_index].has_arg_type)
+				put_codage(&GET_INSTRUCTION(lst)->lexem.code[counter++],
+						   GET_INSTRUCTION(lst)->lexem.argument);
+			put_arguments(&GET_INSTRUCTION(lst)->lexem.code[counter],
+						  GET_INSTRUCTION(lst)->lexem.argument,
+						  g_op_tab[op_index].is_dir_2);
+		}
 		lst = lst->next;
 	}
 }
