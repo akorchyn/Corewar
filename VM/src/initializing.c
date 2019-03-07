@@ -39,6 +39,7 @@ void			initializing(t_corewar *corewar)
 	t_carriage		*tmp;
 	int32_t			distance;
 
+	(corewar->players > MAX_PLAYERS) ? error(111, "Players too much", NULL) : 0;
 	sort_list(&corewar->carriages);
 	memory_allocation(corewar);
 	corewar->player_last_live = corewar->players;
@@ -48,7 +49,7 @@ void			initializing(t_corewar *corewar)
 	tmp = corewar->carriages;
 	while (tmp)
 	{
-		tmp->reg[0] = -tmp->id;
+		tmp->reg[0] = (uint32_t )-tmp->id;
 		g_header[tmp->id - 1] = tmp->header;
 		tmp->counter = distance * (tmp->id - 1);
 		ft_memcpy(corewar->map + tmp->counter, tmp->code,
