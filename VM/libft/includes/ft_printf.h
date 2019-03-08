@@ -6,17 +6,12 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/13 11:46:19 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/03/02 14:57:28 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/03/08 16:10:44 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FT_PRINTF_H
 # define FT_PRINTF_H
-
-#ifdef __linux__
-	#define uintmax_t __uintmax_t
-	#define intmax_t __intmax_t
-#endif
 
 # include <stdarg.h>
 # include <wchar.h>

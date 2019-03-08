@@ -6,7 +6,7 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 16:38:06 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/02/28 17:49:22 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/03/08 16:11:30 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include <netdb.h>
 # include "../libft/includes/libft.h"
 # include <signal.h>
+
 extern int32_t			g_id;
 extern int32_t			g_car_count;
 extern char				*g_usage;
