@@ -6,7 +6,7 @@
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/01 12:37:29 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/03/01 14:08:06 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/03/04 12:14:29 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,12 @@
 # include <string.h>
 # include <utility>
 
-# include "/Users/kpshenyc/.brew/include/SDL2/SDL.h"
-# include "/Users/kpshenyc/.brew/include/SDL2/SDL_ttf.h"
+# include <thread>
+# include <mutex>
+# include <future>
+# include "libs_includes/SDL.h"
+# include "libs_includes/SDL_ttf.h"
+# include "libs_includes/SDL_image.h"
 
 using std::string;
 using std::vector;

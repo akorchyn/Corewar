@@ -21,7 +21,7 @@
 # include <arpa/inet.h>
 # include <netdb.h>
 # include "../libft/includes/libft.h"
-
+# include <signal.h>
 extern int32_t			g_id;
 extern int32_t			g_car_count;
 extern char				*g_usage;

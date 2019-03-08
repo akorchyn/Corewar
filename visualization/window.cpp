@@ -6,7 +6,7 @@
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/28 13:33:23 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/02/28 19:43:08 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/03/04 12:23:53 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@ Window::Window(std::string name, int width, int height)
 	this->height = height;
 	this->name = name;
 	this->preview = true;
-
+	this->isStoped = true;
+	creators = false;
 	if (SDL_Init(SDL_INIT_VIDEO) != 0)
 	{
 		std::cerr << "SDL_INIT_VIDEO::ERROR" << std::endl;
@@ -29,6 +30,13 @@ Window::Window(std::string name, int width, int height)
 	if (TTF_Init() != 0)
 	{
 		std::cerr << "TTF_INIT::ERROR" << std::endl;
+		closed = true;
+		return ;
+	}
+
+	if (!IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG))
+	{
+		std::cerr << "IMG_INIT::ERROR" << std::endl;
 		closed = true;
 		return ;
 	}
@@ -47,7 +55,7 @@ Window::Window(std::string name, int width, int height)
 		return ;
 	}
 
-	this->renderer = SDL_CreateRenderer(this->window, -1, SDL_RENDERER_ACCELERATED);
+	this->renderer = SDL_CreateRenderer(this->window, -1, SDL_RENDERER_SOFTWARE);
 
 	if (this->renderer == nullptr)
 	{
@@ -80,9 +88,24 @@ void Window::poolEvents()
 				switch(event.key.keysym.sym)
 				{
 					case SDLK_ESCAPE: this->closed = true; break;
-					case SDLK_RETURN: 
+					case SDLK_RETURN:
 					{
-						this->preview = this->preview ? false : true;
+						if (!creators) {
+							if (this->preview == true)
+								this->preview = false;
+						}
+						break ;
+					}
+					case SDLK_SPACE:
+					{
+						if (!creators && !preview)
+							this->isStoped = this->isStoped ? false : true;
+						break ;
+					}
+					case SDLK_f:
+					{
+						if (preview)
+							this->creators = this->creators ? false : true;
 						break ;
 					}
 					default:

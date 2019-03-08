@@ -6,7 +6,7 @@
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/01 12:35:54 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/03/01 18:28:07 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/03/04 17:35:21 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,37 @@
 
 //-----------------------------------------------------------------------------
 
+void			Text::drawBackground(bool fill)
+{
+	if (fill)
+		SDL_SetRenderDrawColor(_renderer, 255, 255, 0, 255);
+	else
+		SDL_SetRenderDrawColor(_renderer, 0, 0, 0, 255);
+	SDL_RenderFillRect(_renderer, &_textRect);
+}
+
+//-----------------------------------------------------------------------------
+
+string			Text::getText()
+{
+	return _text;
+}
+
+//-----------------------------------------------------------------------------
+
 void			Text::changeColor(SDL_Color *newColor)
 {
 	_color = newColor;
 	if (_textSurface != nullptr)
+	{
 		SDL_FreeSurface(_textSurface);
+		_textSurface = nullptr;
+	}
 	if (_textTexture != nullptr)
+	{
 		SDL_DestroyTexture(_textTexture);
+		_textTexture = nullptr;
+	}
 	_textSurface = TTF_RenderText_Solid(_font, _text.c_str(), *(_color));
 	_textTexture = SDL_CreateTextureFromSurface(_renderer, _textSurface);
 	SDL_QueryTexture(_textTexture, nullptr, nullptr, &(_textRect.w), &(_textRect.h));
@@ -28,13 +52,20 @@ void			Text::changeColor(SDL_Color *newColor)
 
 //-----------------------------------------------------------------------------
 
-void			Text::changeText(string newText)
+void			Text::changeText(string newText, SDL_Color *color)
 {
 	_text = newText;
+	_color = color;
 	if (_textSurface != nullptr)
+	{
 		SDL_FreeSurface(_textSurface);
+		_textSurface = nullptr;
+	}
 	if (_textTexture != nullptr)
+	{
 		SDL_DestroyTexture(_textTexture);
+		_textTexture = nullptr;
+	}
 	_textSurface = TTF_RenderText_Solid(_font, _text.c_str(), *(_color));
 	_textTexture = SDL_CreateTextureFromSurface(_renderer, _textSurface);
 	SDL_QueryTexture(_textTexture, nullptr, nullptr, &(_textRect.w), &(_textRect.h));
@@ -76,8 +107,6 @@ void		Text::_initGraphicsInfo()
 
 	_textRect.x = _xPos;
 	_textRect.y = _yPos;
-
-	std::cout << "w: " << _textRect.w << " h: " << _textRect.h << " x: " << _textRect.x << " y: " << _textRect.y << std::endl;
 
 	SDL_QueryTexture(_textTexture, nullptr, nullptr, &(_textRect.w), &(_textRect.h));
 }
@@ -175,8 +204,6 @@ Text::~Text()
 		SDL_FreeSurface(_textSurface);
 	if (_textTexture != nullptr)
 		SDL_DestroyTexture(_textTexture);
-	if (!_commonFont)
-		TTF_CloseFont(_font);
 }
 
 //-----------------------------------------------------------------------------
@@ -196,7 +223,6 @@ Text&			Text::operator=(const Text &right) noexcept
 	_charWidth = right._charWidth;
 	_xPos = right._xPos;
 	_yPos = right._yPos;
-	std::cout << "wtf2" << std::endl;
 	return *this;
 }
 

@@ -21,6 +21,11 @@ enum								Players
 	NO_PLAYER, FIRST, SECOND, THIRD, FOURTH
 };
 
+enum waitStatus
+{
+	NOT_WAITING, WAITING
+};
+
 class Corewar
 {
 	struct Player
@@ -49,20 +54,30 @@ class Corewar
 		/*
 			Graphics information
 		*/
+		bool						carriageOn;
 		Text						byteText;
 	};
 
 	void							_parseInitPackage(uint8_t *initPackage, Window *window);
 	void							_initField(Window *window);
-	
+	void							_processField(uint8_t *fieldPackage, uint16_t cells);
+	void							_drawField(uint16_t from, uint16_t to);
 	/*
 		Info that gets from buffer, and applies by Corewar::refreshData method;
 	*/
 	vector<Byte>					_map;			// perfectly buffer of 4096 Byte's samples
-	int32_t							_iteration;
-	int16_t							_processess;
+
+	Text							_iteration;
+	Text							_iterationTextValue;
+	uint32_t						_iterationValue;
+
+	Text							_processess;
+	Text							_processessValue;
+
 	vector<Player>					_players;		// max - 4
-	int32_t							_cycleToDie;
+
+	Text							_cycleToDie;
+	Text							_cycleToDieValue;
 
 	Text							_cycleDelta;
 	Text							_nbrLive;
@@ -84,8 +99,13 @@ class Corewar
 	~Corewar();
 
 	void							draw(Window *window);
+	friend void 					drawMap(uint8_t *map);
+	void							drawWinner(Window *window);
 	void							drawInitData(Window *window);
-	void							refreshData(uint8_t *fieldPackage, uint8_t *carriagesPackage, uint32_t carriagePackagesSize);
+
+	void							refreshData(uint8_t *fieldPackage);
+
+	int8_t							winner;
 
 	static constexpr int16_t		mapSize = 4096;
 	static constexpr int16_t		initPackageSize = 529;

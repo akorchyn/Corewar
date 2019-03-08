@@ -13,6 +13,11 @@
 #ifndef FT_PRINTF_H
 # define FT_PRINTF_H
 
+#ifdef __linux__
+	#define uintmax_t __uintmax_t
+	#define intmax_t __intmax_t
+#endif
+
 # include <stdarg.h>
 # include <wchar.h>
 # include "libft.h"
