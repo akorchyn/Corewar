@@ -36,6 +36,24 @@ int32_t			set_connection_to_visualization(char *address, int16_t *i)
 				error(17, "Can not connect to the server...", NULL);
 				close(sock);
 			}
+//	int info = 0;
+//	int len = sizeof(info);
+//	if (getsockopt(sock, SOL_SOCKET, SO_SNDBUF, &info, &len) == -1)
+//	{
+//		ft_printf("cannot get info about socket\n");
+//		ft_printf("errno: %d", errno);
+//		exit(1);
+//	}
+//	ft_printf("%d\n", info);
+//	info *= 30;
+//	setsockopt(sock, SOL_SOCKET, SO_SNDBUF, &info, sizeof(len));
+//	if (getsockopt(sock, SOL_SOCKET, SO_SNDBUF, &info, &len) == -1)
+//	{
+//		ft_printf("cannot get info about socket\n");
+//		ft_printf("errno: %d", errno);
+//		exit(1);
+//	}
+//	ft_printf("%d\n", info);
 	return (sock);
 }
 

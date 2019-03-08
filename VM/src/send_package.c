@@ -20,14 +20,6 @@
 ** Next		carriages position							( int16_t each )
 */
 
-uint8_t				*alloc_package(int32_t *size)
-{
-	*size = sizeof(uint32_t) +
-			sizeof(uint8_t) * (MEM_SIZE * 2) +
-			sizeof(uint32_t);
-	return ((uint8_t *)malloc(sizeof(uint8_t) * (*size)));
-}
-
 void				fill_map_package(t_corewar *corewar, uint8_t *package)
 {
 	int32_t			i;
@@ -45,40 +37,30 @@ void				fill_map_package(t_corewar *corewar, uint8_t *package)
 	ft_memcpy(package + step, &(corewar->cycles_to_die), sizeof(uint32_t));
 }
 
-uint8_t		*fill_carriages_package(t_corewar *corewar, int32_t *size)
+void	fill_carriages_package(uint8_t *car_pack, t_corewar *corewar)
 {
 	t_carriage		*tmp;
-	int32_t			step;
-	uint8_t			*package;
 
-	*size = sizeof(uint16_t) * g_car_count;
-	package = (uint8_t *)malloc(sizeof(uint8_t) * (*size));
-	step = 0;
 	tmp = corewar->carriages;
 	while (tmp)
 	{
-		ft_memcpy(package + step, &(tmp->counter), sizeof(uint16_t));
-		step += sizeof(uint16_t);
+		car_pack[tmp->counter] = 1;
 		tmp = tmp->next;
 	}
-	return (package);
 }
 
 void				send_package(t_corewar *corewar)
 {
-	uint8_t			*package;
-	int32_t			size;
-	int8_t			answer;
+	static const size_t		size = sizeof(uint32_t) +
+							sizeof(uint8_t) * (MEM_SIZE * 3) +
+							sizeof(uint32_t);
+	static uint8_t			package[size];
 
-	package = alloc_package(&size);
+	ft_bzero(package, size);
  	fill_map_package(corewar, package);
+	fill_carriages_package(package +
+	size - MEM_SIZE, corewar);
 	send(corewar->sock, package, size, 0);
-	free(package);
-	package = fill_carriages_package(corewar, &size);
-	while (recv(corewar->sock, &answer, 1, 0) == 0)
-		;
-	send(corewar->sock, package, size, 0);
-	free(package);
 }
 
 /*

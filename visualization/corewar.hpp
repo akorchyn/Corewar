@@ -100,9 +100,12 @@ class Corewar
 
 	void							draw(Window *window);
 	friend void 					drawMap(uint8_t *map);
+	void							drawWinner(Window *window);
 	void							drawInitData(Window *window);
 
-	void							refreshData(uint8_t *fieldPackage, uint16_t *carriagesPackage, uint32_t carriagePackagesSize);
+	void							refreshData(uint8_t *fieldPackage);
+
+	int8_t							winner;
 
 	static constexpr int16_t		mapSize = 4096;
 	static constexpr int16_t		initPackageSize = 529;

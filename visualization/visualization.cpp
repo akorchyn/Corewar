@@ -22,6 +22,27 @@ int					initSocket()
 	int		sock;
 
 	sock = socket(AF_INET, SOCK_STREAM, 0);
+//	int buff = 0;
+//	setsockopt(sock, SOL_SOCKET, SO_RCVBUF, &buff, sizeof(int));
+	int info;
+	int len = sizeof(info);
+	if (getsockopt(sock, SOL_SOCKET, SO_RCVBUF, &info, (socklen_t *)(&len)) == -1)
+	{
+		std::cerr << "cannot get info about socket" << std::endl;
+		std::cerr << ("errno: %d", errno) << std::endl;
+		exit(1);
+	}
+	std::cout << info << std::endl;
+	info *= 30;
+	setsockopt(sock, SOL_SOCKET, SO_RCVBUF, &info, sizeof(len));
+	setsockopt(sock, SOL_SOCKET, SO_SNDBUF, &info, sizeof(len));
+	if (getsockopt(sock, SOL_SOCKET, SO_RCVBUF, &info, (socklen_t *)(&len)) == -1)
+	{
+		std::cerr << "cannot get info about socket" << std::endl;
+		std::cerr << ("errno: %d", errno) << std::endl;
+		exit(1);
+	}
+	std::cout << info << std::endl;
 	struct sockaddr_in server_address;
 	server_address.sin_family = AF_INET;
 	server_address.sin_port = htons(4242);
@@ -166,12 +187,10 @@ int					main(void)
 	Window			window("Corewar", WIDTH, HEIGHT);
 	Corewar			*corewar;
 
-	uint8_t			fieldPackage[Corewar::fieldPackageSize];
-	uint16_t		*carriagesPackage;
+	uint8_t			fieldPackage[Corewar::fieldPackageSize + Corewar::mapSize];
 
 	bool			corewarInitialized = false;
 	bool			waitingClient = false;
-
 	std::thread th;
 
 	while (!window.isClosed())
@@ -187,20 +206,25 @@ int					main(void)
 			}
 			if (corewarInitialized && !window.isStoped)
 			{
-				send(clientSock, &answerToVisualization, 1, 0);
-				if (recv(clientSock, fieldPackage, Corewar::fieldPackageSize, 0) <= 0)
+				if (corewar->winner == 0)
 				{
-					uninitializeCorewar(&corewar, &window, corewarInitialized, waitingClient, sock, clientSock);
-					continue ;
+					uint32_t def;
+					send(clientSock, &answerToVisualization, 1, 0);
+					recv(clientSock, fieldPackage, Corewar::fieldPackageSize + Corewar::mapSize, 0);
+					def = *((uint32_t *) fieldPackage);
+					if (def >> 31)
+					{
+						corewar->winner = def & 7;
+						continue;
+					}
+					else
+						corewar->refreshData(fieldPackage);
 				}
-				carriagesPackage = new uint16_t[*((uint32_t *) fieldPackage)];
-				send(clientSock, &answerToVisualization, 1, 0);
-				if (recv(clientSock, carriagesPackage, *((uint32_t *) fieldPackage) * sizeof(uint16_t), 0) > 0)
-					corewar->refreshData(fieldPackage, carriagesPackage, *((uint32_t *)fieldPackage));
-				delete[] carriagesPackage;
 			}
 			if (corewarInitialized)
 			{
+				if (corewar->winner)
+					corewar->drawWinner(&window);
 				corewar->drawInitData(&window);
 				corewar->draw(&window);
 			}

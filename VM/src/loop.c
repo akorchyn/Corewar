@@ -98,11 +98,13 @@ void			cycle(t_corewar *corewar, t_dispatcher *dispatcher)
 			system("leaks -q corewar");
 		if (corewar->sock)
 		{
-			while (recv(corewar->sock, &answer, 1, 0) == 0)
+			while (recv(corewar->sock, &answer, 1, 0) != 1)
 				;
 			send_package(corewar);
 		}
 	}
+	corewar->sock ? send(corewar->sock, &((int){corewar->player_last_live | (1 << 31)}),
+			sizeof(corewar->player_last_live), 0) : 0;
 	ft_printf("Contestant %d, \"%s\", has won !\n", corewar->player_last_live,
 			g_header[corewar->player_last_live - 1]->prog_name);
 }

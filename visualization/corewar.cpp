@@ -182,7 +182,7 @@ void							Corewar::_initField(Window *window)
 Corewar::Corewar(Window *window, uint8_t *initPackage) :
 	_map(vector<Byte>(Corewar::mapSize, Byte{})), _startX(10), _startY(10),
 	_byteWidth(10), _byteHeight(2), _blankWidth(18), _blankHeight(18),
-	_iterationValue(0)
+	_iterationValue(0), winner(0)
 {
 	_font = TTF_OpenFont("fonts/BebasNeue.ttf", 22);
 	if (!_font)
@@ -222,19 +222,18 @@ void					Corewar::_processField(uint8_t *fieldPackage, uint16_t cells)
 
 //-----------------------------------------------------------------------------
 
-void		Corewar::refreshData(uint8_t *fieldPackage, uint16_t *carriagesPackage, uint32_t carriagePackagesSize)
+void		Corewar::refreshData(uint8_t *fieldPackage)
 {
+	uint8_t		*carPack = fieldPackage + Corewar::fieldPackageSize - 4;
+
 	if (_processessValue.getText() != std::to_string(*((uint32_t *)(fieldPackage))))
 		_processessValue.changeText(std::to_string(*((uint32_t *)(fieldPackage))), &basicColors[NO_PLAYER]);
 	fieldPackage += 4;
-
 	_processField(fieldPackage, Corewar::mapSize);
-
-	for (uint16_t j = 0; j < carriagePackagesSize; ++j)
-		_map[carriagesPackage[j]].carriageOn = true;
-
-	if (_cycleToDieValue.getText() != std::to_string(*((uint32_t *)(fieldPackage + Corewar::mapSize * 2))))
-		_cycleToDieValue.changeText(std::to_string(*((uint32_t *)(fieldPackage + Corewar::mapSize * 2))), &basicColors[NO_PLAYER]);
+	for (uint32_t j = 0; j < Corewar::mapSize; ++j)
+		_map.at(j).carriageOn = (bool) carPack[j];
+	if (_cycleToDieValue.getText() != std::to_string(*((int32_t *)(fieldPackage + Corewar::mapSize * 2))))
+		_cycleToDieValue.changeText(std::to_string(*((int32_t *)(fieldPackage + Corewar::mapSize * 2))), &basicColors[NO_PLAYER]);
 	_iterationValue++;
 	_iterationTextValue.changeText(std::to_string(_iterationValue), &basicColors[NO_PLAYER]);
 }
@@ -279,6 +278,18 @@ void Corewar::draw(Window *window)
 	_processessValue.draw();
 	_iteration.draw();
 	_iterationTextValue.draw();
+}
+
+//-----------------------------------------------------------------------------
+
+void Corewar::drawWinner(Window *window)
+{
+	static Text winnerText = Text(("Winner is " + _players[winner - 1].idText.getText() +
+										" " +
+										  _players[winner - 1].nameText.getText()).c_str(),
+										  		_font, (64 * (_byteWidth + _blankWidth)) + 25, 750,
+										  		200, 300, &basicColors[winner], window->renderer);
+	winnerText.draw();
 }
 
 //-----------------------------------------------------------------------------
