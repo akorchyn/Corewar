@@ -6,7 +6,7 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/25 22:59:19 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/03/08 15:07:10 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/03/08 21:03:32 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,8 +82,6 @@ static void		cycle_to_die(t_corewar *corewar, t_carriage *pc)
 
 void			cycle(t_corewar *corewar, t_dispatcher *dispatcher)
 {
-	int8_t				answer;
-
 	(corewar->sock) ? send_init_package(corewar) : 0;
 	while (corewar->carriages)
 	{
@@ -96,11 +94,7 @@ void			cycle(t_corewar *corewar, t_dispatcher *dispatcher)
 		if (corewar->verbose & 8 && !(corewar->iteration % 500))
 			system("leaks -q corewar");
 		if (corewar->sock)
-		{
-			while (recv(corewar->sock, &answer, 1, 0) != 1)
-				;
 			send_package(corewar);
-		}
 	}
 	corewar->sock ? send(corewar->sock,
 			&((int){corewar->player_last_live | (1 << 31)}),
@@ -111,8 +105,6 @@ void			cycle(t_corewar *corewar, t_dispatcher *dispatcher)
 
 void			dump_cycle(t_corewar *corewar, t_dispatcher *dispatcher)
 {
-	int8_t				answer;
-
 	if (corewar->sock)
 		send_init_package(corewar);
 	while (corewar->carriages && ++corewar->iteration <= corewar->dump_drop)
@@ -123,11 +115,7 @@ void			dump_cycle(t_corewar *corewar, t_dispatcher *dispatcher)
 		if (--corewar->to_check < 1)
 			cycle_to_die(corewar, corewar->carriages);
 		if (corewar->sock)
-		{
-			while (recv(corewar->sock, &answer, 1, 0) != 1)
-				;
 			send_package(corewar);
-		}
 		if (corewar->verbose & 8 && !(corewar->iteration % 500))
 			system("leaks -q corewar");
 	}

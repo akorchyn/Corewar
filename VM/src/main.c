@@ -6,7 +6,7 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 23:43:59 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/03/08 15:10:07 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/03/08 20:06:59 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ int32_t			set_connection_to_visualization(char *address, int16_t *i)
 	{
 		error(17, "Can not connect to the server...", NULL);
 		close(sock);
+		exit(0);
 	}
 	return (sock);
 }

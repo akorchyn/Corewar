@@ -6,7 +6,7 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 16:38:06 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/03/08 16:11:30 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/03/08 21:05:57 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,8 @@ typedef struct			s_corewar
 	uint8_t				players;
 	int					sock;
 }						t_corewar;
+
+extern t_corewar		g_corewar;
 
 typedef struct			s_variables
 {

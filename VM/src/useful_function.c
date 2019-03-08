@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   useful_function.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/19 09:49:17 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/27 18:01:56 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/03/08 21:05:31 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vm.h"
+
+t_corewar				g_corewar;
 
 int32_t					error(int code, char *msg, char *argument)
 {
@@ -21,6 +23,8 @@ int32_t					error(int code, char *msg, char *argument)
 		ft_putstr_fd(argument, 2);
 	}
 	ft_putstr_fd("\n", 2);
+	if (g_corewar.sock)
+		close(g_corewar.sock);
 	exit(code);
 	return (1);
 }
