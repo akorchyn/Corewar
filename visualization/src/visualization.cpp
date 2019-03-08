@@ -31,6 +31,24 @@ int					initSocket()
 	return sock;
 }
 
+void				recv_(int32_t sock, uint8_t *data, int32_t size, int32_t flags)
+{
+	int32_t		received = 0;
+	int32_t		ret;
+	while (received < size)
+	{
+		received += (ret = recv(sock, data + received, size - received, flags));
+		std::cout << ret << std::endl;
+		if (!ret || ret == -1)
+		{
+			close(sock);
+			std::cerr << "VM closed connection" << std::endl;
+			exit(EXIT_FAILURE);
+		}
+		std::cout << received << std::endl;
+	}
+}
+
 void				acceptClient(int32_t sock, int32_t &clientSocket, Corewar **corewar,
 							 bool &corewarInitialiazed, Window &window)
 {
@@ -38,7 +56,7 @@ void				acceptClient(int32_t sock, int32_t &clientSocket, Corewar **corewar,
 
 	sock = initSocket();
 	clientSocket = accept(sock, NULL, NULL);
-	recv(clientSocket, initPackage, Corewar::initPackageSize, 0);
+	recv_(clientSocket, initPackage, Corewar::initPackageSize, 0);
 	*corewar = new Corewar(&window, initPackage);
 	corewarInitialiazed = true;
 	std::cout << "Connection is set!" << std::endl;
@@ -156,7 +174,6 @@ void				uninitializeCorewar(Corewar **corewar, Window *window, bool &corewarInit
 	std::cout << "Disconnecting is done!" << std::endl;
 }
 
-
 int					main(void)
 {
 	int32_t			clientSock = 0;
@@ -188,8 +205,7 @@ int					main(void)
 				if (corewar->winner == 0)
 				{
 					uint32_t def;
-					send(clientSock, &answerToVisualization, 1, 0);
-					recv(clientSock, fieldPackage, Corewar::fieldPackageSize + Corewar::mapSize, 0);
+					recv_(clientSock, fieldPackage, Corewar::fieldPackageSize + Corewar::mapSize, 0);
 					def = *((uint32_t *) fieldPackage);
 					if (def >> 31)
 					{

@@ -224,7 +224,7 @@ void					Corewar::_processField(uint8_t *fieldPackage, uint16_t cells)
 
 void		Corewar::refreshData(uint8_t *fieldPackage)
 {
-	uint8_t		*carPack = fieldPackage + Corewar::fieldPackageSize - 4;
+	uint8_t		*carPack = fieldPackage + Corewar::fieldPackageSize;
 
 	if (_processessValue.getText() != std::to_string(*((uint32_t *)(fieldPackage))))
 		_processessValue.changeText(std::to_string(*((uint32_t *)(fieldPackage))), &basicColors[NO_PLAYER]);

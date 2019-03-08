@@ -109,7 +109,7 @@ class Corewar
 
 	static constexpr int16_t		mapSize = 4096;
 	static constexpr int16_t		initPackageSize = 529;
-	static constexpr int16_t		fieldPackageSize = 8204;
+	static constexpr int16_t		fieldPackageSize = 8200;
 	static constexpr int16_t		maxNameLength = 128;
 	static constexpr uint8_t		byteOrder[17] = "0123456789abcdef";
 };
