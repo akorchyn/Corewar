@@ -6,7 +6,7 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/27 15:47:33 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/03/08 20:10:51 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/03/08 20:11:30 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	fill_carriages_package(uint8_t *car_pack, t_corewar *corewar)
 	}
 }
 
-void	send_(int32_t sock, void *package, size_t size, int32_t mode)
+void	send_(int32_t sock, void *package, int32_t size, int32_t mode)
 {
 	int32_t		sended;
 
