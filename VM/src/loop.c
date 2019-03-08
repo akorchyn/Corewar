@@ -6,7 +6,7 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/25 22:59:19 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/02/28 18:07:16 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/03/08 15:07:10 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,8 +84,7 @@ void			cycle(t_corewar *corewar, t_dispatcher *dispatcher)
 {
 	int8_t				answer;
 
-	if (corewar->sock)
-		send_init_package(corewar);
+	(corewar->sock) ? send_init_package(corewar) : 0;
 	while (corewar->carriages)
 	{
 		corewar->iteration++;

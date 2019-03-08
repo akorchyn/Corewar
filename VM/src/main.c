@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 23:43:59 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/03/04 14:30:30 by kpshenyc         ###   ########.fr       */
+/*   Updated: 2019/03/08 15:10:07 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 t_header		*g_header[MAX_PLAYERS];
 int32_t			g_car_count;
-t_corewar		corewar;
+t_corewar		g_corewar;
 
 int32_t			set_connection_to_visualization(char *address, int16_t *i)
 {
@@ -32,49 +32,30 @@ int32_t			set_connection_to_visualization(char *address, int16_t *i)
 	server_address.sin_addr.s_addr = (addr) ? (*addr)->s_addr : INADDR_ANY;
 	if (connect(sock, (struct sockaddr *)&server_address,
 			sizeof(server_address)) == -1)
-			{
-				error(17, "Can not connect to the server...", NULL);
-				close(sock);
-			}
-//	int info = 0;
-//	int len = sizeof(info);
-//	if (getsockopt(sock, SOL_SOCKET, SO_SNDBUF, &info, &len) == -1)
-//	{
-//		ft_printf("cannot get info about socket\n");
-//		ft_printf("errno: %d", errno);
-//		exit(1);
-//	}
-//	ft_printf("%d\n", info);
-//	info *= 30;
-//	setsockopt(sock, SOL_SOCKET, SO_SNDBUF, &info, sizeof(len));
-//	if (getsockopt(sock, SOL_SOCKET, SO_SNDBUF, &info, &len) == -1)
-//	{
-//		ft_printf("cannot get info about socket\n");
-//		ft_printf("errno: %d", errno);
-//		exit(1);
-//	}
-//	ft_printf("%d\n", info);
+	{
+		error(17, "Can not connect to the server...", NULL);
+		close(sock);
+	}
 	return (sock);
 }
 
-static void		ending(t_corewar *corewar)
+static void		ending(t_corewar *g_corewar)
 {
 	int8_t		i;
 
 	i = -1;
-	free(corewar->map);
-	if (corewar->sock)
-		free(corewar->player_affected);
-	while (++i < corewar->players)
+	free(g_corewar->map);
+	if (g_corewar->sock)
+		free(g_corewar->player_affected);
+	while (++i < g_corewar->players)
 		free(g_header[i]);
 }
-
 
 void			handler(int signal)
 {
 	(void)signal;
-	if (corewar.sock)
-		close(corewar.sock);
+	if (g_corewar.sock)
+		close(g_corewar.sock);
 	exit(EXIT_SUCCESS);
 }
 
@@ -83,21 +64,21 @@ int32_t			main(int ac, char **av)
 	t_dispatcher	dispatcher[16];
 
 	signal(SIGTERM, &handler);
-	ft_bzero(&corewar, sizeof(corewar));
-	parse_arguments(ac, av, &corewar, 0);
-	!(corewar.players) ? print_usage(av) : 0;
-	process_ids(corewar.carriages, corewar.players);
-	g_id = corewar.players;
-	g_car_count = corewar.players;
-	initializing(&corewar);
+	ft_bzero(&g_corewar, sizeof(g_corewar));
+	parse_arguments(ac, av, &g_corewar, 0);
+	!(g_corewar.players) ? print_usage(av) : 0;
+	process_ids(g_corewar.carriages, g_corewar.players);
+	g_id = g_corewar.players;
+	g_car_count = g_corewar.players;
+	initializing(&g_corewar);
 	initializing_dispatcher(dispatcher);
-	if (!corewar.is_dump)
-		cycle(&corewar, dispatcher);
+	if (!g_corewar.is_dump)
+		cycle(&g_corewar, dispatcher);
 	else
-		dump_cycle(&corewar, dispatcher);
-	ending(&corewar);
-	(corewar.verbose & 8) ? system("leaks -q corewar") : 0;
-	if (corewar.sock)
-		close(corewar.sock);
+		dump_cycle(&g_corewar, dispatcher);
+	ending(&g_corewar);
+	(g_corewar.verbose & 8) ? system("leaks -q g_corewar") : 0;
+	if (g_corewar.sock)
+		close(g_corewar.sock);
 	return (0);
 }
