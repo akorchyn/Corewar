@@ -6,7 +6,7 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/27 15:47:33 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/03/08 21:20:33 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/03/09 11:51:20 by akorchyn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void	send_package(t_corewar *corewar)
 	ft_bzero(package, size);
 	fill_map_package(corewar, package);
 	fill_carriages_package(package + size - MEM_SIZE, corewar);
-	send_(corewar->sock, package, size, MSG_WAITALL);
+	send_(corewar->sock, package, size, 0);
 }
 
 /*
