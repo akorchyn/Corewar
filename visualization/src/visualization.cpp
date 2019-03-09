@@ -136,24 +136,24 @@ void				drawCreators(Window *window)
 	SDL_RenderCopy(window->renderer, opishcheText, nullptr, &opishcheRect);
 
 	static Text			inspiredBy = Text("Inspired by Stura",
-							"fonts/joystix monospace.ttf", 30,
-								885, 600,
-								600, 600,
-								&basicColors[THIRD], window->renderer);
+											"fonts/joystix monospace.ttf", 30,
+											885, 600,
+											600, 600,
+											&basicColors[THIRD], window->renderer);
 	inspiredBy.draw();
 
 	static Text			sponsoredBy = Text("Sponsored by Stura",
-											 "fonts/joystix monospace.ttf", 30,
-											 875, 650,
-											 600, 600,
-											 &basicColors[FIRST], window->renderer);
+											"fonts/joystix monospace.ttf", 30,
+											875, 650,
+											600, 600,
+											&basicColors[FIRST], window->renderer);
 	sponsoredBy.draw();
 
 	static Text			acceleratedBy = Text("Accelerated by Stura",
-											  "fonts/joystix monospace.ttf", 30,
-											  850, 700,
-											  600, 600,
-											  &basicColors[SECOND], window->renderer);
+											"fonts/joystix monospace.ttf", 30,
+											850, 700,
+											600, 600,
+											&basicColors[SECOND], window->renderer);
 	acceleratedBy.draw();
 
 }
@@ -171,6 +171,7 @@ void				uninitializeCorewar(Corewar **corewar, Window *window, bool &corewarInit
 	sock = 0;
 	delete *corewar;
 	*corewar = nullptr;
+	window->mustBeDestroyed = false;
 	std::cout << "Disconnecting is done!" << std::endl;
 }
 
@@ -187,6 +188,7 @@ int					main(void)
 
 	bool			corewarInitialized = false;
 	bool			waitingClient = false;
+
 	std::thread th;
 
 	while (!window.isClosed())
@@ -218,6 +220,11 @@ int					main(void)
 			}
 			if (corewarInitialized)
 			{
+				if (window.mustBeDestroyed)
+				{
+					uninitializeCorewar(&corewar, &window, corewarInitialized, waitingClient, sock, clientSock);
+					continue ;
+				}
 				if (corewar->winner)
 					corewar->drawWinner(&window);
 				corewar->drawInitData(&window);
