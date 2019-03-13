@@ -39,7 +39,7 @@ print_cs.c print_float.c print_numeric.c \
 
 SRC_LST=ft_list_size.c ft_lstadd.c ft_lstadd_sorted.c ft_lstdel.c \
 ft_lstdelone.c ft_lstfind.c ft_lstiter.c ft_lstmap.c ft_lstnew.c \
-ft_lstadd_end.c \
+ft_lstadd_end.c ft_lstrev.c \
 
 SRC=$(addprefix 42/, $(SRC_42)) $(addprefix mem/, $(SRC_MEM)) \
 $(addprefix str/, $(SRC_STR)) $(addprefix lst/, $(SRC_LST)) \

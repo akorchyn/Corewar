@@ -17,10 +17,6 @@
 # include <fcntl.h>
 # include <stdint.h>
 
-# define IND_SIZE				2
-# define REG_SIZE				4
-# define DIR_SIZE				REG_SIZE
-
 # define REG_CODE				1
 # define DIR_CODE				2
 # define IND_CODE				3
@@ -107,5 +103,6 @@ uint8_t							find_op_index(char *command,
 		size_t command_length);
 void							write_bites(uint8_t *mem,
 		uint32_t value32, uint8_t bites);
+void							write_executable(int fd, t_list *instr_list);
 
 #endif

@@ -92,6 +92,7 @@ static int	create_file(char *file_name)
 	write(fd, mem4, 4);
 	write(fd, g_header.comment, COMMENT_LENGTH);
 	write(fd, COREWAR_NULL, COREWAR_NULL_LENGTH);
+	free(mem4);
 	return (fd);
 }
 
@@ -107,6 +108,6 @@ void		assembly(char *file_name)
 	instr_list = read_instructions(file_content);
 	free(content_pointer);
 	fd = create_file(file_name);
-	write_executable(instr_list);
+	write_executable(fd, instr_list);
 	print_labels(g_label_list);
 }
