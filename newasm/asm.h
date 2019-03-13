@@ -36,6 +36,7 @@
 
 # define NAME_CMD_STRING		".name"
 # define COMMENT_CMD_STRING		".comment"
+# define COREWAR_NULL			"\0\0\0\0"
 
 # define REG_NUMBER				16
 
@@ -45,6 +46,7 @@
 
 # define PROG_NAME_LENGTH		(128)
 # define COMMENT_LENGTH			(2048)
+# define COREWAR_NULL_LENGTH	(4)
 # define COREWAR_EXEC_MAGIC		0xea83f3
 
 typedef struct					t_header
@@ -77,7 +79,9 @@ typedef struct					s_instruction
 {
 	uint8_t						op_index;
 	uint8_t						op_size;
+	uint32_t					size_here;
 	t_list						*argument;
+	size_t						line_nb;
 }								t_instruction;
 
 extern t_op						g_op_tab[17];
@@ -99,5 +103,9 @@ char							*read_name_comment(char *file_content,
 t_list							*read_instructions(char *start);
 void							collect_instruction(t_list **instr_list,
 		t_instruction *instr, char *instruction);
+uint8_t							find_op_index(char *command,
+		size_t command_length);
+void							write_bites(uint8_t *mem,
+		uint32_t value32, uint8_t bites);
 
 #endif

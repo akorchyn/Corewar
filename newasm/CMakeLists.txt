@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.13)
 project(asm C)
 
 set(SOURCE_C main.c assembly.c name_comment.c disassembly.c
-        valid.c read_instructions.c parse_instruction.c)
+        valid.c read_instructions.c parse_instruction.c executable.c)
 
 set(SOURCE_H asm.h)
 

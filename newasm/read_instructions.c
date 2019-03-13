@@ -40,8 +40,8 @@ static void		collect_label(char *instruction, char *label_char)
 {
 	t_label	label;
 
-	label.label_name = ft_memcpy(ft_stralloc(label_char - instruction - 1),
-			instruction, label_char - instruction - 1);
+	label.label_name = ft_memcpy(ft_stralloc(label_char - instruction),
+			instruction, label_char - instruction);
 	label.label_value = g_header.prog_size;
 	ft_lstadd(&g_label_list, ft_lstnew(&label, sizeof(t_label)));
 	while (ft_is_whitespace(label_char + 1))
@@ -92,7 +92,6 @@ t_list			*read_instructions(char *start)
 	ft_bzero(&instr, sizeof(t_instruction));
 	while (start)
 	{
-		g_line++;
 		end = ft_strchr(start, '\n');
 		if (end)
 		{
@@ -104,6 +103,7 @@ t_list			*read_instructions(char *start)
 		}
 		else if (line_not_clear(start, ft_strchr(start, 0)))
 			throw_error("expected \\n", g_line);
+		g_line++;
 		start = (end) ? end + 1 : end;
 	}
 	return (instr_list);
