@@ -50,9 +50,11 @@ static uint32_t	get_arg_value(char *argument, t_instruction *instr)
 {
 	t_list	*label;
 
-	if (*argument == LABEL_CHAR)
+	if (*argument == LABEL_CHAR
+		|| (*argument == DIRECT_CHAR && *(argument + 1) ==  LABEL_CHAR))
 	{
-		if (!(label = ft_lstfind(g_label_list, argument + 1, label_find)))
+		if (!(label = ft_lstfind(g_label_list, (*argument == DIRECT_CHAR)
+				? argument + 2 : argument + 1, label_find)))
 			throw_error("unknown label", instr->line_nb);
 		return (((t_label*)label->content)->label_value - instr->size_here);
 	}
