@@ -16,15 +16,6 @@ size_t			g_line;
 t_header		g_header;
 t_op			g_op_tab[17];
 
-static void		print_operation(t_list *operation)
-{
-	ft_printf("\nindex = %d\t", ((t_instruction*)operation->content)->op_index);
-	ft_printf("op_name: %s\n", g_op_tab[((t_instruction*)operation->content)
-		->op_index].name);
-	ft_printf("size = %d\n", ((t_instruction*)operation->content)->op_size);
-	ft_printf("\t\t\tglobal size = %d\n\n\n", g_header.prog_size);
-}
-
 static uint8_t	arg_valid(char *str,
 		uint8_t argument_code, uint8_t is_dir_ind)
 {
@@ -57,10 +48,9 @@ static void		check_arguments(t_instruction *instr,
 	}
 }
 
-static t_list	*collect_arguments(char *str, t_instruction *instr)
+static t_list	*collect_arguments(char *str, char *end, t_instruction *instr)
 {
 	t_list		*arg;
-	char		*end;
 
 	arg = NULL;
 	while (*str)
@@ -100,7 +90,7 @@ void			collect_instruction(t_list **instr_list,
 	if (instr->op_index == 16)
 		throw_error("unknown command", g_line);
 	instr->op_size = (g_op_tab[instr->op_index].has_arg_type) ? 2 : 1;
-	instr->argument = collect_arguments(command_end, instr);
+	instr->argument = collect_arguments(command_end, NULL, instr);
 	instr->line_nb = g_line;
 	instr->size_here = g_header.prog_size;
 	operation = ft_lstnew(instr, sizeof(t_instruction));

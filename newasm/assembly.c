@@ -62,28 +62,16 @@ static char	*read_file(char *file_name)
 	return (file);
 }
 
-static void	print_labels(t_list *label)
-{
-	if (label)
-	{
-		print_labels(label->next);
-		ft_printf("label_name: %s\tlabel_value: %d\n",
-				((t_label*)label->content)->label_name,
-				((t_label*)label->content)->label_value);
-	}
-}
-
 static int	create_file(char *file_name)
 {
 	int		fd;
 	uint8_t	*mem4;
-	char	*binary_name;
 
-	binary_name = ft_strcat(ft_memcpy(ft_strnew(ft_strlen(file_name) + 2),
+	mem4 = (uint8_t*)ft_strcat(ft_memcpy(ft_strnew(ft_strlen(file_name) + 2),
 			file_name, ft_strlen(file_name + 1)), "cor");
-	mem4 = malloc(4);
-	if ((fd = open(binary_name, O_WRONLY | O_CREAT, 0b110110110)) == -1)
+	if ((fd = open((char*)mem4, O_WRONLY | O_CREAT, 0b110110110)) == -1)
 		throw_error("Error on file creating!", 0);
+	ft_printf(GREEN"Writing champion into: %s\n"EOM, mem4);
 	write_bites(mem4, g_header.magic, 4);
 	write(fd, mem4, 4);
 	write(fd, g_header.prog_name, PROG_NAME_LENGTH);
@@ -110,4 +98,6 @@ void		assembly(char *file_name)
 	fd = create_file(file_name);
 	write_executable(fd, instr_list);
 	print_labels(g_label_list);
+	clean_labels(g_label_list);
+	clean_instr(instr_list);
 }

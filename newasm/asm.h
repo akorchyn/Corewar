@@ -104,5 +104,9 @@ uint8_t							find_op_index(char *command,
 void							write_bites(uint8_t *mem,
 		uint32_t value32, uint8_t bites);
 void							write_executable(int fd, t_list *instr_list);
+void							print_labels(t_list *label);
+void							clean_labels(t_list *label);
+void							clean_instr(t_list *instr);
+void							print_operation(t_list *operation);
 
 #endif

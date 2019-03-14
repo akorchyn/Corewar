@@ -58,5 +58,6 @@ int			main(int ac, char **av)
 		? assembly(av[1]) : throw_error("Wrong file extension!", 0);
 	else
 		throw_error("Usage: ./asm [-d] source_file(.s|.cor)", 0);
+	system("leaks asm");
 	return (0);
 }
