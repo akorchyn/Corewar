@@ -79,8 +79,8 @@ static t_list	*collect_arguments(char *str, t_instruction *instr)
 			throw_error("expected expression", g_line);
 		while (*end && *end != SEPARATOR_CHAR && ft_is_whitespace(end))
 			end++;
-		(*end != SEPARATOR_CHAR && !ft_is_whitespace(end))
-			? throw_error("expected expression", g_line) : 0;
+		(*end != SEPARATOR_CHAR && *end)
+			? throw_error("extra expression", g_line) : 0;
 		str = (*end == SEPARATOR_CHAR && *(end + 1)) ? end + 1 : end;
 	}
 	check_arguments(instr, arg, g_op_tab[instr->op_index].arg_count);
