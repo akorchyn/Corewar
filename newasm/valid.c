@@ -6,7 +6,7 @@
 /*   By: dmlitvin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/12 14:35:51 by dmlitvin          #+#    #+#             */
-/*   Updated: 2019/03/12 14:35:57 by dmlitvin         ###   ########.fr       */
+/*   Updated: 2019/03/15 13:19:41 by dmlitvin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ void	throw_error(char *error, size_t line)
 	}
 	ft_putendl_fd(error, 2);
 	ft_putstr_fd(EOM, 2);
-	system("leaks asm");
 	exit(1);
 }
 
