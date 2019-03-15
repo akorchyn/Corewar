@@ -42,6 +42,8 @@ static void		collect_label(char *instruction, char *label_char)
 
 	label.label_name = ft_memcpy(ft_stralloc(label_char - instruction),
 			instruction, label_char - instruction);
+	if (ft_lstfind(g_label_list, label.label_name, label_find))
+		throw_error("double label declaration", g_line);
 	label.label_value = g_header.prog_size;
 	ft_lstadd(&g_label_list, ft_lstnew(&label, sizeof(t_label)));
 	while (ft_is_whitespace(label_char + 1))

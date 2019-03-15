@@ -27,6 +27,25 @@ void	throw_error(char *error, size_t line)
 	exit(1);
 }
 
+void	check_labels(t_list *label_list, t_list *op_list)
+{
+	t_list *argument;
+
+	while (op_list)
+	{
+		argument = ((t_instruction*)op_list->content)->argument;
+		while (argument)
+		{
+			if (*((char*)argument->content) == DIRECT_CHAR
+			&& !ft_lstfind(label_list, argument->content + 1, label_find))
+				throw_error("unknown label",
+				((t_instruction*)op_list->content)->line_nb);
+			argument = argument->next;
+		}
+		op_list = op_list->next;
+	}
+}
+
 uint8_t	check_extension(char *file_name, char *extension)
 {
 	return (ft_strequ(file_name + ft_strlen(file_name)

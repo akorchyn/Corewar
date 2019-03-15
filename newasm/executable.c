@@ -41,7 +41,7 @@ static char		get_arg_type(uint8_t op_index, t_instruction *instr)
 	return (result);
 }
 
-static int		label_find(void *lst_content, void *content)
+int				label_find(void *lst_content, void *content)
 {
 	return (!ft_strcmp(content, ((t_label*)lst_content)->label_name));
 }

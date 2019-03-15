@@ -110,5 +110,8 @@ void							print_labels(t_list *label);
 void							clean_labels(t_list *label);
 void							clean_instr(t_list *instr);
 void							print_operation(t_list *operation);
+void							check_labels(t_list *label_list,
+		t_list *op_list);
+int								label_find(void *lst_content, void *content);
 
 #endif
