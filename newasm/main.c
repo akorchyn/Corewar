@@ -16,6 +16,8 @@ t_op		g_op_tab[17];
 t_header	g_header;
 size_t		g_line;
 t_list		*g_label_list;
+char		g_n;
+char		g_c;
 
 t_op		g_op_tab[17] =
 {
@@ -49,6 +51,8 @@ int			main(int ac, char **av)
 	ft_bzero(&g_header, sizeof(t_header));
 	g_label_list = NULL;
 	g_line = 0;
+	g_n = 0;
+	g_c = 0;
 	g_header.magic = COREWAR_EXEC_MAGIC;
 	if (ac == 3 && ft_strequ("-d", av[1]))
 		check_extension(av[ac - 1], ".cor")
