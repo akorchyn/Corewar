@@ -36,7 +36,7 @@ void	check_labels(t_list *label_list, t_list *op_list)
 		argument = ((t_instruction*)op_list->content)->argument;
 		while (argument)
 		{
-			if (*((char*)argument->content) == DIRECT_CHAR
+			if (*((char*)argument->content) == LABEL_CHAR
 			&& !ft_lstfind(label_list, argument->content + 1, label_find))
 				throw_error("unknown label",
 				((t_instruction*)op_list->content)->line_nb);
