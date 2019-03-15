@@ -54,13 +54,10 @@ int			main(int ac, char **av)
 	g_n = 0;
 	g_c = 0;
 	g_header.magic = COREWAR_EXEC_MAGIC;
-	if (ac == 3 && ft_strequ("-d", av[1]))
-		check_extension(av[ac - 1], ".cor")
-		? disassembly(av[2]) : throw_error("Wrong file extension!", 0);
-	else if (ac == 2)
+	if (ac == 2)
 		check_extension(av[1], ".s")
 		? assembly(av[1]) : throw_error("Wrong file extension!", 0);
 	else
-		throw_error("Usage: ./asm [-d] source_file(.s|.cor)", 0);
+		throw_error("Usage: ./asm \"source_file.s\"", 0);
 	return (0);
 }
