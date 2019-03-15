@@ -23,6 +23,7 @@ void	throw_error(char *error, size_t line)
 	}
 	ft_putendl_fd(error, 2);
 	ft_putstr_fd(EOM, 2);
+	system("leaks asm");
 	exit(1);
 }
 

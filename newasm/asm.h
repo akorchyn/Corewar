@@ -45,7 +45,7 @@
 # define COREWAR_NULL_LENGTH	(4)
 # define COREWAR_EXEC_MAGIC		0xea83f3
 
-typedef struct					t_header
+typedef struct					s_header
 {
 	unsigned int				magic;
 	char						prog_name[PROG_NAME_LENGTH + 1];
@@ -84,6 +84,8 @@ extern t_op						g_op_tab[17];
 extern t_header					g_header;
 extern size_t					g_line;
 extern t_list					*g_label_list;
+extern char						g_c;
+extern char						g_n;
 
 void							throw_error(char *error, size_t line);
 uint8_t							check_extension(char *file_name,

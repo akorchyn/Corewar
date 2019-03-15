@@ -13,6 +13,8 @@
 #include "asm.h"
 
 size_t		g_line;
+char		g_n;
+char		g_c;
 
 int			line_not_clear(char const *start, char const *end)
 {
@@ -27,12 +29,13 @@ int			line_not_clear(char const *start, char const *end)
 static void	collect_name(char const *q1, char const *q2,
 		const size_t content_size)
 {
-	if (g_header.prog_name[0])
-		throw_error("double name declaration", g_line);
+	if (g_n)
+		throw_error("Double name declaration", 0);
 	else if (content_size > PROG_NAME_LENGTH)
-		throw_error("too big bot name", g_line);
+		throw_error("Too big bot name", 0);
 	else
 		ft_memcpy(g_header.prog_name, q1 + 1, q2 - q1 - 1);
+	g_n = 1;
 	while (q1 != q2)
 		if (*q1++ == '\n')
 			g_line++;
@@ -42,11 +45,12 @@ static void	collect_comment(char const *q1, char const *q2,
 		const size_t content_size)
 {
 	if (content_size > COMMENT_LENGTH)
-		throw_error("too big bot comment", g_line);
-	else if (g_header.comment[0])
-		throw_error("double bot comment declaration", g_line);
+		throw_error("Too big bot comment", 0);
+	else if (g_c)
+		throw_error("Double bot comment declaration", 0);
 	else
 		ft_memcpy(g_header.comment, q1 + 1, q2 - q1 - 1);
+	g_c = 1;
 	while (q1 != q2)
 		if (*q1++ == '\n')
 			g_line++;
