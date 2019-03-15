@@ -6,7 +6,7 @@
 #    By: dmlitvin <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/02/06 22:47:34 by dmlitvin          #+#    #+#              #
-#    Updated: 2019/03/08 16:32:05 by akorchyn         ###   ########.fr        #
+#    Updated: 2019/03/15 19:13:21 by dmlitvin         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,9 +18,8 @@ FLAGS=-Wall -Wextra -Werror -I libft/include
 
 CC=clang $(FLAGS)
 
-SRC=main.c file.c assembly.c valid_check.c split_instr.c \
-	byte_code.c command_argument.c calculate_size.c disassembly.c \
-	header.c parse_label.c read_label.c \
+SRC=main.c assembly.c name_comment.c clean_debug.c \
+parse_instruction.c read_instructions.c valid.c executable.c \
 
 SRO=$(SRC:.c=.o)
 

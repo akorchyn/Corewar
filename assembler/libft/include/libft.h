@@ -6,7 +6,7 @@
 /*   By: dmlitvin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/29 18:21:05 by dmlitvin          #+#    #+#             */
-/*   Updated: 2019/02/23 17:37:12 by dmlitvin         ###   ########.fr       */
+/*   Updated: 2019/03/13 17:53:23 by dmlitvin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -224,6 +224,7 @@ void					ft_reverse(void *content, size_t content_size,
 							size_t size);
 t_list					*ft_lstfind(t_list *head, void *data,
 							int (*content_cmp)(void*, void*));
+void					ft_lstrev(t_list **lst);
 int						ft_isnumeric(char *str);
 
 /*

@@ -95,6 +95,8 @@ void		assembly(char *file_name)
 	file_content = read_name_comment(content_pointer, 2);
 	instr_list = read_instructions(file_content);
 	free(content_pointer);
+	if (!ft_list_size(g_label_list) && !ft_list_size(instr_list))
+		throw_error("empty bot");
 	check_labels(g_label_list, instr_list);
 	fd = create_file(file_name);
 	write_executable(fd, instr_list);

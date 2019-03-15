@@ -6,7 +6,7 @@
 /*   By: dmlitvin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/12 13:35:36 by dmlitvin          #+#    #+#             */
-/*   Updated: 2019/03/12 13:35:51 by dmlitvin         ###   ########.fr       */
+/*   Updated: 2019/03/15 13:19:26 by dmlitvin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,5 @@ int			main(int ac, char **av)
 		? assembly(av[1]) : throw_error("Wrong file extension!", 0);
 	else
 		throw_error("Usage: ./asm [-d] source_file(.s|.cor)", 0);
-	system("leaks asm");
 	return (0);
 }
