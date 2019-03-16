@@ -20,7 +20,8 @@ static uint8_t	arg_valid(char *str,
 		uint8_t argument_code, uint8_t is_dir_ind)
 {
 	if (*str == REGISTRY_CHAR && (argument_code & T_REG) == T_REG
-	&& ft_isnumeric(str++ + 1) && ft_atoi(str) && ft_atoi(str) <= REG_NUMBER)
+	&& ft_isnumeric(str++ + 1) && ft_atoi(str) > 0
+	&& ft_atoi(str) <= REG_NUMBER)
 		return (1);
 	else if (*str == DIRECT_CHAR && (argument_code & T_DIR) == T_DIR
 	&& ((*(str + 1) == LABEL_CHAR && *(str + 2)) ||
