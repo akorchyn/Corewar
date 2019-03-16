@@ -6,7 +6,7 @@
 /*   By: dmlitvin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/12 14:44:28 by dmlitvin          #+#    #+#             */
-/*   Updated: 2019/03/12 14:44:37 by dmlitvin         ###   ########.fr       */
+/*   Updated: 2019/03/16 14:40:42 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,8 @@ static int	create_file(char *file_name)
 
 	mem4 = (uint8_t*)ft_strcat(ft_memcpy(ft_strnew(ft_strlen(file_name) + 2),
 			file_name, ft_strlen(file_name + 1)), "cor");
-	if ((fd = open((char*)mem4, O_WRONLY | O_CREAT | O_TRUNC, 0b110110110)) == -1)
+	if ((fd = open((char*)mem4, O_WRONLY | O_CREAT | O_TRUNC,
+										0b110110110)) == -1)
 		throw_error("Error on file creating!", 0);
 	ft_printf(GREEN"Writing champion into: %s\n"EOM, mem4);
 	write_bites(mem4, g_header.magic, 4);
