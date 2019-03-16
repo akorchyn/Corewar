@@ -6,7 +6,7 @@
 /*   By: akorchyn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 23:43:59 by akorchyn          #+#    #+#             */
-/*   Updated: 2019/03/08 20:06:59 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/03/16 14:02:13 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int32_t			main(int ac, char **av)
 	signal(SIGTERM, &handler);
 	ft_bzero(&g_corewar, sizeof(g_corewar));
 	parse_arguments(ac, av, &g_corewar, 0);
-	(g_corewar.players > MAX_PLAYERS) ? error(767, "Too much player", NULL) : 0;
+	(g_corewar.players > MAX_PLAYERS) ? error(767, "Too many players", NULL) : 0;
 	!(g_corewar.players) ? print_usage(av) : 0;
 	process_ids(g_corewar.carriages, g_corewar.players);
 	g_id = g_corewar.players;
