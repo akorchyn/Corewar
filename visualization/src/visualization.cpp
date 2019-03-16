@@ -6,7 +6,7 @@
 /*   By: kpshenyc <kpshenyc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 17:22:41 by kpshenyc          #+#    #+#             */
-/*   Updated: 2019/03/08 15:52:16 by akorchyn         ###   ########.fr       */
+/*   Updated: 2019/03/16 13:54:50 by kpshenyc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,25 +31,26 @@ int					initSocket()
 	return sock;
 }
 
-void				recv_(int32_t sock, uint8_t *data, int32_t size, int32_t flags)
+int8_t				recv_(int32_t sock, uint8_t *data, int32_t size, int32_t flags)
 {
 	int32_t		received = 0;
 	int32_t		ret;
 	while (received < size)
 	{
 		received += (ret = recv(sock, data + received, size - received, flags));
-		std::cout << ret << std::endl;
+		if (ret == 4 && (*((uint32_t *) data) >> 31))
+			break ;
 		if (!ret || ret == -1)
 		{
 			close(sock);
 			std::cerr << "VM closed connection" << std::endl;
-			exit(EXIT_FAILURE);
+			return EXIT_SUCCESS;
 		}
-		std::cout << received << std::endl;
 	}
+	return EXIT_FAILURE;
 }
 
-void				acceptClient(int32_t sock, int32_t &clientSocket, Corewar **corewar,
+void				acceptClient(int32_t &sock, int32_t &clientSocket, Corewar **corewar,
 							 bool &corewarInitialiazed, Window &window)
 {
 	uint8_t			initPackage[Corewar::initPackageSize];
@@ -136,24 +137,24 @@ void				drawCreators(Window *window)
 	SDL_RenderCopy(window->renderer, opishcheText, nullptr, &opishcheRect);
 
 	static Text			inspiredBy = Text("Inspired by Stura",
-							"fonts/joystix monospace.ttf", 30,
-								885, 600,
-								600, 600,
-								&basicColors[THIRD], window->renderer);
+											"fonts/joystix monospace.ttf", 30,
+											885, 600,
+											600, 600,
+											&basicColors[THIRD], window->renderer);
 	inspiredBy.draw();
 
 	static Text			sponsoredBy = Text("Sponsored by Stura",
-											 "fonts/joystix monospace.ttf", 30,
-											 875, 650,
-											 600, 600,
-											 &basicColors[FIRST], window->renderer);
+											"fonts/joystix monospace.ttf", 30,
+											875, 650,
+											600, 600,
+											&basicColors[FIRST], window->renderer);
 	sponsoredBy.draw();
 
 	static Text			acceleratedBy = Text("Accelerated by Stura",
-											  "fonts/joystix monospace.ttf", 30,
-											  850, 700,
-											  600, 600,
-											  &basicColors[SECOND], window->renderer);
+											"fonts/joystix monospace.ttf", 30,
+											850, 700,
+											600, 600,
+											&basicColors[SECOND], window->renderer);
 	acceleratedBy.draw();
 
 }
@@ -167,8 +168,6 @@ void				uninitializeCorewar(Corewar **corewar, Window *window, bool &corewarInit
 	waitingClient = false;
 	close(sock);
 	close(clientSock);
-	clientSock = 0;
-	sock = 0;
 	delete *corewar;
 	*corewar = nullptr;
 	std::cout << "Disconnecting is done!" << std::endl;
@@ -176,8 +175,8 @@ void				uninitializeCorewar(Corewar **corewar, Window *window, bool &corewarInit
 
 int					main(void)
 {
-	int32_t			clientSock = 0;
-	int32_t			sock = 0;
+	int32_t			clientSock = -1;
+	int32_t			sock = -1;
 	int8_t			answerToVisualization = 0;
 
 	Window			window("Corewar", WIDTH, HEIGHT);
@@ -187,6 +186,7 @@ int					main(void)
 
 	bool			corewarInitialized = false;
 	bool			waitingClient = false;
+
 	std::thread th;
 
 	while (!window.isClosed())
@@ -196,7 +196,7 @@ int					main(void)
 			if (!waitingClient && !corewarInitialized)
 			{
 				waitingClient = true;
-				th = std::thread(acceptClient, sock, std::ref(clientSock),
+				th = std::thread(std::ref(acceptClient), std::ref(sock), std::ref(clientSock),
 						&corewar, std::ref(corewarInitialized), std::ref(window));
 				th.detach();
 			}
@@ -205,19 +205,30 @@ int					main(void)
 				if (corewar->winner == 0)
 				{
 					uint32_t def;
-					recv_(clientSock, fieldPackage, Corewar::fieldPackageSize + Corewar::mapSize, 0);
-					def = *((uint32_t *) fieldPackage);
-					if (def >> 31)
-					{
-						corewar->winner = def & 7;
-						continue;
-					}
+					if (!recv_(clientSock, fieldPackage, Corewar::fieldPackageSize + Corewar::mapSize, 0))
+						window.mustBeDestroyed = 1;
 					else
-						corewar->refreshData(fieldPackage);
+					{
+						def = *((uint32_t *) fieldPackage);
+						if (def >> 31)
+						{
+							std::cout << "Winner is found!" << std::endl;
+							corewar->winner = def & 7;
+							continue;
+						}
+						else
+							corewar->refreshData(fieldPackage);
+					}	
 				}
 			}
 			if (corewarInitialized)
 			{
+				if (window.mustBeDestroyed)
+				{
+					uninitializeCorewar(&corewar, &window, corewarInitialized, waitingClient, sock, clientSock);
+					window.mustBeDestroyed = false;
+					continue ;
+				}
 				if (corewar->winner)
 					corewar->drawWinner(&window);
 				corewar->drawInitData(&window);

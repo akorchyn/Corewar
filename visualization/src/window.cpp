@@ -11,15 +11,16 @@
 /* ************************************************************************** */
 
 #include "window.hpp"
-
 Window::Window(std::string name, int width, int height)
 {
 	this->width = width;
 	this->height = height;
 	this->name = name;
+
 	this->preview = true;
 	this->isStoped = true;
-	creators = false;
+	this->creators = false;
+	this->mustBeDestroyed = false;
 	if (SDL_Init(SDL_INIT_VIDEO) != 0)
 	{
 		std::cerr << "SDL_INIT_VIDEO::ERROR" << std::endl;
@@ -107,6 +108,11 @@ void Window::poolEvents()
 						if (preview)
 							this->creators = this->creators ? false : true;
 						break ;
+					}
+					case SDLK_q:
+					{
+						if (!mustBeDestroyed)
+							mustBeDestroyed = true;
 					}
 					default:
 						break;

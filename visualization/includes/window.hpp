@@ -13,7 +13,6 @@
 #pragma once
 
 # include "visualization.hpp"
-
 class Window
 {
 	int				width = 2000;
@@ -22,9 +21,12 @@ class Window
 	SDL_Window		*window = nullptr;
 	int				closed = false;
 public:
+
 	bool			preview;
 	bool			isStoped;
 	bool			creators;
+	bool			mustBeDestroyed;
+
 	SDL_Renderer	*renderer = nullptr;
 	Window(std::string name, int width, int height);
 	bool isClosed();
