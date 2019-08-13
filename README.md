@@ -37,6 +37,7 @@ Usage: ./corewar [-dump N -v N -visual [ip]] <[-n number] champion1.cor> <...>
 ./visualization/visualization &
 Press Enter, then start VM with -visual [without ip is localhost]
 ESC to exit program.
+SPACE to pause/unpause.
 ```
 
 # Example game
