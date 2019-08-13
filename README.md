@@ -7,8 +7,13 @@ If you want more details - check the [pdf](readmeResources/corewar.en.pdf).
 - Virtual machine runs byte code commands and announce the winner.
 - Visualization display the game.
 
-# Usage
+# Installing
+> SDL2, SDL2_ttf, SDL2_image is required
+```
+make
+```
 
+# Usage
 #### `Assembler`
 
 ```
