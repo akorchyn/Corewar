@@ -4,7 +4,7 @@ If you want more details - check the [pdf](readmeResources/corewar.en.pdf).
 
 # Parts:
 - Assembler translate commands from assembly language to bytocode understandable to VM.
-- Virtual machine runs byte code commands and announce the winner.
+- Virtual machine runs byte code commands and announces the winner.
 - Visualization display the game.
 
 # Installing
