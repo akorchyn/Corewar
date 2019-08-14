@@ -8,7 +8,7 @@ If you want more details - check the [pdf](readmeResources/corewar.en.pdf).
 - Visualization display the game.
 
 # Installing
-> SDL2, SDL2_ttf, SDL2_image is required
+> SDL2, SDL2_ttf, SDL2_image are required
 ```
 make
 ```
